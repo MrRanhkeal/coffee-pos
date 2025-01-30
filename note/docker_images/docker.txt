@@ -1,0 +1,10 @@
+//create docker container mysql
+bash
+docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=mydatabase -e MYSQL_USER=myuser -e MYSQL_PASSWORD=mypassword -p 3306:3306 -d mysql:latest
+
+//mysql-docker
+docker pull mysql:latest
+docker run --name docker-mysql -e MYSQL_ROOT_PASSWORD=root -p 3307:3306 mysql
+
+//remove docker container
+docker rm link(36dc3d88a9e574a514ec62055e47a811625b1ba827692ea372299af77ae35ed3) //on git bash
