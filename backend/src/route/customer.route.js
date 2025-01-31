@@ -3,10 +3,10 @@ const { logErr } = require("../util/logErr");
 
 try{
     module.exports = (app) => {
-        app.get("/customer/getlist",getlist);
-        app.post("/customer/create",create);
-        app.put("/customer/update",update);
-        app.delete("/customer/delete",remove);
+        app.get("/api/customer/getlist",getlist);
+        app.post("/api/customer/create",create);
+        app.put("/api/customer/update",update);
+        app.delete("/api/customer/delete",remove);
     }
 }
 catch(err){

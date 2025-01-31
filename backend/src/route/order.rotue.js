@@ -2,10 +2,10 @@ const {getlist,create,update,remove} = require("../controller/order.controller")
 
 try{
     module.exports = (app) => {
-        app.get("/order/getlist",getlist);
-        app.post("/order/create",create);
-        app.put("/order/update",update);
-        app.delete("/order/delete",remove);
+        app.get("/api/order/getlist",getlist);
+        app.post("/api/order/create",create);
+        app.put("/api/order/update",update);
+        app.delete("/api/order/delete",remove);
     }
 }
 catch(err){
