@@ -131,7 +131,7 @@ const MainLayout = () => {
     const onLoginout = () => {
         setProfile("");
         setAccesToken("");
-        navigate("/login");
+        // navigate("/login");
     }
     if (!profile) {
         return null;

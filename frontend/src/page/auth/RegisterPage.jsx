@@ -50,7 +50,7 @@ function RegisterPage() {
                     <Input placeholder='Username' />
                 </Form.Item>
                 <Form.Item name="password" label="Password">
-                    <Input placeholder='Password' type='password'/>
+                    <Input placeholder='Password' type='password' hidden/>
                 </Form.Item>
                 <Form.Item name="role_id" label="Role">
                     <Input placeholder='Role' />

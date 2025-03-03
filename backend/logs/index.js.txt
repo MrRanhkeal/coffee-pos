@@ -1,6 +1,16 @@
-Error: Route.get() requires a callback function but got a [object Undefined] + 2025-01-31 12:30:19 
-TypeError: require(...) is not a function + 2025-01-31 12:30:32 
-TypeError: require(...) is not a function + 2025-01-31 12:30:55 
-TypeError: require(...) is not a function + 2025-01-31 12:30:57 
-TypeError: require(...) is not a function + 2025-01-31 12:30:58 
-TypeError: require(...) is not a function + 2025-01-31 12:31:01 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-02-03 22:18:28 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-02-03 22:18:32 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-02-03 22:18:35 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-02-03 22:18:40 
+SyntaxError: Unexpected token 'export' + 2025-02-03 22:19:33 
+SyntaxError: Unexpected token '=' + 2025-02-03 22:19:35 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-02-03 22:19:40 
+SyntaxError: Missing initializer in const declaration + 2025-02-07 10:21:30 
+SyntaxError: Missing initializer in const declaration + 2025-02-07 10:21:34 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:21:58 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:22:07 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:22:08 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:22:14 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:22:16 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:22:19 
+SyntaxError: Unexpected token ':' + 2025-02-07 10:22:32 

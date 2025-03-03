@@ -3,8 +3,8 @@ const { logErr } = require("../util/logErr");
 
 try{
     module.exports = (app) => {
-        app.get("/api/invoice/getlist",getlist);
-        app.post("/api/invoice/create",create);
+        app.get("/api/invoice",getlist);
+        app.post("/api/invoice",create);
     }
 }
 catch(err){

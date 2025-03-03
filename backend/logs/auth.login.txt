@@ -1,0 +1,1 @@
+Error: Unknown database 'coffe_db' + 2025-03-02 15:59:49 

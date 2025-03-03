@@ -1,5 +1,5 @@
 import React from 'react';
-import { setAccesToken, setProfile } from '../../store/profile.store';
+import { setAccesToken, setPermission, setProfile } from '../../store/profile.store';
 import { request } from '../../util/helper';
 import { Button, Form, Input, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -13,12 +13,13 @@ function LoginPage() {
             var params = {
                 username: items.username,
                 password: items.password
-            }
+            };
             const res = await request("auth/login", "post", params);
             if(res && !res.error){
                 //setAccessToken(res.access_token);
                 setAccesToken(res.access_token);
                 //convert json to string: convert obj to string json
+                setPermission(JSON.stringify(res.permission));
                 setProfile(JSON.stringify(res.profile));
                 navigate("/");
             }

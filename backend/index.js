@@ -49,7 +49,6 @@ try {
     });
 } catch (err) {
     logErr("index.js",err);
-    //console.error("Error loading routes:", err);
 }
 
 //start server
@@ -62,4 +61,5 @@ app.listen(port, () => {
 app.use((err, req, res, next) => {
     console.error("Server error:", err);
     res.status(500).json({ error: "Internal server error" });
+    next();
 });

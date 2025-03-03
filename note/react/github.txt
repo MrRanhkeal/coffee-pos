@@ -23,3 +23,6 @@ git push -u origin main
     # git origin when something err#
         git pull --rebase origin main
         git push -u origin main
+
+    #congit
+    git config --global --add safe.directory E:/IT_Class/Y_3/S_1/PHP_And_MySQL/ass/meeting_system_project_G4

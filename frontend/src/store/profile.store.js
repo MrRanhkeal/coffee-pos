@@ -23,21 +23,21 @@ export const getProfile = () => {
         return null;
     }
 }
-// export const setPermission = (array) => {
-//     localStorage.setItem("permission", array);
-// };
+export const setPermission = (array) => {
+    localStorage.setItem("permission", array);
+};
 
-// export const getPermission = () => {
-//     // convert string json to object
-//     try {
-//         var permission = localStorage.getItem("permission");
-//         if (permission !== "" && permission !== null && permission !== undefined) {
-//             return JSON.parse(permission);
-//         }
-//         return null;
-//     } catch (err) {
-//         console.log("not found permission",err);
-//         return null;
+export const getPermission = () => {
+    // convert string json to object
+    try {
+        var permission = localStorage.getItem("permission");
+        if (permission !== "" && permission !== null && permission !== undefined) {
+            return JSON.parse(permission);
+        }
+        return null;
+    } catch (err) {
+        console.log("not found permission",err);
+        return null;
 
-//     }
-// };
+    }
+};
