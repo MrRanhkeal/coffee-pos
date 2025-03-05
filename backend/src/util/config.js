@@ -8,8 +8,8 @@ module.exports = {
             HOST: 'localhost',
             USER: 'root',
             PASSWORD: 'root',
-            DATABASE: 'coffee_db',
-            PORT: 3306
+            DATABASE: 'coffe_db',
+            PORT: 3307
             },
         token: {
             access_token_key: "#$*%*(*234898ireiuLJEROI#@)(#)$*@#)*$(@948858839798283838jaflke",

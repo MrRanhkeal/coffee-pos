@@ -159,7 +159,24 @@ table.pos_tbl_invoice td {
 .btn-login {
   background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
   margin-top: 40px;
-  margin-left: 50%;
+  margin-left: 10%;
+  padding: 15px 45px;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display:  flex;
+  width: 120px;
+  font-size: 18px;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+.btn-register{
+  background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
+  margin-top: 40px;
+  margin-left: 20%;
   padding: 15px 45px;
   text-align: center;
   text-transform: uppercase;
@@ -169,10 +186,8 @@ table.pos_tbl_invoice td {
   box-shadow: 0 0 20px #eee;
   border-radius: 10px;
   display:  flex;
-  width: 100%;
+  width: 120px;
   font-size: 18px;
-  justify-content: center;
-  align-items: center;
 }
 .main-container {
   display: flex;

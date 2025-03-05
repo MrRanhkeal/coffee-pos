@@ -4,7 +4,7 @@ const { validate_token } = require("../middleware/jwt_token");
 try {
     module.exports = (app) => {
         app.get("/api/auth", validate_token(), getlist);
-        app.post("/api/auth", register);
+        app.post("/api/auth/register", register);
         app.post("/api/auth/login", login);
         app.get("/api/auth/profile", profile);
         app.get("/api/auth/logout", logout);

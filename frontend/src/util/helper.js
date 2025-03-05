@@ -4,47 +4,48 @@ import { getAccessToken } from "../store/profile.store";
 import { setServerStatus } from "../store/server.store";
 
 export const request = async (url = "", method = "get", data = {}) => {
-    try {
-        // Validate Config.base_url
-        if (!Config || !Config.base_url) {
-            throw new Error("Config.base_url is not defined or invalid.");
-        }
-
-        // Fetch the access token
-        const access_token = getAccessToken();
-        if (!access_token) {
-            throw new Error("Access token is missing or invalid.");
-        }
-
-        // Make the request to the server
-        const response = await axios({
-            url: Config.base_url + url,
-            method: method,
-            data: method.toLowerCase() === "get" ? undefined : data, // Only attach `data` for non-GET methods
-            headers: {
-                Authorization: `Bearer ${access_token}`, // Include Bearer token
-                "Content-Type": "application/json", // Explicitly set content type
-            },
-        });
-
-        // Set server status to 200 on success
-        setServerStatus(200);
-        return response.data;
-    } catch (error) {
-        // Handle errors and set appropriate server status
-        if (error.response) {
-            const status = error.response.status === 401 ? 403 : error.response.status;
-            setServerStatus(status);
-        } else if (error.code === "ERR_NETWORK") {
-            setServerStatus("error");
-        } else {
-            setServerStatus(500); // General server error
-            console.error("Unexpected error:", error);
-        }
-
-        // Log the error and return `false` for failure
-        console.error("Error in request:", error);
-        return false;
+    var access_token = getAccessToken();
+    // in react
+    var headers = { "Content-Type": "application/json" };
+    if (data instanceof FormData) {
+        // check if param data is FormData
+        headers = { "Content-Type": "multipart/form-data" };
     }
+    var param_query = "?";
+    if (method == "get" && data instanceof Object) {
+        Object.keys(data).map((key, index) => {
+            if (data[key] != "" && data[key] != null) {
+                param_query += "&" + key + "=" + data[key];
+                
+            }
+        });
+    }
+    return axios({
+        url: Config.base_url + url + param_query,
+        method: method,
+        data: data,
+        headers: {
+            ...headers,
+            Authorization: "Bearer " + access_token,
+        },
+    })
+        .then((res) => {
+            setServerStatus(200);
+            return res.data;
+        })
+        .catch((err) => {
+            var response = err.response;
+            if (response) {
+                var status = response.status;
+                if (status == "401") {
+                    status = 403;
+                }
+                setServerStatus(status);
+            } else if (err.code == "ERR_NETWORK") {
+                setServerStatus("error");
+            }
+            console.log(">>>", err);
+            return false;
+        });
 };
 

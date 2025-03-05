@@ -1,4 +1,4 @@
-import React, {  } from "react";
+import React, { } from "react";
 import { PieChartOutlined, SmileOutlined } from "@ant-design/icons";
 import { Dropdown, Input, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -106,18 +106,37 @@ const items = [
 ];
 
 const MainLayout = () => {
-    const {setConfig} = configStore();
+    //const permission = getPermission();
+    const { setConfig } = configStore();
     const profile = getProfile();
     const [collapsed, setCollapsed] = useState(false);
     const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
     const navigate = useNavigate();
-
+    // const [items , setItems] = useState([]);
     useEffect(() => {
+        geMenu();
         getConfig();
-        if (profile === null) {
+        if (!profile) {
             navigate("/login");
         }
-    });
+    },[]);
+
+    //non required login
+    // useEffect(() => {
+    //     getConfig();
+    //     if (profile === null) {
+    //         navigate("/login");
+    //     }
+    // });
+
+    const geMenu = ()=>{
+        // let newitem_menu = [];
+        // itemsmenue?.map((item1) => {
+        //     const p1 = permission.findInex(
+        //         (data1)
+        //     );
+        // })
+    }
 
     const getConfig = async () => {
         const res = await request("config", "get");
@@ -131,7 +150,7 @@ const MainLayout = () => {
     const onLoginout = () => {
         setProfile("");
         setAccesToken("");
-        // navigate("/login");
+        navigate("/login");
     }
     if (!profile) {
         return null;
@@ -170,7 +189,8 @@ const MainLayout = () => {
         >
             <Sider
                 collapsible //show collapse button
-                collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
+                collapsed={collapsed} 
+                onCollapse={(value) => setCollapsed(value)}
 
             >
                 {/* <div className='demo-logo-vertical' /> */}
@@ -202,7 +222,7 @@ const MainLayout = () => {
                         <IoIosNotifications className='icon-notify' />
                         <MdOutlineMarkEmailUnread className='icon-email' />
                         <div>
-                            <div className="txt-username" >{profile?.name}</div>
+                            {/* <div className="txt-username" >{profile?.name}</div> */}
                             <div>{profile?.role_name}</div>
                         </div>
                     </div>
