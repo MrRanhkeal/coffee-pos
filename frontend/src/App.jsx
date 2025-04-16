@@ -1,93 +1,70 @@
-//import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import MainLayout from './components/layout/MainLayout';
-import MainLayoutAuth from './components/layout/MainLayoutAuth';
-import HomePage from './page/home/HomePage';
-import CategoryPage from './page/category/CategoryPage';
-import LoginPage from './page/auth/LoginPage';
-import RegisterPage from './page/auth/RegisterPage';
-import CustomerPage from './page/customer/CustomerPage';
-import DashboardPage from './page/dashboard/DashboardPage';
-import EmployeePage from './page/employee/EmployeePage';
-import ExchangPage from './page/exchange/ExchangPage';
-import OrderPage from './page/order/OrderPage';
-import ProductPage from './page/product/ProductPage';
-import ReportPage from './page/report/ReportPage';
-import RolePage from './page/role/RolePage';
-import UserPage from './page/user/UserPage';
-import SettngPage from './page/setting/SettngPage';
+// import { useState } from "react";
+// import reactLogo from "./assets/react.svg";
+// import viteLogo from "/vite.svg";
+// import { Button } from "antd";
+// import { DeleteFilled } from "@ant-design/icons";
+// import { MdDelete } from "react-icons/md";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./page/home/HomePage";
+import RegisterPage from "./page/auth/RegisterPage";
 
+import MainLayout from "./component/layout/MainLayout";
+import EmployeePage from "./page/employee/EmployeePage";
+import CustomerPage from "./page/customer/CustomerPage";
+import CategoryPage from "./page/category/CategoryPage";
+import UserPage from "./page/user/UserPage";
+import RolePage from "./page/role/RolePage";
+import SupplierPage from "./page/purchase/SupplierPage";
+import ProductPage from "./page/product/ProductPage";
+import ExpanseTypePage from "./page/expanse/ExpanseTypePage";
+import ExpansePage from "./page/expanse/ExpansePage";
+import PosPage from "./page/pos/PosPage";
+import OrderPage from "./page/order/OrderPage";
+import ReportSaleSummaryPage from "./page/report/ReportSaleSummaryPage";
+import ReportExpenseSummaryPage from "./page/report/ReportExpenseSummaryPage";
+import LoginPage from "./page/auth/LoginPage";
 
 function App() {
   return (
-
     <BrowserRouter>
-      
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/category" element={<CategoryPage />} />
+          <Route path="/pos" element={<PosPage />} />
           <Route path="/customer" element={<CustomerPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/employee" element={<EmployeePage />} />
-          <Route path="/exchange" element={<ExchangPage />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/product" element={<ProductPage />} />
-          <Route path="/report" element={<ReportPage />} />
+          <Route path="/category" element={<CategoryPage />} />
+          <Route path="/supplier" element={<SupplierPage />} />
+
           <Route path="/user" element={<UserPage />} />
           <Route path="/role" element={<RolePage />} />
-          <Route path="/setting" element={<SettngPage />} />
 
-          <Route path="*" element={<h1>404-Page not found...!</h1>} />
+          <Route path="/expanse_type" element={<ExpanseTypePage />} />
+          <Route path="/expanse" element={<ExpansePage />} />
+
+          <Route
+            path="/report_sale_summary"
+            element={<ReportSaleSummaryPage />}
+          />
+          <Route
+            path="/report_expense_summary"
+            element={<ReportExpenseSummaryPage />}
+          />
+
+          <Route path="*" element={<h1>404-Route Not Found!</h1>} />
         </Route>
-        <Route element={<MainLayoutAuth />}>
+
+        <Route>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Routes>
-      
     </BrowserRouter>
-
-  )
+  );
 }
 
-export default App
-
-
-
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-
-//function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-//export default App
+export default App;

@@ -1,1 +1,0 @@
-ReferenceError: barcode is not defined + 2025-02-03 22:34:11 

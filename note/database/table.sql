@@ -118,3 +118,12 @@
 
     -- category drop column
     alter table category drop column code;
+    
+    --modify column syntax
+    alter table roles modify column code varchar(120);
+
+    --update syntax
+    update roles set code= 'admin' where id=1;
+
+    -- add column syntax
+    alter table suppliers add column code varchar(12);

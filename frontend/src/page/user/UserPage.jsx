@@ -1,219 +1,256 @@
-//import React from 'react'
-//import MainPage from '../../components/layout/MainPage'
-import { Modal, Form, Table, Tag, Button, Input, Select, Space, message } from 'antd';
-import { MdAdd } from "react-icons/md";
+import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
-import { useEffect, useState } from "react";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import { resetWarned } from "antd/es/_util/warning";
 function UserPage() {
-    const [formRef] = Form.useForm();
-    //const [List, setList] = useState([]);
-    //const [loading, setLoading] = useState(false); //loading mainpage when data connected stay on MianPage
-    const [state, setState] = useState({
-        role: [],
-        list: [],
-        loading: false,
-        visible: false,
-        // name: "",
-        // username: "",
-        // phone: "",
-        // sex: "",
-        // status: "",
-    })
-    //effect use handle the side effects such as fetching data and updating the DOM
-    useEffect(() => {
-        getList();
-    }, []);
-    //get list user
-    const getList = async () => {
-        const res = await request("auth", "get");
+  const [form] = Form.useForm();
+  const [state, setState] = useState({
+    list: [],
+    role: [],
+    loading: false,
+    visible: false,
+  });
+  useEffect(() => {
+    getList();
+  }, []);
 
-        if (res && !res.error) {
-            setState((pre) => ({
-                ...pre,
-                list: res.list,
-                role: res.role
-            }));
-            //setList(res.list);
-        }
-    };
-    const onClickDelete = () => [];
-    const onClickEdit = () => [];
-
-    const onCloseModal = () => {
-        setState((pre) => ({
-            ...pre,
-            visible: false
-        }));
-        formRef.resetFields();
+  const getList = async () => {
+    const res = await request("auth/get-list", "get");
+    if (res && !res.error) {
+      setState((pre) => ({
+        ...pre,
+        list: res.list,
+        role: res.role,
+      }));
     }
+  };
 
-    const onOpenModal = () => {
-        setState((pre) => ({
-            ...pre,
-            visible: true,
-        }));
+  const clickBtnEdit = () => {};
+  const clickBtnDelete = () => {};
+
+  const handleCloseModal = () => {
+    setState((pre) => ({
+      ...pre,
+      visible: false,
+    }));
+    form.resetFields();
+  };
+
+  const handleOpenModal = () => {
+    setState((pre) => ({
+      ...pre,
+      visible: true,
+    }));
+  };
+  // {"name":"a","username":"b","password":"12","role_id":2,"is_active":0}
+  const onFinish = async (item) => {
+    if (item.password !== item.confirm_password) {
+      message.warning("Password and Confirm Password Not Match!");
+      return;
     }
-    //finish
-    const onFinish = async (items) => {
-        try {
-            if(items.password !== items.confirm_password){
-                message.warning("Password not match");
-                return;
-            }
-            var data = {
-                ...items,
-            }
-            const res = await request("auth", "post", data);
-            if (res && !res.error) {
-                message.success(res.message);
-                getList();
-                onCloseModal();
-            }
-            else{
-                message.warning(res.message);
-            }
-        }
-        catch (error) {
-            console.log("something when wrong", error)
-        }
+    var data = {
+      ...item,
     };
-    return (
-        // <div>UserPage</div>
-        <div >
-            <Button type="primary" className="btn-add" icon={<MdAdd />} onClick={onOpenModal}>New</Button>
-            <Modal
-                open={state.visible}
-                //title={formRef.getFieldValue("id") ? "Edit User" : "New User"}
-                footer={null}
-                onCancel={onCloseModal}
-            >
-                <Form layout="vertical" onFinish={onFinish} form={formRef}>
-                    <Form.Item name={"name"} label="Name">
-                        <Input placeholder="name" />
-                    </Form.Item>
-                    <Form.Item name={"username"} label="Username">
-                    <Input type='email' placeholder="@gmail.com" />
-                    </Form.Item>
-                    <Form.Item name={"password"} label="Password" >
-                        <Input type='password' hidden placeholder="Password" />
-                    </Form.Item>
-                    <Form.Item name={"confirm_password"} label="Confirm Password" >
-                        <Input type='password' hidden placeholder="Confirm Password" />
-                    </Form.Item>
-                    <Form.Item name={"sex"} label="Sex" >
-                        <Select placeholder="select sex"
-                            options={[
-                                {
-                                    label: "Male",
-                                    value: "male"
-                                },
-                                {
-                                    label: "Female",
-                                    value: "female"
-                                }
-                            ]}
-                        />
-                    </Form.Item>
-                    <Form.Item name={"phone"} label="phone" >
-                        <Input placeholder="phone" />
-                    </Form.Item>
-                    <Form.Item name={"role_id"} label="Role" >
-                        <Select placeholder="select role" options={state.role} />
-                    </Form.Item>
-                    <Form.Item name={"status"} label="status">
-                        <Select placeholder="select status"
-                            options={[
-                                {
-                                    label: "Active",
-                                    value: 1
-                                },
-                                {
-                                    label: "InActive",
-                                    value: 0
-                                }
-                            ]}
-                        />
-                    </Form.Item>
-                    <Form.Item style={{ textAlign: "right" }}>
-                        <Space>
-                            <Button onClick={onCloseModal}>Cancel</Button>
-                            <Button type="primary" htmlType="submit">
-                                Save
-                            </Button>
-                        </Space>
-                    </Form.Item>
-                    
-                </Form>
-            </Modal>
-            <Table className="table"
-                dataSource={state.list}
-                columns={[
-                    {
-                        key: "No",
-                        title: "No",
-                        render: (text, record, index) => index + 1,
-                    },
-                    {
-                        key: "id",
-                        title: "Id",
-                        dataIndex: "id"
-                    },
-                    {
-                        key: "name",
-                        title: "Name",
-                        dataIndex: "name"
-                    },
-                    {
-                        key: "username",
-                        title: "Username",
-                        dataIndex: "username"
-                    },
-                    {
-                        key: "phone",
-                        title: "Phone",
-                        dataIndex: "phone"
-                    },
-                    {
-                        key: "sex",
-                        title: "Sex",
-                        dataIndex: "sex"
-                    },
-                    {
-                        key: "role",
-                        title: "Role",
-                        dataIndex: "role"
-                    },
-                    {
-                        key: "status",
-                        title: "Status",
-                        dataIndex: "status",
-                        render: (Status) =>
-                            Status == 1 ? (
-                                <Tag color="green">Active</Tag>
-                            ) : (
-                                <Tag color="red">InActive</Tag>
-                            )
+    const res = await request("auth/register", "post", data);
+    if (res && !res.error) {
+      message.success(res.message);
+      getList();
+      handleCloseModal();
+    } else {
+      message.warning(res.message);
+    }
+  };
 
-                    },
-                    {
-                        key: "action",
-                        title: "Action",
-                        align: "center",
-                        render: (item, data, index) => (
-                            <Space>
-                                <Button onClick={() => onClickEdit(data,index)} type='primary'>
-                                    Edit
-                                </Button>
-                                <Button onClick={() => onClickDelete(data)} type='primary' danger>
-                                    Delete
-                                </Button>
-                            </Space>
-                        )
-                    }
-                ]}
-            />
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingBottom: 10,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div>User</div>
+          <Input.Search style={{ marginLeft: 10 }} placeholder="Search" />
         </div>
-    )
+        <Button type="primary" onClick={handleOpenModal}>
+          New
+        </Button>
+      </div>
+      <Modal
+        title="New User"
+        open={state.visible}
+        onCancel={handleCloseModal}
+        footer={null}
+      >
+        <Form layout="vertical" form={form} onFinish={onFinish}>
+          <Form.Item
+            name={"name"}
+            label="Name"
+            rules={[
+              {
+                required: true,
+                message: "Please fill in name",
+              },
+            ]}
+          >
+            <Input placeholder="Name" />
+          </Form.Item>
+          <Form.Item
+            name={"username"}
+            label="Email"
+            rules={[
+              {
+                required: true,
+                message: "Please fill in email",
+              },
+            ]}
+          >
+            <Input placeholder="email" />
+          </Form.Item>
+          <Form.Item
+            name={"password"}
+            label="password"
+            rules={[
+              {
+                required: true,
+                message: "Please fill in password",
+              },
+            ]}
+          >
+            <Input.Password placeholder="password" />
+          </Form.Item>
+          <Form.Item
+            name={"confirm_password"}
+            label="Confirm Password"
+            rules={[
+              {
+                required: true,
+                message: "Please fill in confirm password",
+              },
+            ]}
+          >
+            <Input.Password placeholder="confirm password" />
+          </Form.Item>
+          <Form.Item
+            name={"role_id"}
+            label="Role"
+            rules={[
+              {
+                required: true,
+                message: "Please select role",
+              },
+            ]}
+          >
+            <Select placeholder="Select Role" options={state.role} />
+          </Form.Item>
+          <Form.Item
+            name={"is_active"}
+            label="Status"
+            rules={[
+              {
+                required: true,
+                message: "Please select status",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Select Status"
+              options={[
+                {
+                  label: "Active",
+                  value: 1,
+                },
+                {
+                  label: "InActive",
+                  value: 0,
+                },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item style={{ textAlign: "right" }}>
+            <Space>
+              <Button onClick={handleCloseModal}>Cancel</Button>
+              <Button type="primary" htmlType="submit">
+                Save
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Table
+        dataSource={state.list}
+        columns={[
+          {
+            key: "no",
+            title: "No",
+            render: (value, data, index) => index + 1,
+          },
+          {
+            key: "name",
+            title: "Name",
+            dataIndex: "name",
+          },
+          {
+            key: "username",
+            title: "Username",
+            dataIndex: "username",
+          },
+          {
+            key: "role_name",
+            title: "Role Name",
+            dataIndex: "role_name",
+          },
+          {
+            key: "is_active",
+            title: "Status",
+            dataIndex: "is_active",
+            render: (value) =>
+              value ? (
+                <Tag color="green">Active</Tag>
+              ) : (
+                <Tag color="red">In Active</Tag>
+              ),
+          },
+          {
+            key: "create_by",
+            title: "Create By",
+            dataIndex: "create_by",
+          },
+          {
+            key: "action",
+            title: "Action",
+            align: "center",
+            render: (value, data) => (
+              <Space>
+                <Button onClick={() => clickBtnEdit(data)} type="primary">
+                  Edit
+                </Button>
+                <Button
+                  onClick={() => clickBtnDelete(data)}
+                  danger
+                  type="primary"
+                >
+                  Delete
+                </Button>
+              </Space>
+            ),
+          },
+        ]}
+      />
+    </div>
+  );
 }
 
-export default UserPage
+export default UserPage;

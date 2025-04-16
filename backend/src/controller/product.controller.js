@@ -108,25 +108,24 @@ exports.getlist = async (req, res) => {
 };
 exports.create = async (req, res) => {
     try {
-        var sql = "insert into products(category_id,barcode,productype_id,name,brand,description,qty,price,discount,status,image,create_by) " +
-            " values(:category_id,:barcode,:productype_id,:name,:brand,:description,:qty,:price,:discount,:status,:image,:create_by)";
+        var sql =
+            " INSERT INTO products (category_id, barcode,name,brand,description,qty,price,discount,status,image,create_by ) " +
+            " VALUES (:category_id, :barcode, :name, :brand, :description, :qty, :price, :discount, :status, :image, :create_by ) ";
+
         var [data] = await db.query(sql, {
             ...req.body,
             image: req.files?.upload_image[0]?.filename,
-            create_by: req.auth?.name
+            create_by: req.auth?.name,
         });
         if (req.files && req.files?.upload_image_optional) {
-            var paramImageProduct = [];
+            var paramImagePorduct = [];
             req.files?.upload_image_optional.map((item, index) => {
-                paramImageProduct.push([
-                    data?.insertId,
-                    item?.filename
-                ]);
+                paramImagePorduct.push([data?.insertId, item.filename]);
             });
-            var sqlImageProduct = "insert into product_images(product_id,image) values :data";
+            var sqlImageProduct =
+                "INSERT INTO product_image (product_id,image) VALUES :data";
             var [dataImage] = await db.query(sqlImageProduct, {
-                data: paramImageProduct,
-
+                data: paramImagePorduct,
             });
         }
         res.json({
@@ -136,36 +135,43 @@ exports.create = async (req, res) => {
         })
     }
     catch (error) {
-        logErr("product.create", error, res);
+        logErr("category.create", error, res);
     }
 };
 exports.update = async (req, res) => {
     try {
         var sql =
-            " UPDATE products SET " +
-            " category_id=:category_id," +
-            " barcode=:barcode," +
-            " name=:name," +
-            " brand=:brand," +
-            " description=:description," +
-            " qty=:qty," +
-            " price=:price," +
-            " discount=:discount," +
-            " status=:status," +
-            " image=:image" +
-            " WHERE id=:id";
+            " UPDATE products set " +
+            " category_id = :category_id, " +
+            " barcode = :barcode, " +
+            " name = :name, " +
+            " brand = :brand, " +
+            " description = :description, " +
+            " qty = :qty, " +
+            " price = :price, " +
+            " discount = :discount, " +
+            " status = :status, " +
+            " image = :image " +
+            " WHERE id = :id";
 
         var filename = req.body.image;
-        //new img
-        if (req.file) {
-            filename = req.file?.filename;
+        /// image new
+        if (req.files?.upload_image) {
+            filename = req.files?.upload_image[0]?.filename;
         }
-        //change img
-        if (req.body.image != "" && req.body.image != null && req.body.image != "null" && req.file) {
-            removeFile(req.body.image); //remove old img
+        // image change
+        if (
+            req.body.image != "" &&
+            req.body.image != null &&
+            req.body.image != "null" &&
+            req.files?.upload_image
+        ) {
+            removeFile(req.body.image); // remove old image
+            filename = req.files?.upload_image[0]?.filename;
         }
+        // image remove
         if (req.body.image_remove == "1") {
-            removeFile(req.body.image); //remove img
+            removeFile(req.body.image); // remove image
             filename = null;
         }
 
@@ -174,6 +180,35 @@ exports.update = async (req, res) => {
             image: filename,
             create_by: req.auth?.name
         });
+        // image opitonal
+        if (req.files && req.files?.upload_image_optional) {
+            var paramImagePorduct = [];
+            req.files?.upload_image_optional.map((item, index) => {
+                paramImagePorduct.push([req.body.id, item.filename]);
+            });
+            var sqlImageProduct =
+                "INSERT INTO product_image (product_id,image) VALUES :data";
+            var [dataImage] = await db.query(sqlImageProduct, {
+                data: paramImagePorduct,
+            });
+        }
+        //multiple image  ( case remove)
+        if (req.body.image_optional && req.body.image_optional.length > 0) {
+            // console.log(req.body.image_optional);
+            if (typeof req.body.image_optional == "string") {
+                req.body.image_optional = [req.body.image_optional];
+            }
+            req.body.image_optional?.map(async (item, index) => {
+                // remove database
+                let [data] = await db.query(
+                    "DELETE FROM product_image WHERE image = :image",
+                    { image: item }
+                );
+                // unlink from hard
+                removeFile(item); // remove image
+            });
+        }
+
         res.json({
             data: data,
             message: "success",
@@ -206,8 +241,8 @@ exports.remove = async (req, res) => {
 exports.newBarcode = async (req, res) => {
     try {
         var sql =
-            "select " +
-            "CONCAT('p',LPAD((select COALESCE(MAX(id),0) + 1 FROM products), 3, '0')) " +
+            "SELECT " +
+            "CONCAT('P',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM products), 3, '0')) " +
             "as barcode";
         var [data] = await db.query(sql);
         res.json({
@@ -222,16 +257,29 @@ exports.newBarcode = async (req, res) => {
 };
 exports.productImage = async (req, res) => {
     try {
-        var sql = "SELECT COUNT(id) as Total FROM products WHERE barcode =:product_id ";
+        var sql = "SELECT *  FROM product_image WHERE product_id=:product_id";
         var [list] = await db.query(sql, {
-            barcode: barcode
+            product_id: req.params.product_id,
         });
-        if (data.length > 0 && data[0].Total > 0) {
-            return true; //is double data
-        }
-        return false; //none double
+        res.json({
+            list,
+        });
     }
     catch (err) {
         logErr("remove.create", err, res);
+    }
+};
+isExistBarcode = async (barcode) => {
+    try {
+        var sql = "SELECT COUNT(id) as Total FROM products WHERE barcode=:barcode";
+        var [data] = await db.query(sql, {
+            barcode: barcode,
+        });
+        if (data.length > 0 && data[0].Total > 0) {
+            return true; // ស្ទួន
+        }
+        return false; // អត់ស្ទួនទេ
+    } catch (error) {
+        logError("remove.create", error, res);
     }
 };
