@@ -1,64 +1,67 @@
-const {db, logErr} = require("../util/helper");
+const { db, logErr, isArray, isEmpty } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
-        var [list] = await db.query("SELECT * FROM customers");
+        var txtSearch = req.query.txtSearch;
+        var sql = "SELECT * FROM customers ";
+        if (!isEmpty(txtSearch)) {
+            sql +=
+                " WHERE name LIKE :txtSearch OR phone LIKE :txtSearch OR email LIKE :txtSearch";
+        }
+        const [list] = await db.query(sql, {
+            txtSearch: "%" + txtSearch + "%",
+        });
         res.json({
-            data:list,
-            message:"success"
-        })
-        // var list = "customer list";
-        // res.json({
-        //     data:list,
-        //     message:"success"
-        // })
-    } 
+            list: list,
+            message: "success"
+        });
+        
+    }
     catch (error) {
-        logErr("customer.getlist",error,res);
+        logErr("customer.getlist", error, res);
     }
 };
 exports.create = async (req, res) => {
     try {
         var sql = "insert into customers(name,phone,email,address,description,create_by) values(:name,:phone,:email,:address,:description,:create_by)";
-        var [list] = await db.query(sql,req.body);
-        res.json({
-            data:list,
-            message:"success"
-        })
+        var [list] = await db.query(sql, 
+            {
+                ...req.body,
+                create_by: req.auth?.name
 
-        // var list = "customer create";
-        // res.json({
-        //     data:list,
-        //     message:"success"
-        // })
-    } 
+            });
+        res.json({
+            data: list,
+            message: "success"
+        })
+    }
     catch (error) {
-        logErr("customer.create",error,res);
+        logErr("customer.create", error, res);
     }
 };
 exports.update = async (req, res) => {
     try {
         var sql = "update customers set name=:name,phone=:phone,email=:email,address=:address,description=:description,create_by=:create_by where id=:id";
-        var [list] = await db.query(sql,req.body);
+        var [list] = await db.query(sql, {...req.body});
         res.json({
-            data:list,
-            message:"success"
+            data: list,
+            message: "success"
         })
-    } 
+    }
     catch (error) {
-        logErr("customer.update",error,res);
+        logErr("customer.update", error, res);
     }
 };
 exports.remove = async (req, res) => {
     try {
         var sql = "delete from customers where id=:id";
-        var [list] = await db.query(sql,req.body);
+        var [list] = await db.query(sql, {...req.body});
         res.json({
-            data:list,
-            message:"success"
+            data: list,
+            message: "success"
         })
-    } 
+    }
     catch (error) {
-        logErr("customer.remove",error,res);
+        logErr("customer.remove", error, res);
     }
 };

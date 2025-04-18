@@ -11,7 +11,6 @@ import {
   Select,
   Space,
 } from "antd";
-import { request } from "../../util/helper";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
 import ProductItem from "../../component/pos/ProductItem";
@@ -19,6 +18,8 @@ import BillItem from "../../component/pos/BillItem";
 import styles from "./PosPage.module.css";
 import { useReactToPrint } from "react-to-print";
 import PrintInvoice from "../../component/pos/PrintInvoice";
+import { request } from "../../util/helper";
+// import { request } from "../../util/helper";
 
 function PosPage() {
   const { config } = configStore();
@@ -150,7 +151,7 @@ function PosPage() {
     }
   };
 
-  const handleRemove = (item, index) => {
+  const handleRemove = (item) => {
     const new_list = state.cart_list.filter(
       (item1) => item1.barcode != item.barcode
     );
@@ -344,6 +345,21 @@ function PosPage() {
           <div>
             <Row gutter={[6, 6]} style={{ marginTop: 15 }}>
               <Col span={12}>
+                {/* <Select
+                  style={{ width: "100%" }}
+                  placeholder="Select Customer"
+                  options={(config?.customer || []).map(cust => ({
+                    label: cust.name, // or cust.fullName or cust.whatever is correct
+                    value: cust.id,   // or cust.customer_id depending on your data
+                  }))}
+                  onSelect={(value) => {
+                    setObjSummary((p) => ({
+                      ...p,
+                      customer_id: value,
+                    }));
+                  }}
+                /> */}
+
                 <Select
                   style={{ width: "100%" }}
                   placeholder="Select Customer"
@@ -374,8 +390,12 @@ function PosPage() {
                       value: "ABA",
                     },
                     {
-                      label: "AC",
-                      value: "AC",
+                      label: "Acleda",
+                      value: "Acleda",
+                    },
+                    {
+                      label: "Crypto",
+                      value: "Crypto",
                     },
                   ]}
                   onSelect={(value) => {

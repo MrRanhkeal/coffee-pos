@@ -1,14 +1,15 @@
-const {getlist,create,update,remove} = require("../controller/customer.controller");
+const { getlist, create, update, remove } = require("../controller/customer.controller");
+const { validate_token } = require("../middleware/jwt_token");
 const { logErr } = require("../util/logErr");
 
-try{
+try {
     module.exports = (app) => {
-        app.get("/api/customer/getlist",getlist);
-        app.post("/api/customer/create",create);
-        app.put("/api/customer/update",update);
-        app.delete("/api/customer/delete",remove);
+        app.get("/api/customer",validate_token(), getlist);
+        app.post("/api/customer", validate_token(), create);
+        app.put("/api/customer", validate_token(), update);
+        app.delete("/api/customer", validate_token(), remove);
     }
 }
-catch(err){
-    logErr("customer.route",err);
+catch (err) {
+    logErr("customer.route", err);
 }

@@ -3,9 +3,9 @@ import {Button, Form,Input,message,Modal,Select,Space,Table,Tag} from "antd";
 import { request } from "../../util/helper";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
-import { configStore } from "../../store/configStore";
+// import { configStore } from "../../store/configStore";
 function CategoryPage() {
-  const { config } = configStore();
+  // const { config } = configStore();
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ function CategoryPage() {
       setList(res.list);
     }
   };
-  const onClickEdit = (data, index) => {
+  const onClickEdit = (data) => {
     setState({
       ...state,
       visibleModal: true,
@@ -45,7 +45,7 @@ function CategoryPage() {
     //
     // formRef.getFieldValue("id")
   };
-  const onClickDelete = async (data, index) => {
+  const onClickDelete = async (data, ) => {
     Modal.confirm({
       title: "លុ​ប",
       descriptoin: "Are you sure to remove?",

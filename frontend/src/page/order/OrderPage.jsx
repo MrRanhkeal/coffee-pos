@@ -7,13 +7,11 @@ import {
   Input,
   message,
   Modal,
-  Select,
   Space,
   Table,
   Tag,
 } from "antd";
 import { formatDateClient, formatDateServer, request } from "../../util/helper";
-import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { IoMdEye } from "react-icons/io";
 import { Config } from "../../util/config";
@@ -180,6 +178,9 @@ function OrderPage() {
         footer={null}
         onCancel={onCloseModal}
         width={800}
+        //check this
+        onFinish={onFinish}
+        onClickDelete={onClickDelete}
       >
         <Table
           dataSource={orderDetail}

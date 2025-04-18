@@ -263,6 +263,7 @@ exports.productImage = async (req, res) => {
         });
         res.json({
             list,
+            message: "success", 
         });
     }
     catch (err) {

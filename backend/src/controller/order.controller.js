@@ -1,68 +1,181 @@
-const {db, logErr } = require("../util/helper");
+const { db, logErr, isArray, isEmpty } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
-        var [list] = await db.query("SELECT * FROM orders");
+        var txtSearch = req.query.txtSearch;
+        var from_date = req.query.from_date;
+        var to_date = req.query.to_date;
+        var sqlSelect =
+            "SELECT " +
+            " o.* , c.name customer_name, c.phone customer_phone, c.address customer_address ";
+        var sqlJoin =
+            " FROM orders o  LEFT JOIN customers c ON o.customer_id = c.id";
+
+        var sqlWhere = " Where true ";
+
+        if (!isEmpty(txtSearch)) {
+            sqlWhere += " AND order_no LIKE :txtSearch ";
+        }
+        // 2024-11-27 :from_date AND :to_date
+        if (!isEmpty(from_date) && !isEmpty(to_date)) {
+            // sqlWhere +=
+            //   " AND DATE_FORMAT(o.create_at,'%Y-%m-%d')  >=  '2024-11-27' " +
+            //   " AND  DATE_FORMAT(o.create_at,'%Y-%m-%d') <= '2024-11-27' ";
+            sqlWhere +=
+                " AND DATE_FORMAT(o.create_at,'%Y-%m-%d')  BETWEEN  :from_date AND :to_date ";
+        }
+        var sqlOrder = " ORDER BY o.id DESC ";
+
+        var sqlParam = {
+            txtSearch: "%" + txtSearch + "%",
+            from_date: from_date,
+            to_date: to_date,
+        };
+        var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlOrder;
+
+        var sqlSummary =
+            " SELECT COUNT(o.id) total_order, SUM(o.total_amount) total_amount  " +
+            sqlJoin +
+            sqlWhere;
+        const [list] = await db.query(sqlList, sqlParam);
+        const [summary] = await db.query(sqlSummary, sqlParam);
         res.json({
-            data:list,
-            message:"success"
+            data: list,
+            summary: summary[0],
+            message: "success"
         })
-    } 
+    }
     catch (error) {
-        logErr("order.getlist",error,res);
+        logErr("order.getlist", error, res);
     }
 };
+exports.getone = async (req, res) => {
+    try {
+        // var sql =
+        //     " select  " +
+        //     "   od.*, " +
+        //     "   p.name p_name, " +
+        //     "   p.brand p_brand, " +
+        //     "   p.description p_des, " +
+        //     "   p.image p_image, " +
+        //     "   c.name p_category_name " +
+        //     " from order_detail od  " +
+        //     " inner join products p on od.proudct_id = p.id " +
+        //     " inner join category c on p.category_id = c.id " +
+        //     " where od.order_id = :id ";
+
+        var sql =
+        " select  " +
+        "   oi.*, " +
+        "   p.name p_name, " +
+        "   p.brand p_brand, " +
+        "   p.description p_des, " +
+        "   p.image p_image, " +
+        "   c.name p_category_name " +
+        " from order_items oi  " +
+        " inner join products p on oi.proudct_id = p.id " +
+        " inner join category c on p.category_id = c.id " +
+        " where oi.order_id = :id ";
+        const [list] = await db.query(sql, { id: req.params.id });
+        res.json({
+            data: list,
+            id: req.params.id,
+            message: "success"
+        })
+    }
+    catch (error) {
+        logErr("order.getone", error, res);
+    }
+}
 exports.create = async (req, res) => {
     try {
-        var sql = "insert into orders(order_no,customer_id,user_id,paid_amount,payment_method,remark,create_by) values(order_no,customer_id,user_id,paid_amount,payment_method,remark,create_by)";
-        var [list] = await db.query(sql,req.body);
+        var { order, order_item = [] } = req.body;
+        // validate data
+        order = {
+            ...order,
+            order_no: await newOrderNo(), // gener order_no
+            user_id: req.auth?.id, // currect access
+            create_by: req.auth?.name, // currect access
+        };
+        var sqlOrder =
+            "INSERT INTO `orders` (order_no,customer_id,total_amount,paid_amount,payment_method,remark,user_id,create_by) VALUES (:order_no,:customer_id,:total_amount,:paid_amount,:payment_method,:remark,:user_id,:create_by) ";
+        var [data] = await db.query(sqlOrder, order);
+        //order_details
+        order_item.map(async (item, index) => {
+            // order product
+            var sqlOrderDetails =
+                "INSERT INTO order_items (order_id,proudct_id,qty,price,discount,total) VALUES (:order_id,:proudct_id,:qty,:price,:discount,:total) ";
+            var [dataOrderProduct] = await db.query(sqlOrderDetails, {
+                ...item,
+                order_id: data.insertId, // overrid key order_id
+            });
+
+            // re stock
+            var sqlReStock =
+                "UPDATE product SET qty = (qty-:order_qty) WHERE id = :proudct_id ";
+            var [dataRestock] = await db.query(sqlReStock, {
+                order_qty: item.qty,
+                proudct_id: item.proudct_id,
+            });
+        });
+        const [currentOrder] = await db.query(
+            "select * from `orders` where id=:id",
+            {
+                id: data.insertId,
+            }
+        );
         res.json({
-            data:list,
-            message:"success"
+            order: currentOrder.length > 0 ? currentOrder[0] : null,
+            order_item: order_item,
+            message: "success"
         })
-    } 
+    }
     catch (error) {
-        logErr("order.create",error,res);
+        logErr("order.create", error, res);
     }
 };
 //newOrderNo
-// const newOrderNo = async (req, res) => {
-//     try {
-//         var sql =
-//             "SELECT " +
-//             "CONCAT('INV',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM `order`), 3, '0')) " +
-//             "as order_no";
-//         var [data] = await db.query(sql);
-//         return data[0].order_no;
-//     } 
-//     catch (error) {
-//         logErr("newOrderNo.create", error, res);
-//     }
-// };
+const newOrderNo = async (req, res) => {
+    try {
+        var sql =
+            "SELECT " +
+            "CONCAT('INV',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM `orders`), 3, '0')) " +
+            "as order_no";
+        var [data] = await db.query(sql);
+        return data[0].order_no;
+    }
+    catch (error) {
+        logErr("newOrderNo.create", error, res);
+    }
+};
 
 exports.update = async (req, res) => {
     try {
-        var sql = "update orders set order_no=:order_no,customer_id=:customer_id,user_id=:user_id,paid_amount=:paid_amount,payment_method=:payment_method,remark=:remark,create_by=:create_by where id=:id";
-        var [list] = await db.query(sql,req.body);
+        var sql =
+            "UPDATE  orders set name=:name, code=:code, phone=:phone, email=:email, address=:address, website=:website, note=:note WHERE id=:id ";
+        var [list] = await db.query(sql, {
+            ...req.body,
+        });
         res.json({
-            data:list,
-            message:"success"
+            data: list,
+            message: "success"
         })
-    } 
+    }
     catch (error) {
-        logErr("order.update",error,res);
+        logErr("order.update", error, res);
     }
 };
 exports.remove = async (req, res) => {
     try {
-        var sql = "delete from orders where id=:id";
-        var [list] = await db.query(sql,req.body);
+        var [list] = await db.query("DELETE FROM orders WHERE id = :id", {
+            ...req.body,
+        });
         res.json({
-            data:list,
-            message:"success"
+            data: list,
+            message: "success"
         })
-    } 
+    }
     catch (error) {
-        logErr("order.remove",error,res);
+        logErr("order.remove", error, res);
     }
 };

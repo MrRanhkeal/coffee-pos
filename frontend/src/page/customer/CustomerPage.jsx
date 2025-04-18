@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Select,
-  Space,
-  Table,
-  Tag,
-} from "antd";
-import { request } from "../../util/helper";
+import { Button, Form, Input, message, Modal, Select, Space, Table, Tag } from "antd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
+import { request } from "../../util/helper";
 function CustomerPage() {
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
@@ -50,6 +40,9 @@ function CustomerPage() {
     formRef.setFieldsValue({
       id: data.id, // hiden id (save? | update?)
       name: data.name,
+      phone: data.phone,
+      email: data.email,
+      address: data.address,
       description: data.description,
       status: data.status,
     });
@@ -58,9 +51,9 @@ function CustomerPage() {
   };
   const onClickDelete = async (data) => {
     Modal.confirm({
-      title: "លុ​ប",
+      title: "Delete",
       descriptoin: "Are you sure to remove?",
-      okText: "យល់ព្រម",
+      okText: "Yes",
       onOk: async () => {
         const res = await request("customer", "delete", {
           id: data.id,
@@ -94,6 +87,9 @@ function CustomerPage() {
     var data = {
       id: formRef.getFieldValue("id"),
       name: items.name,
+      phone: items.phone,
+      email: items.email,
+      address: items.address,
       description: items.description,
       status: items.status,
       parent_id: 0,
@@ -114,7 +110,7 @@ function CustomerPage() {
     <MainPage loading={loading}>
       <div className="pageHeader">
         <Space>
-          <div>Customer</div>
+          <div>Customer List </div>
           <Input.Search
             onChange={(value) =>
               setState((p) => ({ ...p, txtSearch: value.target.value }))
@@ -138,8 +134,17 @@ function CustomerPage() {
         onCancel={onCloseModal}
       >
         <Form layout="vertical" onFinish={onFinish} form={formRef}>
-          <Form.Item name={"name"} label="Customer name">
+          <Form.Item name={"name"} label="Customer name" >
             <Input placeholder="Input Customer name" />
+          </Form.Item>
+          <Form.Item name={"phone"} label="Customer phone">
+            <Input placeholder="Input Customer phone" name="phone" />
+          </Form.Item>
+          <Form.Item name={"email"} label="Customer email">
+            <Input placeholder="Input Customer email" name="email" />
+          </Form.Item>
+          <Form.Item name={"address"} label="Customer address">
+            <Input placeholder="Input Customer address" name="address" />
           </Form.Item>
           <Form.Item name={"description"} label="description">
             <Input.TextArea placeholder="description" />
@@ -161,7 +166,7 @@ function CustomerPage() {
           </Form.Item>
 
           <Space>
-            <Button>Cancel</Button>
+            <Button type="default" onClick={onCloseModal}>Cancel</Button>
             <Button type="primary" htmlType="submit">
               {formRef.getFieldValue("id") ? "Update" : "Save"}
             </Button>
@@ -182,9 +187,9 @@ function CustomerPage() {
             dataIndex: "name",
           },
           {
-            key: "tel",
-            title: "tel",
-            dataIndex: "tel",
+            key: "phone",
+            title: "phone",
+            dataIndex: "phone",
           },
           {
             key: "email",
@@ -197,9 +202,15 @@ function CustomerPage() {
             dataIndex: "address",
           },
           {
-            key: "type",
-            title: "type",
-            dataIndex: "type",
+            key: "status",
+            title: "status",
+            dataIndex: "status",
+            render: (status) =>
+              status == 1 ? (
+                <Tag color="green">Active</Tag>
+              ) : (
+                <Tag color="red">InActive</Tag>
+              ),
           },
           {
             key: "Action",

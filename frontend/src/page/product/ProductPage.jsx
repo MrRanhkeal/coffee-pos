@@ -19,7 +19,6 @@ import { request } from "../../util/helper";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
-// import { configStore } from "../../store/configStore";
 
 //please check this
 const getBase64 = (file) =>

@@ -39,6 +39,14 @@ exports.getlist = async (req, res) => {
             { label: "fresh-fruit", value: "fresh-fruit", country: "kh" },
         ];
 
+        // const [customer] = await db.query(
+        //     "select id as value, concat(name,'-',phone) as label, name, phone, email from customers"
+        // );
+
+        const [customer] = await db.query(
+            "select id as value, concat(name) as label, name from customers"
+        );
+
 
         res.json({
             category,
@@ -47,7 +55,7 @@ exports.getlist = async (req, res) => {
             brand,
             product_type,
             purchase_status,
-            message: "success"
+            customer,
         })
     }
     catch (error) {

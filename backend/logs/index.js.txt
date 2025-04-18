@@ -1,0 +1,21 @@
+ReferenceError: va is not defined + 2025-04-16 23:12:16 
+ReferenceError: vali is not defined + 2025-04-16 23:12:18 
+ReferenceError: valida is not defined + 2025-04-16 23:12:22 
+ReferenceError: va is not defined + 2025-04-16 23:13:05 
+ReferenceError: vali is not defined + 2025-04-16 23:13:07 
+ReferenceError: va is not defined + 2025-04-16 23:13:44 
+SyntaxError: Missing catch or finally after try + 2025-04-16 23:32:57 
+SyntaxError: Unexpected token '.' + 2025-04-16 23:37:36 
+SyntaxError: Unexpected token '.' + 2025-04-16 23:37:41 
+SyntaxError: Unexpected token '.' + 2025-04-16 23:37:45 
+SyntaxError: Unexpected token '.' + 2025-04-16 23:37:48 
+SyntaxError: Unexpected token '}' + 2025-04-16 23:38:15 
+SyntaxError: Unexpected token ',' + 2025-04-16 23:43:11 
+ReferenceError: bs is not defined + 2025-04-17 13:01:35 
+ReferenceError: vs is not defined + 2025-04-17 13:01:37 
+SyntaxError: Unexpected token 'var' + 2025-04-17 13:01:39 
+SyntaxError: Missing initializer in const declaration + 2025-04-18 13:29:25 
+SyntaxError: Missing initializer in const declaration + 2025-04-18 13:29:28 
+SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 13:29:30 
+SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 13:29:33 
+SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 13:29:34 
