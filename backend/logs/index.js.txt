@@ -19,3 +19,41 @@ SyntaxError: Missing initializer in const declaration + 2025-04-18 13:29:28
 SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 13:29:30 
 SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 13:29:33 
 SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 13:29:34 
+TypeError: require(...) is not a function + 2025-04-18 20:56:10 
+TypeError: require(...) is not a function + 2025-04-18 20:56:13 
+TypeError: require(...) is not a function + 2025-04-18 20:56:15 
+ReferenceError: ex is not defined + 2025-04-18 20:56:20 
+TypeError: require(...) is not a function + 2025-04-18 20:56:23 
+ReferenceError: m is not defined + 2025-04-18 20:56:33 
+ReferenceError: mo is not defined + 2025-04-18 20:56:34 
+SyntaxError: Unexpected end of input + 2025-04-18 20:56:39 
+ReferenceError: tr is not defined + 2025-04-18 20:56:47 
+ReferenceError: tr is not defined + 2025-04-18 20:56:55 
+SyntaxError: Unexpected token '}' + 2025-04-18 20:56:56 
+SyntaxError: Missing catch or finally after try + 2025-04-18 20:56:59 
+SyntaxError: Unexpected token '}' + 2025-04-18 20:57:03 
+SyntaxError: Unexpected token ')' + 2025-04-18 20:57:10 
+SyntaxError: Missing initializer in destructuring declaration + 2025-04-18 20:57:56 
+ReferenceError: r is not defined + 2025-04-18 20:57:59 
+TypeError [ERR_INVALID_ARG_VALUE]: The argument 'id' must be a non-empty string. Received '' + 2025-04-18 20:58:04 
+Error: Cannot find module '..'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\order.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-18 20:58:07 
+Error: Cannot find module '../'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\order.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-18 20:58:09 
+Error: Cannot find module '../controller'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\order.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-18 20:58:18 
+Error: Cannot find module '../controller/'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\order.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-18 20:58:20 
+Error: Cannot find module '../controller/order'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\order.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-18 20:58:30 
+SyntaxError: Unexpected token ',' + 2025-04-18 20:59:33 

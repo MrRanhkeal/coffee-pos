@@ -3,7 +3,7 @@ import React from "react";
 function RegisterPage() {
   return (
     <div>
-      <h1>RegisterPage</h1>
+      <h1>Please Cantact Admin...!</h1>
     </div>
   );
 }
