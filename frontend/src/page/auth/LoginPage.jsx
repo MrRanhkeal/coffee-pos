@@ -73,7 +73,6 @@ function LoginPage() {
         <div className="register-link">
           Dont have an account? <a href="/register">Register</a>
         </div>
-        
       </div>
     </div>
   );

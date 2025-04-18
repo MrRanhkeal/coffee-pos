@@ -12,7 +12,7 @@ const Receipt = React.forwardRef((props, ref) => (
       fontSize: "12px",
     }}
   >
-    <h2 style={{ textAlign: "center" }}>NIT COMPUTER</h2>
+    <h2 style={{ textAlign: "center" }}>Coffee Shop</h2>
     <div>INV001 | {new Date().toLocaleString()}</div>
     <div>
       Customer: <b>General</b>

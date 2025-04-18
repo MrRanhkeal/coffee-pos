@@ -57,3 +57,50 @@ Require stack:
 - E:\IT_Class\Project\coffee-pos\backend\src\route\order.route.js
 - E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-18 20:58:30 
 SyntaxError: Unexpected token ',' + 2025-04-18 20:59:33 
+Error: Cannot find module '../controller/order_items.controller'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\order_items.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-19 00:46:56 
+TypeError: require(...) is not a function + 2025-04-19 00:50:12 
+TypeError: require(...) is not a function + 2025-04-19 00:50:20 
+ReferenceError: m is not defined + 2025-04-19 00:50:25 
+SyntaxError: Unexpected end of input + 2025-04-19 00:50:30 
+ReferenceError: validate_token is not defined + 2025-04-19 00:50:32 
+SyntaxError: Unexpected token '}' + 2025-04-19 00:50:39 
+SyntaxError: Missing catch or finally after try + 2025-04-19 00:50:40 
+SyntaxError: Missing catch or finally after try + 2025-04-19 00:50:49 
+SyntaxError: Unexpected end of input + 2025-04-19 00:50:53 
+SyntaxError: Identifier 'module' has already been declared + 2025-04-19 00:52:34 
+SyntaxError: Identifier 'module' has already been declared + 2025-04-19 00:52:37 
+ReferenceError: req is not defined + 2025-04-19 00:52:41 
+TypeError [ERR_INVALID_ARG_TYPE]: The "id" argument must be of type string. Received undefined + 2025-04-19 00:52:45 
+Error: Cannot find module '../controller/'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\dashboard.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-19 00:52:49 
+Error: Cannot find module '../controller/da'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\dashboard.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-04-19 00:52:52 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:15 
+ReferenceError: c is not defined + 2025-04-19 00:53:18 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:34 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:36 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:38 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:39 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:40 
+SyntaxError: Missing catch or finally after try + 2025-04-19 00:53:42 
+SyntaxError: Missing catch or finally after try + 2025-04-19 00:53:46 
+SyntaxError: Unexpected token ')' + 2025-04-19 00:53:50 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:53 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:54 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:57 
+SyntaxError: Unexpected end of input + 2025-04-19 00:53:58 
+ReferenceError: co is not defined + 2025-04-19 01:31:50 
+SyntaxError: Identifier 'exports' has already been declared + 2025-04-19 01:31:51 
+SyntaxError: Identifier 'exports' has already been declared + 2025-04-19 01:31:53 
+ReferenceError: r is not defined + 2025-04-19 01:31:57 
+TypeError [ERR_INVALID_ARG_VALUE]: The argument 'id' must be a non-empty string. Received '' + 2025-04-19 01:32:02 
+SyntaxError: Unexpected token '.' + 2025-04-19 01:36:42 
+SyntaxError: Unexpected identifier 'message' + 2025-04-19 01:38:02 
+SyntaxError: Unexpected identifier 'message' + 2025-04-19 01:38:03 

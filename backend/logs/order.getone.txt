@@ -1,0 +1,2 @@
+Error: Unknown column 'oi.proudct_id' in 'on clause' + 2025-04-19 01:39:31 
+Error: Unknown column 'oi.proudct_id' in 'on clause' + 2025-04-19 01:53:44 

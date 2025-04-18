@@ -1,7 +1,7 @@
 import { Col, Flex, Row } from "antd";
 import React from "react";
 import { formatDateClient } from "../../util/helper";
-import logo from "../../assets/INT_LOGO.png";
+import logo from "../../assets/coffee-shop.jpg";
 
 const PrintInvoice = React.forwardRef((props, ref) => {
   const findTotalItem = (item) => {
@@ -34,8 +34,8 @@ const PrintInvoice = React.forwardRef((props, ref) => {
           }}
         />
         <div>
-          <div style={{ fontWeight: "bold" }}>NIT COMPUTER SHOP</div>
-          <div style={{ fontSize: 9 }}>By : Admin NIT</div>
+          <div style={{ fontWeight: "bold" }}>Coffee Shop</div>
+          <div style={{ fontSize: 9 }}>V-Freind</div>
         </div>
       </Flex>
       <hr />

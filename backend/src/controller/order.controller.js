@@ -2,49 +2,49 @@ const { db, logErr, isArray, isEmpty } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
-        // var txtSearch = req.query.txtSearch;
-        // var from_date = req.query.from_date;
-        // var to_date = req.query.to_date;
-        // var sqlSelect =
-        //     "SELECT " +
-        //     " o.* , c.name customer_name, c.phone customer_phone, c.address customer_address ";
-        // var sqlJoin =
-        //     " FROM orders o  LEFT JOIN customers c ON o.customer_id = c.id";
+        var txtSearch = req.query.txtSearch;
+        var from_date = req.query.from_date;
+        var to_date = req.query.to_date;
+        var sqlSelect =
+            "SELECT " +
+            " o.* , c.name customer_name, c.phone customer_phone, c.address customer_address ";
+        var sqlJoin =
+            " FROM orders o  LEFT JOIN customers c ON o.customer_id = c.id";
 
-        // var sqlWhere = " Where true ";
+        var sqlWhere = " Where true ";
 
-        // if (!isEmpty(txtSearch)) {
-        //     sqlWhere += " AND order_no LIKE :txtSearch ";
-        // }
-        // // 2024-11-27 :from_date AND :to_date
-        // if (!isEmpty(from_date) && !isEmpty(to_date)) {
-        //     // sqlWhere +=
-        //     //   " AND DATE_FORMAT(o.create_at,'%Y-%m-%d')  >=  '2024-11-27' " +
-        //     //   " AND  DATE_FORMAT(o.create_at,'%Y-%m-%d') <= '2024-11-27' ";
-        //     sqlWhere +=
-        //         " AND DATE_FORMAT(o.create_at,'%Y-%m-%d')  BETWEEN  :from_date AND :to_date ";
-        // }
-        // var sqlOrder = " ORDER BY o.id DESC ";
+        if (!isEmpty(txtSearch)) {
+            sqlWhere += " AND order_no LIKE :txtSearch ";
+        }
+        // 2024-11-27 :from_date AND :to_date
+        if (!isEmpty(from_date) && !isEmpty(to_date)) {
+            // sqlWhere +=
+            //   " AND DATE_FORMAT(o.create_at,'%Y-%m-%d')  >=  '2024-11-27' " +
+            //   " AND  DATE_FORMAT(o.create_at,'%Y-%m-%d') <= '2024-11-27' ";
+            sqlWhere +=
+                " AND DATE_FORMAT(o.create_at,'%Y-%m-%d')  BETWEEN  :from_date AND :to_date ";
+        }
+        var sqlOrder = " ORDER BY o.id DESC ";
 
-        // var sqlParam = {
-        //     txtSearch: "%" + txtSearch + "%",
-        //     from_date: from_date,
-        //     to_date: to_date,
-        // };
-        // var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlOrder;
+        var sqlParam = {
+            txtSearch: "%" + txtSearch + "%",
+            from_date: from_date,
+            to_date: to_date,
+        };
+        var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlOrder;
 
-        // var sqlSummary =
-        //     " SELECT COUNT(o.id) total_order, SUM(o.total_amount) total_amount  " +
-        //     sqlJoin +
-        //     sqlWhere;
-        // const [list] = await db.query(sqlList, sqlParam);
-        // const [summary] = await db.query(sqlSummary, sqlParam);
+        var sqlSummary =
+            " SELECT COUNT(o.id) total_order, SUM(o.total_amount) total_amount  " +
+            sqlJoin +
+            sqlWhere;
+        const [list] = await db.query(sqlList, sqlParam);
+        const [summary] = await db.query(sqlSummary, sqlParam);
 
-        var list = "select * from orders";
+        //var list = "select * from orders";
             
         res.json({
             list: list,
-            //summary: summary[0],
+            summary: summary[0],
             message: "success"
         })
     }
