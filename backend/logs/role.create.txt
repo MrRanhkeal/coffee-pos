@@ -1,0 +1,1 @@
+Error: Unknown column 'status' in 'field list' + 2025-04-20 16:37:31 

@@ -104,3 +104,8 @@ TypeError [ERR_INVALID_ARG_VALUE]: The argument 'id' must be a non-empty string.
 SyntaxError: Unexpected token '.' + 2025-04-19 01:36:42 
 SyntaxError: Unexpected identifier 'message' + 2025-04-19 01:38:02 
 SyntaxError: Unexpected identifier 'message' + 2025-04-19 01:38:03 
+ReferenceError: varidate_token is not defined + 2025-04-20 16:30:32 
+ReferenceError: varidate_token is not defined + 2025-04-20 16:31:15 
+ReferenceError: varidate_token is not defined + 2025-04-20 16:33:00 
+ReferenceError: varidate_token is not defined + 2025-04-20 16:33:02 
+ReferenceError: varidate_token is not defined + 2025-04-20 16:33:27 

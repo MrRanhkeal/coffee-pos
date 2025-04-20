@@ -127,3 +127,5 @@
 
     -- add column syntax
     alter table suppliers add column code varchar(12);
+    -- rename table syntax
+    alter table order_items rename order_detail;
