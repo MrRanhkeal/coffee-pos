@@ -199,7 +199,7 @@ function PosPage() {
         total = total - (total * Number(item.discount)) / 100;
       }
       var objItem = {
-        proudct_id: item.id,
+        product_id: item.id,
         qty: Number(item.cart_qty),
         price: Number(item.price),
         discount: Number(item.discount),
@@ -327,19 +327,19 @@ function PosPage() {
           <div>
             <div className={styles.rowSummary}>
               <div>Total Qty </div>
-              <div>{objSummary.total_qty}PCS</div>
+              <div>{objSummary.total_qty}&nbsp;&nbsp;Item</div>
             </div>
             <div className={styles.rowSummary}>
               <div>Sub total </div>
-              <div>{objSummary.sub_total}$</div>
+              <div>{objSummary.sub_total}&nbsp;$</div>
             </div>
             <div className={styles.rowSummary}>
               <div>Save($) </div>
-              <div>{objSummary.save_discount}$</div>
+              <div>{objSummary.save_discount}&nbsp;$</div>
             </div>
             <div className={styles.rowSummary}>
               <div style={{ fontWeight: "bold" }}>Total </div>
-              <div style={{ fontWeight: "bold" }}>{objSummary.total}$</div>
+              <div style={{ fontWeight: "bold" }}>{objSummary.total}&nbsp;$</div>
             </div>
           </div>
           <div>

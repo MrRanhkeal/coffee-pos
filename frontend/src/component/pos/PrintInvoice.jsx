@@ -41,7 +41,7 @@ const PrintInvoice = React.forwardRef((props, ref) => {
       <hr />
 
       <div style={{ marginBottom: 15, marginTop: 5 }}>
-        {props.objSummary?.order_no} |{" "}
+        {props.objSummary?.order_no}|{" "}
         {formatDateClient(props.objSummary?.order_date, "DD/MM/YYYY h:mm ss A")}
       </div>
       <table className="pos_tbl_invoice">
@@ -69,7 +69,7 @@ const PrintInvoice = React.forwardRef((props, ref) => {
       <div>
         <div className={"row_between_invoice"}>
           <div>Total Qty </div>
-          <div>{props?.objSummary.total_qty}PCS</div>
+          <div>{props?.objSummary.total_qty}Items</div>
         </div>
         <div className={"row_between_invoice"}>
           <div>Sub total </div>

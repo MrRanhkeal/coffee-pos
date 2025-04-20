@@ -10,7 +10,7 @@ exports.report_sale_summary = async (req, res) => {
             "  DATE_FORMAT(o.create_at,'%d/%m/%Y') title, " +
             "  sum(od.total_qty) total_qty, " +
             "    sum(od.total_amount)  total_amount " +
-            " from c o " +
+            " from orders o " +
             " inner join  " +
             " ( " +
             "    select  " +
@@ -18,7 +18,7 @@ exports.report_sale_summary = async (req, res) => {
             "      sum(od1.qty) total_qty, " +
             "      sum(od1.total) total_amount " +
             "    from order_detail od1 " +
-            "    inner join product p on od1.product_id = p.id " +
+            "    inner join products p on od1.product_id = p.id " +
             "    where (:category_id IS NULL OR p.category_id = :category_id )  " +
             "    and (:brand_id IS NULL OR p.brand = :brand_id) " +
             "    group by od1.order_id " +
@@ -32,6 +32,11 @@ exports.report_sale_summary = async (req, res) => {
             category_id,
             brand_id,
         });
+        res.json({
+            data: list,
+            message: "success",
+            error: false
+        })
     }
     catch (error) {
         logErr(error, "report.controller.js", "report_sale_summary");

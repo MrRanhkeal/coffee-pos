@@ -41,7 +41,7 @@ exports.getlist = async (req, res) => {
         const [summary] = await db.query(sqlSummary, sqlParam);
 
         //var list = "select * from orders";
-            
+
         res.json({
             list: list,
             summary: summary[0],
@@ -54,45 +54,30 @@ exports.getlist = async (req, res) => {
 };
 exports.getone = async (req, res) => {
     try {
-        // var sql =
-        //     " select  " +
-        //     "   od.*, " +
-        //     "   p.name p_name, " +
-        //     "   p.brand p_brand, " +
-        //     "   p.description p_des, " +
-        //     "   p.image p_image, " +
-        //     "   c.name p_category_name " +
-        //     " from order_detail od  " +
-        //     " inner join products p on od.proudct_id = p.id " +
-        //     " inner join category c on p.category_id = c.id " +
-        //     " where od.order_id = :id ";
-
         var sql =
-        " select  " +
-        "   oi.*, " +
-        "   p.name p_name, " +
-        "   p.brand p_brand, " +
-        "   p.description p_des, " +
-        "   p.image p_image, " +
-        "   c.name p_category_name " +
-        " from order_items oi  " +
-        " inner join products p on oi.proudct_id = p.id " +
-        " inner join category c on p.category_id = c.id " +
-        " where oi.order_id = :id ";
+            " select  " +
+            "   od.*, " +
+            "   p.name p_name, " +
+            "   p.brand p_brand, " +
+            "   p.description p_des, " +
+            "   p.image p_image, " +
+            "   c.name p_category_name " +
+            " from order_detail od  " +
+            " inner join products p on od.product_id = p.id " +
+            " inner join category c on p.category_id = c.id " +
+            " where od.order_id = :id ";
         const [list] = await db.query(sql, { id: req.params.id });
         res.json({
-            data: list,
+            list: list,
             id: req.params.id,
-            message: "success"
-        })
-    }
-    catch (error) {
+        });
+    } catch (error) {
         logErr("order.getone", error, res);
     }
-}
+};
 exports.create = async (req, res) => {
     try {
-        var { order, order_item = [] } = req.body;
+        var { order, order_details = [] } = req.body;
         // validate data
         order = {
             ...order,
@@ -103,42 +88,44 @@ exports.create = async (req, res) => {
         var sqlOrder =
             "INSERT INTO orders (order_no,customer_id,total_amount,paid_amount,payment_method,remark,user_id,create_by) VALUES (:order_no,:customer_id,:total_amount,:paid_amount,:payment_method,:remark,:user_id,:create_by) ";
         var [data] = await db.query(sqlOrder, order);
-        //order_details
-        order_item.map(async (item, index) => {
+
+        // Use Promise.all to wait for all order details to be inserted
+        await Promise.all(order_details.map(async (item) => {
             // order product
             var sqlOrderDetails =
-                "INSERT INTO order_items (order_id,proudct_id,qty,price,discount,total) VALUES (:order_id,:proudct_id,:qty,:price,:discount,:total) ";
-            var [dataOrderProduct] = await db.query(sqlOrderDetails, {
+                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total) VALUES (:order_id,:product_id,:qty,:price,:discount,:total) ";
+            await db.query(sqlOrderDetails, {
                 ...item,
-                order_id: data.insertId, // overrid key order_id
+                order_id: data.insertId, // override key order_id
             });
 
             // re stock
             var sqlReStock =
-                "UPDATE product SET qty = (qty-:order_qty) WHERE id = :proudct_id ";
-            var [dataRestock] = await db.query(sqlReStock, {
+                "UPDATE products SET qty = (qty-:order_qty) WHERE id = :product_id ";
+            await db.query(sqlReStock, {
                 order_qty: item.qty,
-                proudct_id: item.proudct_id,
+                product_id: item.product_id,
             });
-        });
+        }));
+
         const [currentOrder] = await db.query(
             "select * from orders where id=:id",
             {
                 id: data.insertId,
             }
         );
+
         res.json({
             order: currentOrder.length > 0 ? currentOrder[0] : null,
-            order_item: order_item,
-            message: "success"
-        })
-    }
-    catch (error) {
+            order_details: order_details,
+            message: "Insert success!",
+        });
+    } catch (error) {
         logErr("order.create", error, res);
     }
 };
 //newOrderNo
-const newOrderNo = async (req, res) => {
+const newOrderNo = async () => {
     try {
         var sql =
             "SELECT " +
@@ -154,15 +141,16 @@ const newOrderNo = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
+        var sql = "update orders set order_no=:order_no, customer_id=:customer_id, total_amount=:total_amount, paid_amount=:paid_amount, payment_method=:payment_method, remark=:remark, user_id=:user_id, create_by=:create_by where id=:id";
         // var sql =
-        //     "UPDATE  orders set name=:name, code=:code, phone=:phone, email=:email, address=:address, website=:website, note=:note WHERE id=:id ";
-        // var [list] = await db.query(sql, {
-        //     ...req.body,
-        // });
+        // "UPDATE  order set name=:name, code=:code, tel=:tel, email=:email, address=:address, website=:website, note=:note WHERE id=:id ";
+        var [data] = await db.query(sql, {
+            ...req.body,
+        });
         res.json({
-            data: list,
-            message: "success"
-        })
+            data: data,
+            message: "Update success!",
+        });
     }
     catch (error) {
         logErr("order.update", error, res);
