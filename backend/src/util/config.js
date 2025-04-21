@@ -8,7 +8,7 @@ module.exports = {
             HOST: 'localhost',
             USER: 'root',
             PASSWORD: '',
-            DATABASE: 'coffeeDb',
+            DATABASE: 'mydb',
             PORT: 3307
         },
         token: {

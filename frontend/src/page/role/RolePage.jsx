@@ -55,7 +55,7 @@ function RolePage() {
   const onFinish = async (item) => {
     var data = {
       id: form.getFieldValue("id"),
-      code: item.code,
+      permissions: item.permissions,
       name: item.name,
     };
     var method = "post";
@@ -114,8 +114,8 @@ function RolePage() {
           <Form.Item name="name" label="Role Name">
             <Input placeholder="Role Name" />
           </Form.Item>
-          <Form.Item name="code" label="Role Code">
-            <Input placeholder="Role Code" />
+          <Form.Item name="permissions" label="Role permissions">
+            <Input placeholder="Role permissions" />
           </Form.Item>
           <Form.Item>
             <Space>
@@ -142,9 +142,9 @@ function RolePage() {
             dataIndex: "name",
           },
           {
-            key: "code",
-            title: "Code",
-            dataIndex: "code",
+            key: "permissions",
+            title: "permissions",
+            dataIndex: "permissions",
           },
           {
             key: "is_active",

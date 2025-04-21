@@ -112,6 +112,8 @@
     -- show data type create table
     show create table products
 
+    --check table with data type
+        DESCRIBE roles;
     -- drop columnalter syntax
     table roles 
     drop column status;
@@ -129,3 +131,6 @@
     alter table suppliers add column code varchar(12);
     -- rename table syntax
     alter table order_items rename order_detail;
+    
+    -- rename column syntax
+    alter table roles change column code permission varchar(120)

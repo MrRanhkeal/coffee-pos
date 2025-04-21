@@ -3,7 +3,7 @@ exports.getlist = async (req, res) => {
     try {
         const [category] = await db.query(
             "select id as value, name as label,description from category");
-        const [role] = await db.query("select id, name, code from roles");
+        const [role] = await db.query("select id, name, permissions from roles");
         const [supplier] = await db.query("select supplier_id, name ,code from suppliers");
         //and more
         const [product_type] = await db.query("select * from product_type");
