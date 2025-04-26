@@ -1,3 +1,0 @@
-Error: Column 'total_amount' cannot be null + 2025-04-18 20:59:59 
-Error: Column 'total_amount' cannot be null + 2025-04-18 21:00:35 
-Error: Column 'payment_method' cannot be null + 2025-04-21 00:54:23 

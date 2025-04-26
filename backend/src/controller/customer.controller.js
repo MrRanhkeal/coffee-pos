@@ -27,7 +27,8 @@ exports.create = async (req, res) => {
         var [list] = await db.query(sql, 
             {
                 ...req.body,
-                create_by: req.auth?.name
+                create_by: req.auth?.name,
+                message: "Insert success!"
 
             });
         res.json({

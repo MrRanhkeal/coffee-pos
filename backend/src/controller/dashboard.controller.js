@@ -1,9 +1,14 @@
 const { logErr } = require("../util/logErr");
-const { } = require("../util/helper");
+const {db, isArray, isEmpty } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
         const [customer] = await db.query("SELECT count(id) total from customers");
+        //expense check
+        const [expense] = await db.query(
+            " SELECT SUM(amount) as total, count(id) total_expense FROM expense " +
+            " WHERE MONTH(expense_date) = MONTH(CURRENT_DATE) AND YEAR(expense_date) = YEAR(CURRENT_DATE) "
+        );
         //and more data
 
         const [sale] = await db.query(
@@ -25,6 +30,16 @@ exports.getlist = async (req, res) => {
             " GROUP BY " +
             "   MONTH(r.create_at) "
         );
+        const [expense_summary_by_month] = await db.query(
+            " SELECT " +
+            "   DATE_FORMAT(e.expense_date,'%M') title" +
+            "   ,SUM(e.amount)  total" +
+            " FROM expenses e " +
+            " WHERE" +
+            "   YEAR(e.expense_date) = YEAR(CURRENT_DATE)" +
+            " GROUP BY " +
+            "   MONTH(e.expense_date) "
+        );
         //and more data
 
         let dashboard = [
@@ -36,14 +51,6 @@ exports.getlist = async (req, res) => {
                     Femal: 12,
                 },
             },
-            // {
-            //     title: "Employee",
-            //     summary: {
-            //         Total: employee[0].total,
-            //         Male: 1,
-            //         Femal: 2,
-            //     },
-            // },
             {
                 title: "Sale",
                 summary: {
@@ -52,10 +59,19 @@ exports.getlist = async (req, res) => {
                     Total_Order: sale[0].total_order,
                 },
             },
+            {
+                title: "Expanse",
+                summary: {
+                    Expanse: "This Month",
+                    Total: expense[0].total + "$",
+                    Total_Expense: expense[0].total_expense,
+                },
+            },
         ]
         res.json({
             data: dashboard,
-            sale:sale_summary_by_month,
+            sale: sale_summary_by_month,
+            expense: expense_summary_by_month,
             message: "success",
             error: false
         })

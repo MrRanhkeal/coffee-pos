@@ -1,6 +1,6 @@
-const {db, logErr} = require("../util/helper");
+const { db, logErr } = require("../util/helper");
 const bcrypt = require("bcrypt");
-const {getAccessToken} = require("../middleware/jwt_token");
+const { getAccessToken } = require("../middleware/jwt_token");
 
 exports.getlist = async (req, res) => {
     try {
@@ -15,23 +15,39 @@ exports.getlist = async (req, res) => {
             "r.name as role_name " +
             "from users u " +
             "inner join roles r on u.role_id = r.id";
-            const [list] = await db.query(sql);
-            const [role] = await db.query("select id as value, name as label from roles");
-            res.json({
-                data:list,
-                roles:role,
-                message:"success"
-            })
-    } 
+
+        // const sql = `
+        // SELECT 
+        //     u.id ,
+        //     u.role_id ,
+        //     u.name ,	
+        //     u.username ,
+        //     r.permissions ,
+        //     u.create_by ,
+        //     u.is_active ,
+        //     r.name as role_name
+        // from users u 
+        // left join roles r on u.role_id = r.id
+        // order by u.id desc
+        // `;
+        const [list] = await db.query(sql);
+        const [role] = await db.query("select id as value, name as label from roles");
+        res.json({
+            data: list,
+            roles: role,
+            message: "success"
+        })
+    }
     catch (error) {
-        logErr("auth.getlist",error,res);
+        logErr("auth.get-list", error, res);
     }
 };
 
 exports.register = async (req, res) => {
+    
     try {
         let password = req.body.password;
-        password = bcrypt.hashSync(password,10); //123456789fasdfsdf#$2332
+        hashedPassword = bcrypt.hashSync(password,10); //123456789fasdfsdf#$2332
         var sql = "INSERT INTO users (role_id,name,username,password,create_by) values "+
             "(:role_id,:name,:username,:password,:create_by)"; //is params
         let data = await db.query(sql,
@@ -39,9 +55,9 @@ exports.register = async (req, res) => {
                 role_id:req.body.role_id,
                 name:req.body.name,
                 username:req.body.username,
-                password:password,
+                password:hashedPassword,
                 // is_active:req.body.is_active,
-                create_by:req.body.create_by
+                create_by:req.body.create_by || "system", // fallback if no auth
             });
         res.json({
             data:data,
@@ -51,11 +67,43 @@ exports.register = async (req, res) => {
     catch (error) {
         logErr("auth.register",error,res);
     }
+
+    //modify
+    // try {
+    //     const { role_id, name, username, password } = req.body;
+    //     if (!role_id || !name || !username || !password) {
+    //         return res.status(400).json({ message: "Missing required fields" });
+    //     }
+
+    //     const hashedPassword = bcrypt.hashSync(password, 10);
+
+    //     const sql = `
+    //         INSERT INTO users (role_id, name, username, password, create_by)
+    //         VALUES (:role_id, :name, :username, :password, :create_by)
+    //         `;
+
+    //     const data = await db.query(sql, {
+    //         role_id,
+    //         name,
+    //         username,
+    //         password: hashedPassword,
+    //         create_by:req.body.create_by || "system", // fallback if no auth
+
+    //     });
+
+    //     res.json({
+    //         data,
+    //         message: "User registered successfully"
+    //     });
+    // } catch (error) {
+    //     logErr("auth.register", error, res);
+    //     res.status(500).json({ message: "Internal Server Error" });
+    // }
 };
 exports.login = async (req, res) => {
     try {
-        let {username,password} = req.body;
-        let sql = 
+        let { username, password } = req.body;
+        let sql =
             " select " +
             " u.*," +
             " r.name as role_name" +
@@ -63,34 +111,34 @@ exports.login = async (req, res) => {
             " inner join roles r on u.role_id = r.id" +
             " where u.username=:username ";
 
-        let [data] = await db.query(sql,{username:username});
-        if(data.length == 0){
+        let [data] = await db.query(sql, { username: username });
+        if (data.length == 0) {
             res.json({
-                error:{
-                    message:"username does't exist"
+                error: {
+                    message: "username does't exist"
                 }, //pro data
             });
             return;
         }
-        else{
+        else {
             let dbPassword = data[0].password;
-            let isMatch = bcrypt.compareSync(password,dbPassword); //this compare true and false pass
-            if(!isMatch){
+            let isMatch = bcrypt.compareSync(password, dbPassword); //this compare true and false pass
+            if (!isMatch) {
                 res.json({
-                    error:{
-                        message:"password does't match, please try again...!"
+                    error: {
+                        message: "password does't match, please try again...!"
                     }, //pro data
                 });
                 return;
             }
-            else{
+            else {
                 delete data[0].password;
-                let obj ={
-                    profile:data[0],
-                    permission:["view","create","update","delete"]
+                let obj = {
+                    profile: data[0],
+                    permission: ["view", "create", "update", "delete"]
                 }
                 res.json({
-                    message:"login success",
+                    message: "login success",
                     ...obj, //this javascript spread operator (...) allows us to quickly copy the contents all part of an existing object into another object
                     // get token
                     access_token: await getAccessToken(obj)
@@ -100,7 +148,7 @@ exports.login = async (req, res) => {
         }
     }
     catch (error) {
-        logErr("auth.login",error,res);
+        logErr("auth.login", error, res);
     }
 };
 
@@ -108,44 +156,44 @@ exports.profile = async (req, res) => {
     try {
         res.json({
             profile: req.profile,
-            message:"success"
+            message: "success"
         })
     }
     catch (error) {
-        logErr("auth.profile",error,res);
+        logErr("auth.profile", error, res);
     }
 };
 
 //logout
-exports.logout = async (req, res) =>{
-    try{
+exports.logout = async (req, res) => {
+    try {
         //const userId = req.profile; //check this
         const cookiesOption = {
-            httpOnly : true,
-            secure : true,
-            sameSite : "None",
-            expire:new Date(0) //cookie will expire js
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            expire: new Date(0) //cookie will expire js
         }
-        res.clearCookie("access_token",cookiesOption);
+        res.clearCookie("access_token", cookiesOption);
         res.status(200).json({
-            message:"logout successfully",
-            error:"false",
-            success:"true"
+            message: "logout successfully",
+            error: "false",
+            success: "true"
         });
     }
-    catch(err){
-        logErr("auth.logout",err,res);
+    catch (err) {
+        logErr("auth.logout", err, res);
     }
 }
 //forgot password
 exports.forgot_password = async (req, res) => {
-    try{
+    try {
         const { email } = req.body;
 
         // Check if user exists
         let sql = "SELECT * FROM users WHERE email = :email";
         let [user] = await db.query(sql, { email });
-        if(user.length ===0){
+        if (user.length === 0) {
             return res.status(400).json({
                 message: "Email does not exist",
                 error: true,
@@ -173,32 +221,31 @@ exports.forgot_password = async (req, res) => {
             success: true
         })
     }
-    catch(err)
-    {
-        logErr("auth.forgot_password",err,res); 
+    catch (err) {
+        logErr("auth.forgot_password", err, res);
     }
 }
 
 //reset password
 exports.reset_password = async (req, res) => {
-    try{
+    try {
         const { email, otp, newPassword } = req.body;
 
         // Validate user and OTP
         let sql = "SELECT * FROM users WHERE email = :email";
         let [user] = await db.query(sql, { email });
 
-        if(user.length === 0){
+        if (user.length === 0) {
             return res.status(400).json({
                 message: "Email does not exist",
                 error: true,
                 success: false
             });
         }
-        
+
         const dbOtp = user[0].forgot_password_otp;
         const dbExpiry = new Date(user[0].forgot_password_expiry);
-        if(otp !== dbOtp){
+        if (otp !== dbOtp) {
             return res.status(400).json({
                 message: "Invalid OTP",
                 error: true,
@@ -218,21 +265,20 @@ exports.reset_password = async (req, res) => {
             success: true
         })
     }
-    catch(err){
-        logErr("auth.reset_password",err,res);
+    catch (err) {
+        logErr("auth.reset_password", err, res);
     }
 }
 exports.verify_email = async (req, res) => {
-    try{
+    try {
         var data = "email verified";
         res.json({
-            data:data,
-            message:"success",
-            error:false,
+            data: data,
+            message: "success",
+            error: false,
         })
     }
-    catch(err)
-    {
-        logErr("auth.verify_email",err,res); 
+    catch (err) {
+        logErr("auth.verify_email", err, res);
     }
 }

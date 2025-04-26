@@ -1,2 +1,0 @@
-Error: Table 'coffee_project_db.user' doesn't exist - 2025-01-28 03:51:00 UTC
-Error: Table 'coffee_project_db.user' doesn't exist + 2025-01-28 03:52:29 UTC

@@ -80,17 +80,3 @@ exports.getAccessToken = async (paramData) => {
 }
 
 
-//check token update When generating the token (e.g., during login), include the role and permissions:
-// const getAccessToken = async (user) => {
-//     const permissions = await RoleModel.getPermissionsByRole(user.role_id);
-//     const token = jwt.sign(
-//         { data: { profile: user, permissions } },
-//         config.token.access_token_key,
-//         { expiresIn: "1d" }
-//     );
-//     return token;
-// };
-
-
-
-

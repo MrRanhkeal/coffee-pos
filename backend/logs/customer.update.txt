@@ -1,4 +1,0 @@
-Error: Column 'phone' cannot be null + 2025-04-17 13:19:13 
-Error: Column 'phone' cannot be null + 2025-04-17 13:19:14 
-Error: Column 'phone' cannot be null + 2025-04-17 13:19:15 
-Error: Column 'phone' cannot be null + 2025-04-17 13:19:15 

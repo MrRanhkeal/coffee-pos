@@ -156,6 +156,7 @@ exports.update = async (req, res) => {
         logErr("order.update", error, res);
     }
 };
+
 exports.remove = async (req, res) => {
     try {
         var [list] = await db.query("DELETE FROM orders WHERE id = :id", {

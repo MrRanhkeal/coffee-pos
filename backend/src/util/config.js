@@ -8,7 +8,7 @@ module.exports = {
             HOST: 'localhost',
             USER: 'root',
             PASSWORD: '',
-            DATABASE: 'mydb',
+            DATABASE: 'bnbdb',
             PORT: 3307
         },
         token: {

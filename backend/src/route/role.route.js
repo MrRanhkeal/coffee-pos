@@ -1,4 +1,5 @@
 const {getlist,create,update,remove} = require("../controller/role.controller");
+const { logErr } = require("../util/logErr");
 
 try{
     module.exports = (app) => {
@@ -9,5 +10,5 @@ try{
     }
 }
 catch(err){
-    
+    logErr("role.route", err);
 }
