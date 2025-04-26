@@ -356,12 +356,19 @@ function ProductPage() {
                   onChange={(id) => {
                     setFilter((pre) => ({ ...pre, category_id: id }));
                   }}
+                  />
+                  {/* <Select
+                  placeholder="Select category"
+                  // options={config.category}
+                  // onChange={(id) => {
+                  //   setFilter((pre) => ({ ...pre, category_id: id }));
+                  // }}
                 
-                // options={config.category?.map((item) => ({
-                //   label: item.name,
-                //   value: item.id,
-                // }))}
-                />
+                options={config.category?.map((item) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                /> */}
               </Form.Item>
 
               <Form.Item name={"price"} label="Price">

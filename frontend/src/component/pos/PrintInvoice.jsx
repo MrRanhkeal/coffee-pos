@@ -39,7 +39,7 @@ const PrintInvoice = React.forwardRef((props, ref) => {
         </div>
       </Flex>
       <hr />
-
+        
       <div style={{ marginBottom: 15, marginTop: 5 }}>
         {props.objSummary?.order_no}|{" "}
         {formatDateClient(props.objSummary?.order_date, "DD/MM/YYYY h:mm ss A")}

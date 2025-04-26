@@ -12,31 +12,50 @@ import {
   Tag,
 } from "antd";
 import { resetWarned } from "antd/es/_util/warning";
+import { configStore } from "../../store/configStore";
+
 function UserPage() {
   const [form] = Form.useForm();
+  const { config } = configStore();
+  const [list, setList] = useState([]);
   const [state, setState] = useState({
     list: [],
-    role: [],
+    // role: [],
+    role_id: null,
     loading: false,
     visible: false,
   });
   useEffect(() => {
     getList();
   }, []);
-
   const getList = async () => {
-    const res = await request("auth/get-list", "get");
-    if (res && !res.error) {
-      setState((pre) => ({
-        ...pre,
-        list: res.list,
-        role: res.role,
-      }));
+    setState((prev) => ({ ...prev, loading: true }));
+    try {
+      const res = await request("auth/get-list", "get");
+      if (res && !res.error) {
+        setList(res.list);
+      }
+    } catch (error) {
+      console.error("Failed to fetch list:", error);
+      message.error("Failed to fetch user list");
+    } finally {
+      setState((prev) => ({ ...prev, loading: false }));
     }
   };
 
-  const clickBtnEdit = () => {};
-  const clickBtnDelete = () => {};
+  // const getList = async () => {
+  //   const res = await request("auth/get-list", "get");
+  //   if (res && !res.error) {
+  //     setState((pre) => ({
+  //       ...pre,
+  //       list: res.list,
+  //       role: res.role,
+  //     }));
+  //   }
+  // };
+
+  const clickBtnEdit = () => { };
+  const clickBtnDelete = () => { };
 
   const handleCloseModal = () => {
     setState((pre) => ({
@@ -53,23 +72,51 @@ function UserPage() {
     }));
   };
   // {"name":"a","username":"b","password":"12","role_id":2,"is_active":0}
+  // const onFinish = async (item) => {
+  //   if (item.password !== item.confirm_password) {
+  //     message.warning("Password and Confirm Password Not Match!");
+  //     return;
+  //   }
+  //   var data = {
+  //     ...item,
+  //   };
+  //   const res = await request("auth/register", "post", data);
+  //   if (res && !res.error) {
+  //     message.success(res.message);
+  //     getList();
+  //     handleCloseModal();
+  //   } else {
+  //     message.warning(res.message);
+  //   }
+  // };
+
   const onFinish = async (item) => {
     if (item.password !== item.confirm_password) {
-      message.warning("Password and Confirm Password Not Match!");
+      message.warning("Password and Confirm Password do not match!");
       return;
     }
-    var data = {
+
+    const data = {
       ...item,
+      role_id: state.role_id, // make sure this exists in your component
     };
-    const res = await request("auth/register", "post", data);
-    if (res && !res.error) {
-      message.success(res.message);
-      getList();
-      handleCloseModal();
-    } else {
-      message.warning(res.message);
+
+    try {
+      const res = await request("auth/register", "post", data);
+
+      if (res && !res.error) {
+        message.success(res.message || "Registration successful");
+        getList();
+        handleCloseModal();
+      } else {
+        message.warning(res.message || "Registration failed");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      message.error("Something went wrong during registration!");
     }
   };
+
 
   return (
     <div>
@@ -143,7 +190,23 @@ function UserPage() {
           >
             <Input.Password placeholder="confirm password" />
           </Form.Item>
-          <Form.Item
+
+          <Select
+            style={{ width: "100%" }}
+            placeholder="Select role"
+            options={(config?.role || []).map(role => ({
+              label: role.name, // or cust.fullName or cust.whatever is correct
+              value: role.id,   // or cust.customer_id depending on your data
+            }))}
+            onSelect={(value) => {
+              setState((p) => ({
+                ...p,
+                role_id: value,
+              }));
+            }}
+          />
+
+          {/* <Form.Item
             name={"role_id"}
             label="Role"
             rules={[
@@ -154,7 +217,7 @@ function UserPage() {
             ]}
           >
             <Select placeholder="Select Role" options={state.role} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name={"is_active"}
             label="Status"
@@ -190,7 +253,9 @@ function UserPage() {
         </Form>
       </Modal>
       <Table
-        dataSource={state.list}
+        // dataSource={state.list}
+        dataSource={list}
+        loading={state.loading}
         columns={[
           {
             key: "no",

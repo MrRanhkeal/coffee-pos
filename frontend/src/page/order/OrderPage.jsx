@@ -16,6 +16,8 @@ import MainPage from "../../component/layout/MainPage";
 import { IoMdEye } from "react-icons/io";
 import { Config } from "../../util/config";
 import dayjs from "dayjs";
+import { MdPrint } from "react-icons/md";
+import handleClickOut from  './../pos/PosPage'
 function OrderPage() {
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
@@ -130,6 +132,10 @@ function OrderPage() {
       getList();
       onCloseModal();
     }
+  };
+  const printmyorder = () => {
+    handleClickOut();
+    //call from pos fun handle print
   };
   return (
     <MainPage loading={loading}>
@@ -314,6 +320,11 @@ function OrderPage() {
                   type="primary"
                   icon={<IoMdEye />}
                   onClick={() => getOrderDetail(data, index)}
+                />
+                <Button
+                  type="primary"
+                  icon={<MdPrint />}
+                  onClick={printmyorder}
                 />
               </Space>
             ),
