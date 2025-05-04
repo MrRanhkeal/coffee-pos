@@ -11,7 +11,7 @@ import {
   Table,
   Tag,
 } from "antd";
-import { resetWarned } from "antd/es/_util/warning";
+// import { resetWarned } from "antd/es/_util/warning";
 import { configStore } from "../../store/configStore";
 
 function UserPage() {
@@ -20,10 +20,11 @@ function UserPage() {
   const [list, setList] = useState([]);
   const [state, setState] = useState({
     list: [],
-    // role: [],
     role_id: null,
     loading: false,
     visible: false,
+    isEdit: false,
+    editingUser: null
   });
   useEffect(() => {
     getList();
@@ -33,7 +34,11 @@ function UserPage() {
     try {
       const res = await request("auth/get-list", "get");
       if (res && !res.error) {
-        setList(res.list);
+        setList(res.data || []); // Changed from res.list to res.data to match backend response
+        setState(prev => ({
+          ...prev,
+          role: res.roles || [] // Store roles from the response
+        }));
       }
     } catch (error) {
       console.error("Failed to fetch list:", error);
@@ -54,13 +59,57 @@ function UserPage() {
   //   }
   // };
 
-  const clickBtnEdit = () => { };
-  const clickBtnDelete = () => { };
+  const clickBtnEdit = (record) => {
+    try{
+      form.setFieldsValue({
+        id: record.id,
+        name: record.name,
+        username: record.username,
+        role_id: record.role_id,
+        is_active: record.is_active
+      });
+      setState(prev => ({
+        ...prev,
+        visible: true,
+        isEdit: true,
+        editingUser: record
+      }));
+    }
+    catch (error) {
+      console.error("Edit error:", error);
+      message.error("Failed to edit user");
+    }
+  };
+
+  const clickBtnDelete = async (record) => {
+    try {
+      Modal.confirm({
+        title: "Are you sure?",
+        description: "Do you want to delete this user?",
+        okText: "Yes",
+        onOk: async () => {
+          const res = await request(`auth/delete/${record.id}`, "delete");
+          if (res && !res.error) {
+            message.success("User deleted successfully");
+            getList();
+          } else {
+            message.error(res.message || "Failed to delete user");
+          }
+        }
+      })
+      
+    } catch (error) {
+      console.error("Delete error:", error);
+      message.error("Failed to delete user");
+    }
+  };
 
   const handleCloseModal = () => {
     setState((pre) => ({
       ...pre,
       visible: false,
+      isEdit: false,
+      editingUser: null
     }));
     form.resetFields();
   };
@@ -91,29 +140,44 @@ function UserPage() {
   // };
 
   const onFinish = async (item) => {
-    if (item.password !== item.confirm_password) {
+    if (!state.isEdit && item.password !== item.confirm_password) {
       message.warning("Password and Confirm Password do not match!");
       return;
     }
 
+    // Get the current user's name from the profile
+    const currentUser = JSON.parse(localStorage.getItem('profile')) || {};
+    const create_by = currentUser.name || 'system';
+
     const data = {
       ...item,
-      role_id: state.role_id, // make sure this exists in your component
+      role_id: state.role_id || item.role_id,
+      create_by: state.isEdit ? undefined : create_by, // Only set create_by for new users
     };
 
     try {
-      const res = await request("auth/register", "post", data);
+      let res;
+      if (state.isEdit) {
+        // Update existing user
+        res = await request("auth/update", "put", {
+          ...data,
+          id: state.editingUser.id
+        });
+      } else {
+        // Create new user
+        res = await request("auth/register", "post", data);
+      }
 
       if (res && !res.error) {
-        message.success(res.message || "Registration successful");
+        message.success(res.message || (state.isEdit ? "Update successful" : "Registration successful"));
         getList();
         handleCloseModal();
       } else {
-        message.warning(res.message || "Registration failed");
+        message.warning(res.message || (state.isEdit ? "Update failed" : "Registration failed"));
       }
     } catch (err) {
-      console.error("Registration error:", err);
-      message.error("Something went wrong during registration!");
+      console.error(state.isEdit ? "Update error:" : "Registration error:", err);
+      message.error(`Something went wrong during ${state.isEdit ? "update" : "registration"}!`);
     }
   };
 
@@ -136,7 +200,7 @@ function UserPage() {
         </Button>
       </div>
       <Modal
-        title="New User"
+        title={state.isEdit ? "Edit User" : "New User"}
         open={state.visible}
         onCancel={handleCloseModal}
         footer={null}
