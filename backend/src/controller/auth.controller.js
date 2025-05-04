@@ -44,61 +44,56 @@ exports.getlist = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    
     try {
-        let password = req.body.password;
-        hashedPassword = bcrypt.hashSync(password,10); //123456789fasdfsdf#$2332
-        var sql = "INSERT INTO users (role_id,name,username,password,create_by) values "+
-            "(:role_id,:name,:username,:password,:create_by)"; //is params
-        let data = await db.query(sql,
-            {
-                role_id:req.body.role_id,
-                name:req.body.name,
-                username:req.body.username,
-                password:hashedPassword,
-                // is_active:req.body.is_active,
-                create_by:req.body.create_by || "system", // fallback if no auth
+        const { password, role_id, name, username, is_active, create_by } = req.body;
+
+        // Validate required fields
+        if (!password || !role_id || !name || !username) {
+            return res.status(400).json({
+                error: true,
+                message: "Missing required fields"
             });
+        }
+
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        
+        const sql = `INSERT INTO users (
+            role_id,
+            name,
+            username,
+            password,
+            is_active,
+            create_by
+        ) VALUES (
+            :role_id,
+            :name,
+            :username,
+            :password,
+            :is_active,
+            :create_by
+        )`;
+
+        const data = await db.query(sql, {
+            role_id,
+            name,
+            username,
+            password: hashedPassword,
+            is_active: is_active ?? 1, // Default to active if not specified
+            create_by: create_by || 'system' // Default to system if not specified
+        });
+
         res.json({
-            data:data,
-            message:"success"
-        })
+            data,
+            message: "User registered successfully",
+            error: false
+        });
+    } catch (error) {
+        logErr("auth.register", error, res);
+        res.status(500).json({
+            message: "Failed to register user",
+            error: true
+        });
     }
-    catch (error) {
-        logErr("auth.register",error,res);
-    }
-
-    //modify
-    // try {
-    //     const { role_id, name, username, password } = req.body;
-    //     if (!role_id || !name || !username || !password) {
-    //         return res.status(400).json({ message: "Missing required fields" });
-    //     }
-
-    //     const hashedPassword = bcrypt.hashSync(password, 10);
-
-    //     const sql = `
-    //         INSERT INTO users (role_id, name, username, password, create_by)
-    //         VALUES (:role_id, :name, :username, :password, :create_by)
-    //         `;
-
-    //     const data = await db.query(sql, {
-    //         role_id,
-    //         name,
-    //         username,
-    //         password: hashedPassword,
-    //         create_by:req.body.create_by || "system", // fallback if no auth
-
-    //     });
-
-    //     res.json({
-    //         data,
-    //         message: "User registered successfully"
-    //     });
-    // } catch (error) {
-    //     logErr("auth.register", error, res);
-    //     res.status(500).json({ message: "Internal Server Error" });
-    // }
 };
 exports.login = async (req, res) => {
     try {
@@ -280,5 +275,72 @@ exports.verify_email = async (req, res) => {
     }
     catch (err) {
         logErr("auth.verify_email", err, res);
+    }
+}
+
+exports.update = async (req, res) => {
+    try {
+        const { id, role_id, name, username, password, is_active } = req.body;
+        
+        // Build the SQL query parts
+        const updates = [];
+        const params = { id };
+
+        // Add non-password fields
+        if (role_id !== undefined) {
+            updates.push("role_id = :role_id");
+            params.role_id = role_id;
+        }
+        if (name !== undefined) {
+            updates.push("name = :name");
+            params.name = name;
+        }
+        if (username !== undefined) {
+            updates.push("username = :username");
+            params.username = username;
+        }
+        if (is_active !== undefined) {
+            updates.push("is_active = :is_active");
+            params.is_active = is_active;
+        }
+
+        // Handle password separately
+        if (password) {
+            updates.push("password = :password");
+            params.password = bcrypt.hashSync(password, 10);
+        }
+
+        // Construct the final SQL query
+        const sql = `UPDATE users SET ${updates.join(", ")} WHERE id = :id`;
+
+        // Execute the query
+        await db.query(sql, params);
+
+        res.json({
+            message: "User updated successfully",
+            error: false
+        });
+    } catch (error) {
+        logErr("auth.update", error, res);
+        res.status(500).json({
+            message: "Failed to update user",
+            error: true
+        });
+    }
+};
+
+exports.delete = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const sql = "DELETE FROM users WHERE id = :id";
+        await db.query(sql, { id });
+
+        res.json({
+            message: "User deleted successfully",
+            error: false
+        });
+    } catch (error) {
+        logErr("auth.delete", error, res);
     }
 }

@@ -72,7 +72,7 @@ exports.getone = async (req, res) => {
             id: req.params.id,
         });
     } catch (error) {
-        logErr("order.getone", error, res);
+        logErr("order.getlist", error, res);
     }
 };
 exports.create = async (req, res) => {

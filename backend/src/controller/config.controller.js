@@ -42,26 +42,30 @@ exports.getlist = async (req, res) => {
 
 exports.getstocklist = async (req, res) => {
     try {
-        var sqlselete = 
+        const sqlSelect = 
+            "SELECT " +
+                "p.id, " +
+                "p.name AS p_name, " +
+                "p.qty AS p_qty, " +
+                "p.brand AS p_brand, " +
+                "c.name AS c_name, " +
+                "p.image AS p_image, " +
+                "p.create_by AS create_by, " +  // <-- Added comma here
+                "CASE " +
+                    "WHEN p.qty <= 2 THEN 'Low' " +
+                    "ELSE 'High' " +
+                "END AS stock_status " +
+            "FROM products p " +
+            "INNER JOIN category c ON p.category_id = c.id " +
+            "WHERE p.status = 1";
         
-            "select " +
-            // "p.id  p_id," +
-            "p.name  p_name," +
-            "p.qty p_qty," +
-            "p.brand p_brand," +
-            "c.name c_name," +
-            " u.create_by "  +
-            " from products p " +
-            "inner join category c on p.category_id = c.id "+
-            "inner join users u on p.create_by = u.name ";
-            // "where p.status = 1 and p.qty > 0";
-        const [stock] = await db.query(sqlselete);
+        const [stock] = await db.query(sqlSelect);
         res.json({
-            data:stock,
+            data: stock,
             message: "success"
-        })
+        });
+    } catch (error) {
+        logErr("config.getstocklist", error, res);
     }
-    catch (error) {
-        logErr("config.getlist", error, res);
-    }
+
 };
