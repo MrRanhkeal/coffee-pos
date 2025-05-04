@@ -1,4 +1,0 @@
-//free icons
-free_icons https://www.flaticon.com/
-free_photo https://www.pexels.com/
-free_PNG https://pnghunter.com/

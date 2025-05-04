@@ -1,8 +1,0 @@
-> npm init 
-> npm insall express 
-
-+ create index.js // root project 
-
-> npm install cors
-> npm install mysql2
-> npm install --save-dev nodemon 
