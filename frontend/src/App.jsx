@@ -10,7 +10,6 @@ import HomePage from "./page/home/HomePage";
 import RegisterPage from "./page/auth/RegisterPage";
 
 import MainLayout from "./component/layout/MainLayout";
-import EmployeePage from "./page/employee/EmployeePage";
 import CustomerPage from "./page/customer/CustomerPage";
 import CategoryPage from "./page/category/CategoryPage";
 import UserPage from "./page/user/UserPage";
@@ -24,6 +23,8 @@ import OrderPage from "./page/order/OrderPage";
 import ReportSaleSummaryPage from "./page/report/ReportSaleSummaryPage";
 import ReportExpenseSummaryPage from "./page/report/ReportExpenseSummaryPage";
 import LoginPage from "./page/auth/LoginPage";
+import ExchangePage from "./page/currency/ExchangePage";
+import LangaugePage from "./page/langauge/LangaugePage";
 
 function App() {
   return (
@@ -33,17 +34,18 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/pos" element={<PosPage />} />
           <Route path="/customer" element={<CustomerPage />} />
-          <Route path="/employee" element={<EmployeePage />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/product" element={<ProductPage />} />
           <Route path="/category" element={<CategoryPage />} />
           <Route path="/supplier" element={<SupplierPage />} />
-
           <Route path="/user" element={<UserPage />} />
           <Route path="/role" element={<RolePage />} />
 
           <Route path="/expanse_type" element={<ExpanseTypePage />} />
           <Route path="/expanse" element={<ExpansePage />} />
+
+          <Route path="/currency" element={<ExchangePage/>}/>
+          <Route path="/langauge" element={<LangaugePage/>}/>
 
           <Route
             path="/report_sale_summary"

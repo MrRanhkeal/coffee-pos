@@ -96,21 +96,6 @@ const items_menu = [
     ],
   },
   {
-    label: "Employee",
-    children: [
-      {
-        key: "employee",
-        label: "Employee",
-        children: null,
-      },
-      {
-        key: "payroll",
-        label: "Payroll",
-        children: null,
-      },
-    ],
-  },
-  {
     label: "Report",
     children: [
       {
@@ -153,12 +138,7 @@ const items_menu = [
         key: "role",
         label: "Role",
         children: null,
-      },
-      {
-        key: "role_permission",
-        label: "Role Permmission",
-        children: null,
-      },
+      }
     ],
   },
 
