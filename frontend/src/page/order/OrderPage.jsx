@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Button,
   DatePicker,
@@ -17,7 +17,7 @@ import { IoMdEye } from "react-icons/io";
 import { Config } from "../../util/config";
 import dayjs from "dayjs";
 import { MdPrint } from "react-icons/md";
-import handleClickOut from  './../pos/PosPage'
+import OrderPrintInvoice from "../../component/pos/OrderPrintInvoice"; //from orderprintinvoice
 function OrderPage() {
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
@@ -33,6 +33,7 @@ function OrderPage() {
     status: "",
     parentId: null,
     txtSearch: "",
+    currentPrintData: null,
   });
 
   const [filter, setFiler] = useState({
@@ -40,34 +41,59 @@ function OrderPage() {
     to_date: dayjs(), // current
   });
 
+  // Add print ref
   useEffect(() => {
     getList();
   }, []);
 
   const getList = async () => {
-    var param = {
-      txtSearch: state.txtSearch,
-      from_date: formatDateServer(filter.from_date), // 2024-11-20
-      to_date: formatDateServer(filter.to_date), // 2024-11-22
-    };
-    setLoading(true);
-    const res = await request("order", "get", param);
-    setLoading(false);
-    if (res) {
-      setList(res.list);
-      setSummary(res.summary);
+    try {
+      const param = {
+        txtSearch: state.txtSearch,
+        from_date: formatDateServer(filter.from_date),
+        to_date: formatDateServer(filter.to_date),
+      };
+      setLoading(true);
+      const res = await request("order", "get", param);
+      setLoading(false);
+      
+      if (res && !res.error) {
+        setList(res.list || []);
+        setSummary(res.summary || null);
+      } else {
+        message.error(res?.message || "Failed to load orders");
+        setList([]);
+        setSummary(null);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error loading orders:', error);
+      message.error("An error occurred while loading orders");
+      setList([]);
+      setSummary(null);
     }
   };
   const getOrderDetail = async (data) => {
-    setLoading(true);
-    const res = await request("order_detail/" + data.id, "get");
-    setLoading(false);
-    if (res) {
-      setOrderDetails(res.list);
-      setState({
-        ...state,
-        visibleModal: true,
-      });
+    try {
+      setLoading(true);
+      const res = await request("order_detail/" + data.id, "get");
+      setLoading(false);
+      
+      if (res && !res.error) {
+        setOrderDetails(res.list || []);
+        setState({
+          ...state,
+          visibleModal: true,
+        });
+      } else {
+        message.error(res?.message || "Failed to load order details");
+        setOrderDetails([]);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error loading order details:', error);
+      message.error("An error occurred while loading order details");
+      setOrderDetails([]);
     }
 
     // formRef.setFieldsValue({
@@ -133,12 +159,56 @@ function OrderPage() {
       onCloseModal();
     }
   };
-  const printmyorder = () => {
-    handleClickOut();
-    //call from pos fun handle print
+  const printOrder = async (order) => {
+    try {
+      setLoading(true);
+      const res = await request("order_detail/" + order.id, "get");
+      setLoading(false);
+      
+      if (res && !res.error) {
+        // Calculate totals from order details
+        const total_qty = res.list.reduce((sum, item) => sum + Number(item.qty), 0);
+        const sub_total = res.list.reduce((sum, item) => sum + (Number(item.price) * Number(item.qty)), 0);
+        
+        // Prepare data for printing
+        const cart_list = res.list.map(item => ({
+          name: item.p_name,
+          price: Number(item.price),
+          cart_qty: Number(item.qty),
+          discount: Number(item.discount || 0)
+        }));
+
+        const objSummary = {
+          order_no: order.order_no,
+          order_date: order.create_at,
+          total_qty,
+          sub_total: sub_total.toFixed(2),
+          total: Number(order.total_amount).toFixed(2),
+          save_discount: (sub_total - Number(order.total_amount)).toFixed(2)
+        };
+
+        // Update state to trigger print
+        setState(prev => ({
+          ...prev,
+          currentPrintData: {
+            cart_list,
+            objSummary
+          }
+        }));
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error printing order:', error);
+      message.error("An error occurred while printing order");
+    }
   };
   return (
     <MainPage loading={loading}>
+      {/* Print Component */}
+      <OrderPrintInvoice
+        printData={state.currentPrintData}
+        onPrintComplete={() => setState(prev => ({ ...prev, currentPrintData: null }))}
+      />
       <div className="pageHeader">
         <Space>
           <div>
@@ -324,12 +394,19 @@ function OrderPage() {
                 <Button
                   type="primary"
                   icon={<MdPrint />}
-                  onClick={printmyorder}
+                  onClick={() => printOrder(data)}
                 />
               </Space>
             ),
           },
         ]}
+      />
+
+      <OrderPrintInvoice 
+        printData={state.currentPrintData}
+        onPrintComplete={() => {
+          setState(prev => ({ ...prev, currentPrintData: null }));
+        }}
       />
     </MainPage>
   );

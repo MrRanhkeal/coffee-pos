@@ -1,17 +1,5 @@
 const { db, isArray, isEmpty, logErr } = require("../util/helper");
 
-exports.getListExpanseType = async (req, res) => {
-    try {
-        var sql = "SELECT * FROM expense_type ";
-        const [list] = await db.query(sql);
-        res.json({
-            list: list,
-        });
-    } catch (error) {
-        logErr("customer.getListExpanseType", error, res);
-    }
-};
-
 exports.getList = async (req, res) => {
     try {
         var txtSearch = req.query.txtSearch;

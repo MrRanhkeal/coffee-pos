@@ -54,25 +54,27 @@ exports.getlist = async (req, res) => {
 };
 exports.getone = async (req, res) => {
     try {
-        var sql =
-            " select  " +
-            "   od.*, " +
-            "   p.name p_name, " +
-            "   p.brand p_brand, " +
-            "   p.description p_des, " +
-            "   p.image p_image, " +
-            "   c.name p_category_name " +
-            " from order_detail od  " +
-            " inner join products p on od.product_id = p.id " +
-            " inner join category c on p.category_id = c.id " +
-            " where od.order_id = :id ";
+        var sql = 
+            "SELECT " +
+            "od.*, " +
+            "p.name p_name, " +
+            "p.brand p_brand, " +
+            "p.description p_des, " +
+            "p.image p_image, " +
+            "c.name cate_name, " +
+            "COALESCE(od.sugar, 100) as sugar " +
+            "FROM order_detail od " +
+            "inner join products p on od.product_id = p.id " +
+            "inner join category c on p.category_id = c.id " +
+            "where od.order_id = :id";
+    
         const [list] = await db.query(sql, { id: req.params.id });
         res.json({
             list: list,
             id: req.params.id,
         });
     } catch (error) {
-        logErr("order.getlist", error, res);
+        logErr("order.getone", error, res);
     }
 };
 exports.create = async (req, res) => {
@@ -93,7 +95,7 @@ exports.create = async (req, res) => {
         await Promise.all(order_details.map(async (item) => {
             // order product
             var sqlOrderDetails =
-                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total) VALUES (:order_id,:product_id,:qty,:price,:discount,:total) ";
+                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total,sugar) VALUES (:order_id,:product_id,:qty,:price,:discount,:total,:sugar) ";
             await db.query(sqlOrderDetails, {
                 ...item,
                 order_id: data.insertId, // override key order_id

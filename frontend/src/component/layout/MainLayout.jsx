@@ -67,30 +67,25 @@ const items_menu = [
         key: "supplier",
         label: "Supplier",
         children: null,
-      },
-      {
-        key: "purchase",
-        label: "List purchase",
-        children: null,
-      },
-      {
-        key: "purchase_product",
-        label: "Purchase Product",
-        children: null,
-      },
+      }
     ],
   },
   {
     label: "Expanse",
     children: [
       {
-        key: "expanse_type",
-        label: "Expanse Type",
-        children: null,
-      },
-      {
         key: "expanse",
         label: "Expanse",
+        children: null,
+      },
+    ],
+  },
+  {
+    label: "Stock",
+    children: [
+      {
+        key: "stock",
+        label: "Stock",
         children: null,
       },
     ],
@@ -107,22 +102,7 @@ const items_menu = [
         key: "report_expense_summary",
         label: "Expense Summary",
         children: null,
-      },
-      {
-        key: "report_new_customer_summary",
-        label: "New Cutomer Summary ",
-        children: null,
-      },
-      {
-        key: "report_top_sale",
-        label: "Top sale",
-        children: null,
-      },
-      {
-        key: "report_purchase_summary",
-        label: "Purchase Summary",
-        children: null,
-      },
+      }
     ],
   },
 

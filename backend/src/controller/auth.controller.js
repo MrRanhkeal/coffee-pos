@@ -15,21 +15,6 @@ exports.getlist = async (req, res) => {
             "r.name as role_name " +
             "from users u " +
             "inner join roles r on u.role_id = r.id";
-
-        // const sql = `
-        // SELECT 
-        //     u.id ,
-        //     u.role_id ,
-        //     u.name ,	
-        //     u.username ,
-        //     r.permissions ,
-        //     u.create_by ,
-        //     u.is_active ,
-        //     r.name as role_name
-        // from users u 
-        // left join roles r on u.role_id = r.id
-        // order by u.id desc
-        // `;
         const [list] = await db.query(sql);
         const [role] = await db.query("select id as value, name as label from roles");
         res.json({

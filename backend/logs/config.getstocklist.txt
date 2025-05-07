@@ -1,0 +1,4 @@
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BY p.id DESC' at line 1 + 2025-05-07 23:00:13 
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BY p.id DESC' at line 1 + 2025-05-07 23:00:13 
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BY p.qty DESC' at line 1 + 2025-05-07 23:01:08 
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BY p.qty DESC' at line 1 + 2025-05-07 23:01:08 

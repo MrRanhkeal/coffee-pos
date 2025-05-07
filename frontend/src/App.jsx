@@ -16,7 +16,6 @@ import UserPage from "./page/user/UserPage";
 import RolePage from "./page/role/RolePage";
 import SupplierPage from "./page/purchase/SupplierPage";
 import ProductPage from "./page/product/ProductPage";
-import ExpanseTypePage from "./page/expanse/ExpanseTypePage";
 import ExpansePage from "./page/expanse/ExpansePage";
 import PosPage from "./page/pos/PosPage";
 import OrderPage from "./page/order/OrderPage";
@@ -25,6 +24,7 @@ import ReportExpenseSummaryPage from "./page/report/ReportExpenseSummaryPage";
 import LoginPage from "./page/auth/LoginPage";
 import ExchangePage from "./page/currency/ExchangePage";
 import LangaugePage from "./page/langauge/LangaugePage";
+import StockPage from "./page/stock/StockPage";
 
 function App() {
   return (
@@ -41,9 +41,9 @@ function App() {
           <Route path="/user" element={<UserPage />} />
           <Route path="/role" element={<RolePage />} />
 
-          <Route path="/expanse_type" element={<ExpanseTypePage />} />
           <Route path="/expanse" element={<ExpansePage />} />
-
+          <Route path="/stock" element={<StockPage />} />
+          
           <Route path="/currency" element={<ExchangePage/>}/>
           <Route path="/langauge" element={<LangaugePage/>}/>
 

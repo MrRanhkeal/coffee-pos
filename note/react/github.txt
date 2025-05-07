@@ -21,6 +21,7 @@ git push -u origin main
         - git commit -m "status" //your status
         - git push //push your source
     # git origin when something err#
+        git rebase --continue
         git pull --rebase origin main
         git push -u origin main
 

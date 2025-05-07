@@ -6,7 +6,7 @@ exports.getlist = async (req, res) => {
         const [customer] = await db.query("SELECT count(id) total from customers");
         //expense check
         const [expense] = await db.query(
-            " SELECT SUM(amount) as total, count(id) total_expense FROM expense " +
+            " SELECT SUM(amount) as total, count(id) total_expense FROM expenses " +
             " WHERE MONTH(expense_date) = MONTH(CURRENT_DATE) AND YEAR(expense_date) = YEAR(CURRENT_DATE) "
         );
         //and more data
@@ -22,7 +22,7 @@ exports.getlist = async (req, res) => {
         );
         const [sale_summary_by_month] = await db.query(
             " SELECT " +
-            "   DATE_FORMAT(r.create_at,'%M') title" +
+            "   DATE_FORMAT(MIN(r.create_at),'%M') title" +
             "   ,SUM(r.total_amount)  total" +
             " FROM orders r " +
             " WHERE" +
@@ -32,7 +32,7 @@ exports.getlist = async (req, res) => {
         );
         const [expense_summary_by_month] = await db.query(
             " SELECT " +
-            "   DATE_FORMAT(e.expense_date,'%M') title" +
+            "   DATE_FORMAT(MIN(e.expense_date),'%M') title" +
             "   ,SUM(e.amount)  total" +
             " FROM expenses e " +
             " WHERE" +
