@@ -59,14 +59,12 @@ exports.getlist = async (req, res) => {
     }
 };
 exports.create = async (req, res) => {
-    const connection = await db.getConnection();
-    try {
-        await connection.beginTransaction();
+    try{
         var sql =
-            " INSERT INTO products (category_id, barcode, name, brand, description, qty, price, discount, status, image, create_by) " +
-            " VALUES (:category_id, :barcode, :name, :brand, :description, :qty, :price, :discount, :status, :image, :create_by) ";
+        " INSERT INTO products (category_id, barcode,name,brand,description,qty,price,discount,status,image,create_by ) " +
+        " VALUES (:category_id, :barcode, :name, :brand, :description, :qty, :price, :discount, :status, :image, :create_by ) ";
 
-        var [data] = await connection.query(sql, {
+        var [data] = await db.query(sql, {
             ...req.body,
             image: req.files?.upload_image[0]?.filename,
             create_by: req.auth?.name,
@@ -74,7 +72,7 @@ exports.create = async (req, res) => {
         if (req.files && req.files?.upload_image_optional) {
             var paramImagePorduct = [];
             req.files?.upload_image_optional.map((item, index) => {
-                paramImagePorduct.push([data.insertId, item.filename]);
+                paramImagePorduct.push([data?.insertId, item.filename]);
             });
             var sqlImageProduct =
                 "INSERT INTO product_image (product_id,image) VALUES :data";
