@@ -1,10 +1,27 @@
 const { db, logErr } = require("../util/helper");
+const configController = require('./config.controller');
 
 exports.getlist = async (req, res) => {
     try {
-        var [list] = await db.query("SELECT * FROM supplier");
+        const txtSearch = req.query.txtSearch || '';
+        const product_type = req.query.product_type || '';
+        
+        let query = "SELECT * FROM supplier WHERE 1=1";
+        let params = [];
+        
+        if (txtSearch) {
+            query += " AND (name LIKE ? OR code LIKE ? OR phone LIKE ? OR email LIKE ?)";
+            params.push(`%${txtSearch}%`, `%${txtSearch}%`, `%${txtSearch}%`, `%${txtSearch}%`);
+        }
+        
+        if (product_type) {
+            query += " AND product_type = ?";
+            params.push(product_type);
+        }
+        
+        var [list] = await db.query(query, params);
         res.json({
-            data: list,
+            list: list,
             message: "success"
         })
     }
@@ -14,12 +31,22 @@ exports.getlist = async (req, res) => {
 }
 exports.create = async (req, res) => {
     try {
-        var sql =
-            "INSERT INTO supplier (name,code,phone,email,address,description,create_by) VALUES (:name,:code,:phone,:email,:address,:description,:create_by) ";
-        var [data] = await db.query(sql, {
-            ...req.body,
-            create_by: req.auth?.name,
-        });
+        var sql = "insert into supplier(name,product_type,code,phone,email,address,description) values(?,?,?,?,?,?,?)";
+        // var [check] = await db.query("SELECT * FROM supplier WHERE code = ?", req.body.code);
+        // if (check.length > 0) {
+        //     return res.status(400).json({
+        //         message: "Code already exists"
+        //     });
+        // }
+        var [data] = await db.query(sql, [
+            req.body.name,
+            req.body.product_type,
+            req.body.code,
+            req.body.phone,
+            req.body.email,
+            req.body.address,
+            req.body.description
+        ]);
         res.json({
             data: data,
             message: "Insert success!",
@@ -31,10 +58,20 @@ exports.create = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
-        var [list] = await db.query("UPDATE supplier SET ? WHERE id = ?", [req.body, req.params.id]);
+        var sql = "UPDATE supplier SET name=?, product_type=?, code=?, phone=?, email=?, address=?, description=? WHERE id=?";
+        var [data] = await db.query(sql, [
+            req.body.name,
+            req.body.product_type,
+            req.body.code,
+            req.body.phone,
+            req.body.email,
+            req.body.address,
+            req.body.description,
+            req.body.id
+        ]);
         res.json({
-            data: list,
-            message: "success"
+            data: data,
+            message: "Update success!"
         })
     }
     catch (error) {
@@ -53,6 +90,3 @@ exports.remove = async (req, res) => {
         logErr("supplier.remove", error, res);
     }
 };
-
-
-
