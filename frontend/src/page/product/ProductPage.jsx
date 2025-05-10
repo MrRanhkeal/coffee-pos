@@ -19,6 +19,7 @@ import { request } from "../../util/helper";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 //please check this
 const getBase64 = (file) =>
@@ -36,7 +37,7 @@ function ProductPage() {
   const [state, setState] = useState({
     list: [],
     total: 0,
-    loading: false,
+    loading: true,
     visibleModal: false,
   });
 
@@ -556,14 +557,16 @@ function ProductPage() {
             align: "center",
             render: (item, data, index) => (
               <Space>
-                <Button
+                <EditOutlined
                   type="primary"
+                  style={{ color: "green", fontSize: 20 }}
                   icon={<MdEdit />}
                   onClick={() => onClickEdit(data, index)}
                 />
-                <Button
+                <DeleteOutlined
                   type="primary"
                   danger
+                  style={{ color: "red", fontSize: 20 }}
                   icon={<MdDelete />}
                   onClick={() => onClickDelete(data, index)}
                 />

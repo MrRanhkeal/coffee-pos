@@ -10,9 +10,13 @@ import {
     Space,
     Table,
     Tag,
+    
 } from "antd";
-import { resetWarned } from "antd/es/_util/warning";
+// import { resetWarned } from "antd/es/_util/warning";
 import { configStore } from "../../store/configStore";
+import { MdDelete, MdEdit } from "react-icons/md";
+import {DeleteOutlined, EditOutlined, FileAddFilled} from "@ant-design/icons";
+
 
 function UserPage() {
     const [form] = Form.useForm();
@@ -21,8 +25,7 @@ function UserPage() {
     const [state, setState] = useState({
         list: [],
         role_id: null,
-        loading: false,
-        visible: false,
+        loading: true,
         isEdit: false,
         editingUser: null
     });
@@ -96,7 +99,7 @@ function UserPage() {
             console.error("Delete error:", error);
             message.error("Failed to delete user");
         }
-
+        
         // try {
         //   const res = await request(`auth/delete/${record.id}`, "delete");
         //   if (res && !res.error) {
@@ -202,9 +205,9 @@ function UserPage() {
                     <div>User</div>
                     <Input.Search style={{ marginLeft: 10 }} placeholder="Search" />
                 </div>
-                <Button type="primary" onClick={handleOpenModal}>
+                <FileAddFilled type="primary" style={{ fontSize: 30,color:"green" }} onClick={handleOpenModal}>
                     New
-                </Button>
+                </FileAddFilled>
             </div>
             <Modal
                 title={state.isEdit ? "Edit User" : "New User"}
@@ -278,17 +281,17 @@ function UserPage() {
                     />
 
                     {/* <Form.Item
-            name={"role_id"}
-            label="Role"
-            rules={[
-              {
-                required: true,
-                message: "Please select role",
-              },
-            ]}
-          >
-            <Select placeholder="Select Role" options={state.role} />
-          </Form.Item> */}
+                        name={"role_id"}
+                        label="Role"
+                        rules={[
+                        {
+                            required: true,
+                            message: "Please select role",
+                        },
+                        ]}
+                    >
+                        <Select placeholder="Select Role" options={state.role} />
+                    </Form.Item> */}
                     <Form.Item
                         name={"is_active"}
                         label="Status"
@@ -326,7 +329,7 @@ function UserPage() {
             <Table
                 // dataSource={state.list}
                 dataSource={list}
-                loading={state.loading}
+                loading={state.loading }
                 columns={[
                     {
                         key: "no",
@@ -370,16 +373,20 @@ function UserPage() {
                         align: "center",
                         render: (value, data) => (
                             <Space>
-                                <Button onClick={() => clickBtnEdit(data)} type="primary">
-                                    Edit
-                                </Button>
-                                <Button
+                            <EditOutlined 
+                                    icon={<MdEdit/>}
+                                    style={{ color: "green" , fontSize: 20}}
+                                    onClick={() => clickBtnEdit(data)} 
+                                    type="primary">
+                                </EditOutlined>
+                                <DeleteOutlined
                                     onClick={() => clickBtnDelete(data)}
                                     danger
+                                    style={{  color: "red", fontSize: 20 }}
                                     type="primary"
+                                    icon={<MdDelete/>}
                                 >
-                                    Delete
-                                </Button>
+                                </DeleteOutlined>
                             </Space>
                         ),
                     },

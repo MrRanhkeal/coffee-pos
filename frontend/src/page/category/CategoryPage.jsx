@@ -3,12 +3,16 @@ import {Button, Form,Input,message,Modal,Select,Space,Table,Tag} from "antd";
 import { request } from "../../util/helper";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 // import { configStore } from "../../store/configStore";
 function CategoryPage() {
   // const { config } = configStore();
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    loading: true,
+    visibleModal: false,
+  });
   const [state, setState] = useState({
     visibleModal: false,
     id: null,
@@ -195,14 +199,16 @@ function CategoryPage() {
             align: "center",
             render: (item, data, index) => (
               <Space>
-                <Button
+                <EditOutlined
                   type="primary"
+                  style={{ color: "green", fontSize: 20 }}
                   icon={<MdEdit />}
                   onClick={() => onClickEdit(data, index)}
                 />
-                <Button
+                <DeleteOutlined
                   type="primary"
                   danger
+                  style={{ color: "red", fontSize: 20 }}
                   icon={<MdDelete />}
                   onClick={() => onClickDelete(data, index)}
                 />

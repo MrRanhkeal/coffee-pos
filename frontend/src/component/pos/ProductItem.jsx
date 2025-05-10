@@ -1,4 +1,4 @@
-import { Button, Image, Tag } from "antd";
+import { Button, Image, Radio, Tag } from "antd";
 import React from "react";
 import { Config } from "../../util/config";
 import styles from "./ProductItem.module.css";
@@ -17,6 +17,7 @@ function ProductItem({
   handleAdd,
   qty,
 }) {
+  const [sugarLevel, setSugarLevel] = React.useState(100);
   var final_price = price;
   if (discount != 0 && discount != null) {
     final_price = price - (price * discount) / 100;
@@ -24,10 +25,10 @@ function ProductItem({
   }
   return (
     <div className={styles.contianer}>
-      <Image src={Config.image_path + image} alt={name} />
+      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '10px' ,width: '200px', height: '200px',justifyContent: 'center' }}/>
       <div className={styles.p_name + " truncate-text"}>{name}</div>
       <div className={styles.p_des}>
-        {barcode} | {category_name} | {brand}
+        {barcode} - {category_name} - {brand}
       </div>
       <div className={styles.p_des}>{description}</div>
       <div className={styles.p_des}>
@@ -46,6 +47,16 @@ function ProductItem({
           <div className={styles.p_final_price}> {price}$</div>
         </div>
       )}
+      <div>
+        <Radio.Group value={sugarLevel} onChange={(e) => setSugarLevel(e.target.value)}>
+          <Radio value={0}>0%</Radio>
+          <Radio value={10}>10%</Radio>
+          <Radio value={25}>25%</Radio>
+          <Radio value={50}>50%</Radio>
+          <Radio value={75}>75%</Radio>
+          <Radio value={100}>100%</Radio>
+        </Radio.Group>
+      </div>
       <div className={styles.btnAddContainer}>
         <Button onClick={handleAdd} type="primary" icon={<MdAddCircle />} />
       </div>

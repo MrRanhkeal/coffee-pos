@@ -15,6 +15,7 @@ function BillItem({
   handleIncrease,
   handleDescrease,
   handleRemove,
+  sugar,
 }) {
   var final_price = price;
   if (discount != 0 && discount != null) {
@@ -50,7 +51,7 @@ function BillItem({
             </div>
           </div>
           <div>
-            {barcode} | {category_name} | {brand}
+            {barcode} - {category_name} - {brand} - {sugar}
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {discount != 0 && discount != null ? (

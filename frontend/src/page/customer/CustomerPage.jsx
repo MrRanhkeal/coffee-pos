@@ -3,6 +3,7 @@ import { Button, Form, Input, message, Modal, Select, Space, Table, Tag } from "
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
+import { DeleteOutlined, EditOutlined, FileAddTwoTone } from "@ant-design/icons";
 function CustomerPage() {
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
@@ -123,9 +124,9 @@ function CustomerPage() {
             Filter
           </Button>
         </Space>
-        <Button type="primary" onClick={onClickAddBtn}>
+        <FileAddTwoTone type="primary" onClick={onClickAddBtn} style={{ color: "green", fontSize: 30 }}>
           NEW
-        </Button>
+        </FileAddTwoTone>
       </div>
       <Modal
         open={state.visibleModal}
@@ -218,14 +219,16 @@ function CustomerPage() {
             align: "center",
             render: (item, data, index) => (
               <Space>
-                <Button
+                <EditOutlined
                   type="primary"
+                  style={{ color: "green", fontSize: 20 }}
                   icon={<MdEdit />}
                   onClick={() => onClickEdit(data, index)}
                 />
-                <Button
+                <DeleteOutlined
                   type="primary"
                   danger
+                  style={{ color: "red", fontSize: 20 }}
                   icon={<MdDelete />}
                   onClick={() => onClickDelete(data, index)}
                 />

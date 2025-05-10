@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { request } from "../../util/helper";
 import MainPage from "../../component/layout/MainPage";
-import { Button, Form, Input, message, Modal, Space, Table } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table, Select } from "antd";
 import dayjs from "dayjs";
+import { configStore } from "../../store/configStore";
+import { MdDelete, MdEdit } from "react-icons/md";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 function SupplierPage() {
     const [form] = Form.useForm();
+    const { config } = configStore();
     const [state, setState] = useState({
         list: [],
         loading: false,
         visible: false,
         txtSearch: "",
     });
-    useEffect(() => {
-        getList();
-    }, []);
-
-    const getList = async () => {
+    const [filter, setFilter] = useState({
+        txtSearch: "",
+        product_type: "",
+        code: "",
+    });
+    const getList = useCallback(async () => {
         // ?txtSearch=VN-101 query paramter
         setState((p) => ({
             ...p,
@@ -23,6 +28,7 @@ function SupplierPage() {
         }));
         var param = {
             txtSearch: state.txtSearch,
+            product_type: filter.product_type,
         };
         const res = await request("supplier", "get", param);
         if (res && !res.error) {
@@ -32,7 +38,11 @@ function SupplierPage() {
                 loading: false,
             }));
         }
-    };
+    }, [state.txtSearch, setState, filter.product_type]);
+
+    useEffect(() => {
+        getList();
+    }, [getList]);
 
     const openModal = () => {
         setState((p) => ({
@@ -129,78 +139,100 @@ function SupplierPage() {
                 <Form layout="vertical" form={form} onFinish={onFinish}>
                     <Form.Item
                         name="name"
-                        label="name"
+                        label="Name"
                         rules={[
                             {
                                 required: true,
-                                message: "name required!",
+                                message: "Name required!",
                             },
                         ]}
                     >
-                        <Input placeholder="code" />
+                        <Input placeholder="Name" />
+                    </Form.Item>
+                    <Form.Item
+                        name="product_type"
+                        label="Product Type"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Product type required!",
+                            },
+                        ]}
+                    >
+                        <Select
+                            placeholder="Select product type"
+                            showSearch
+                            allowClear
+                            options={Object.entries(config.product_type || {}).flatMap(([category, items]) =>
+                                items.map(item => ({
+                                    label: `${category} - ${item.label}`,
+                                    value: item.value
+                                }))
+                            )}
+                            onChange={(value) => {
+                                setFilter(prev => ({
+                                    ...prev,
+                                    product_type: value
+                                }));
+                                getList();
+                            }}
+                        />
+                        
                     </Form.Item>
                     <Form.Item
                         name="code"
-                        label="code"
+                        label="Code"
                         rules={[
                             {
                                 required: true,
-                                message: "code required!",
+                                message: "Code required!",
                             },
                         ]}
                     >
-                        <Input placeholder="code" />
+                        <Input placeholder="Enter supplier code" />
                     </Form.Item>
                     <Form.Item
-                        name="tel"
-                        label="tel"
+                        name="phone"
+                        label="Phone"
                         rules={[
                             {
                                 required: true,
-                                message: "tel required!",
+                                message: "Phone number required!",
                             },
                         ]}
                     >
-                        <Input placeholder="tel" />
+                        <Input placeholder="Phone number" />
                     </Form.Item>
                     <Form.Item
                         name="email"
-                        label="email"
+                        label="Email"
                         rules={[
                             {
                                 required: true,
-                                message: "email required!",
+                                message: "Email required!",
+                                type: "email"
                             },
                         ]}
                     >
-                        <Input placeholder="email" />
+                        <Input placeholder="Enter email address" />
                     </Form.Item>
                     <Form.Item
                         name="address"
-                        label="address"
+                        label="Address"
                         rules={[
                             {
                                 required: true,
-                                message: "address required!",
+                                message: "Address required!",
                             },
                         ]}
                     >
-                        <Input placeholder="address" />
+                        <Input.TextArea placeholder="Enter full address" rows={3} />
                     </Form.Item>
                     <Form.Item
-                        name="website"
-                        label="website"
-                        rules={[
-                            {
-                                required: true,
-                                message: "website required!",
-                            },
-                        ]}
+                        name="description"
+                        label="Description"
                     >
-                        <Input placeholder="website" />
-                    </Form.Item>
-                    <Form.Item name="note" label="note">
-                        <Input.TextArea placeholder="note" />
+                        <Input.TextArea placeholder="Description" />
                     </Form.Item>
                     <Form.Item style={{ textAlign: "right" }}>
                         <Space>
@@ -217,33 +249,38 @@ function SupplierPage() {
                 columns={[
                     {
                         key: "name",
-                        title: "name",
+                        title: "Name",
                         dataIndex: "name",
                     },
                     {
+                        key: "product_type",
+                        title: "Product Type",
+                        dataIndex: "product_type",
+                    },
+                    {
                         key: "code",
-                        title: "code",
+                        title: "Code",
                         dataIndex: "code",
                     },
                     {
-                        key: "tel",
-                        title: "tel",
-                        dataIndex: "tel",
+                        key: "phone",
+                        title: "Phone",
+                        dataIndex: "phone",
                     },
                     {
                         key: "email",
-                        title: "email",
+                        title: "Email",
                         dataIndex: "email",
                     },
                     {
                         key: "address",
-                        title: "address",
+                        title: "Address",
                         dataIndex: "address",
                     },
                     {
-                        key: "website",
-                        title: "website",
-                        dataIndex: "website",
+                        key: "description",
+                        title: "Description",
+                        dataIndex: "description",
                     },
                     {
                         key: "create_at",
@@ -251,21 +288,25 @@ function SupplierPage() {
                         dataIndex: "create_at",
                         render: (value) => dayjs(value).format("DD/MM/YYYY"),
                     },
+                    
                     {
                         key: "action",
                         title: "action",
                         render: (value, data) => (
                             <Space>
-                                <Button type="primary" onClick={() => onClickBtnEdit(data)}>
-                                    EDIT
-                                </Button>
-                                <Button
+                                <EditOutlined type="primary" 
+                                icon={<MdEdit/>}
+                                style={{ color: "green", fontSize: 20 }}
+                                onClick={() => onClickBtnEdit(data)}>
+                                </EditOutlined>
+                                <DeleteOutlined
                                     type="primary"
+                                    icon={<MdDelete />}
                                     danger
+                                    style={{ color: "red", fontSize: 20 }}
                                     onClick={() => onClickBtnDelete(data)}
                                 >
-                                    DELETE
-                                </Button>
+                                </DeleteOutlined>
                             </Space>
                         ),
                     },

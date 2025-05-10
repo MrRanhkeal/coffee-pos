@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import { Button, Form, Input, message, Modal, Space, Table, Tag } from "antd";
+import { DeleteOutlined, EditOutlined, FileAddTwoTone } from "@ant-design/icons";
+import {  } from "react-icons/md";
 
 function RolePage() {
     const [state, setState] = useState({
         list: [],
-        loading: false,
+        loading: true,
         visible: false
     });
     const [form] = Form.useForm();
@@ -153,12 +155,12 @@ function RolePage() {
             width: 150,
             render: (_, record) => (
                 <Space>
-                    <Button type="primary" onClick={() => handleEdit(record)}>
+                    <EditOutlined type="primary" style={{ color: "green", fontSize: 20 }} onClick={() => handleEdit(record)}>
                         Edit
-                    </Button>
-                    <Button danger onClick={() => handleDelete(record)}>
+                    </EditOutlined>
+                    <DeleteOutlined danger style={{ color: "red", fontSize: 20 }} onClick={() => handleDelete(record)}>
                         Delete
-                    </Button>
+                    </DeleteOutlined>
                 </Space>
             )
         }
@@ -168,15 +170,15 @@ function RolePage() {
         <div className="page-content" >
             <div className="page-header" style={{display:"flex"}}>
                 <h3>Role Management</h3>
-                <Button type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))}
+                <FileAddTwoTone type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))}
                 style={{
-                    marginLeft: "86% ",
-                    marginBottom: "20px",
-                    display: "optimal",
+                    marginLeft: "auto",
+                    fontSize: 40,
+                    color: "green",
                 }}
                 >
                     New Role
-                </Button>
+                </FileAddTwoTone>
             </div>
 
             <Table

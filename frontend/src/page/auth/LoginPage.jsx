@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Modal, message, Input, Space } from "antd";
+import { Form, Button, message, Input } from "antd";
 import { request } from "../../util/helper";
 import {
   setAcccessToken,
@@ -8,7 +8,7 @@ import {
 } from "../../store/profile.store";
 import { useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Checkbox, Flex } from "antd";
+import { Checkbox } from "antd";
 import "./LoginPage.css";
 
 function LoginPage() {
