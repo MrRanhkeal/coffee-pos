@@ -3,6 +3,7 @@ import { Config } from "../../util/config";
 import styles from "./BillItem.module.css";
 import { Button, Col, Row, Space } from "antd";
 import { MdAdd, MdDelete, MdHorizontalRule } from "react-icons/md";
+import PropTypes from "prop-types";
 function BillItem({
   name,
   image,
@@ -89,5 +90,20 @@ function BillItem({
     </div>
   );
 }
+//proptypes
+BillItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  brand: PropTypes.string.isRequired,
+  category_name: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  discount: PropTypes.number,
+  barcode: PropTypes.string,
+  cart_qty: PropTypes.number.isRequired,
+  handleIncrease: PropTypes.func.isRequired,
+  handleDescrease: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  sugar: PropTypes.string,
+};
 
 export default BillItem;

@@ -2,6 +2,7 @@ import { Col, Flex, Row } from "antd";
 import React from "react";
 import { formatDateClient } from "../../util/helper";
 import logo from "../../assets/coffee-shop.jpg";
+import PropTypes from "prop-types";
 
 const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {} }, ref) => {
   // Add print styles
@@ -64,8 +65,8 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {} }, ref)
       <hr />
         
       <div style={{ marginBottom: 15, marginTop: 5 }}>
-        {/* {props.objSummary?.order_no}|{" "} */}
-        {/* {formatDateClient(props.objSummary?.order_date, "DD/MM/YYYY h:mm ss A")} */}
+        {/* {props.objSummary?.order_no}|{" "}
+        {formatDateClient(props.objSummary?.order_date, "DD/MM/YYYY h:mm ss A")} */}
       </div>
       <table className="pos_tbl_invoice">
         <thead>
@@ -111,5 +112,32 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {} }, ref)
     </div>
   );
 });
+//modify
+PrintInvoice.propTypes = {
+  cart_list: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      cart_qty: PropTypes.number.isRequired,
+      price: PropTypes.number.isRequired,
+      discount: PropTypes.number,
+    })
+  ),
+  objSummary: PropTypes.shape({
+    total_qty: PropTypes.number,
+    sub_total: PropTypes.number,
+    save_discount: PropTypes.number,
+    total: PropTypes.number,
+  }),
+};
+PrintInvoice.displayName = "PrintInvoice";
+PrintInvoice.defaultProps = {
+  cart_list: [],
+  objSummary: {
+    total_qty: 0,
+    sub_total: 0,
+    save_discount: 0,
+    total: 0,
+  },
+};
 
 export default PrintInvoice;

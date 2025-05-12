@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const InvoiceComponent = React.forwardRef((props, ref) => (
   <div
@@ -16,3 +17,19 @@ const InvoiceComponent = React.forwardRef((props, ref) => (
     <p style={{ textAlign: "center" }}>Thank you for your purchase!</p>
   </div>
 ));
+
+//props
+InvoiceComponent.propTypes = {
+  name: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  total: PropTypes.number.isRequired,
+};
+InvoiceComponent.displayName = "InvoiceComponent";
+
+export default InvoiceComponent;

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-
+import PropTypes from "prop-types";
 // Receipt Component for Printing
 const Receipt = React.forwardRef((props, ref) => (
   <div
@@ -56,5 +56,19 @@ const App = () => {
     </div>
   );
 };
+
+// PropTypes for the Receipt component
+Receipt.propTypes = {
+  name: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  total: PropTypes.number.isRequired,
+};
+Receipt.displayName = "Receipt";
 
 export default App;

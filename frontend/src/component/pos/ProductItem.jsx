@@ -3,7 +3,7 @@ import React from "react";
 import { Config } from "../../util/config";
 import styles from "./ProductItem.module.css";
 import { MdAddCircle } from "react-icons/md";
-
+import PropTypes from "prop-types";
 function ProductItem({
   name,
   description,
@@ -12,7 +12,7 @@ function ProductItem({
   brand,
   price,
   discount,
-  barcode,
+  // barcode,
   handleAdd,
   qty,
 }) 
@@ -63,5 +63,17 @@ function ProductItem({
     </div>
   );
 }
+ProductItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  category_name: PropTypes.string.isRequired,
+  brand: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  discount: PropTypes.number,
+  barcode: PropTypes.string.isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  qty: PropTypes.number.isRequired,
+};
 
 export default ProductItem;
