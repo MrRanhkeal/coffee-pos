@@ -23,7 +23,7 @@ exports.getlist = async (req, res) => {
 };
 exports.create = async (req, res) => {
     try {
-        var sql = "insert into customers(name,phone,email,address,description,create_by) values(:name,:phone,:email,:address,:description,:create_by)";
+        var sql = "insert into customers(name,phone,email,address,description,create_by,status) values(:name,:phone,:email,:address,:description,:create_by,:status)";
         var [list] = await db.query(sql, 
             {
                 ...req.body,
@@ -42,7 +42,7 @@ exports.create = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
-        var sql = "update customers set name=:name,phone=:phone,email=:email,address=:address,description=:description,create_by=:create_by where id=:id";
+        var sql = "update customers set name=:name,phone=:phone,email=:email,address=:address,description=:description,create_by=:create_by, status=:status where id=:id";
         var [list] = await db.query(sql, {...req.body});
         res.json({
             data: list,
