@@ -5,7 +5,6 @@ import styles from "./ProductItem.module.css";
 import { MdAddCircle } from "react-icons/md";
 
 function ProductItem({
-  id,
   name,
   description,
   image,
@@ -16,7 +15,8 @@ function ProductItem({
   barcode,
   handleAdd,
   qty,
-}) {
+}) 
+{
   const [sugarLevel, setSugarLevel] = React.useState(100);
   var final_price = price;
   if (discount != 0 && discount != null) {
@@ -24,11 +24,11 @@ function ProductItem({
     final_price = final_price.toFixed(2);
   }
   return (
-    <div className={styles.contianer}>
-      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '10px' ,width: '200px', height: '200px',justifyContent: 'center' }}/>
+    <div className={styles.contianer} >
+      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '10px' ,width: '250px', height: '260px',justifyContent: 'center' }}/>
       <div className={styles.p_name + " truncate-text"}>{name}</div>
       <div className={styles.p_des}>
-        {barcode} - {category_name} - {brand}
+        {category_name} - {brand}
       </div>
       <div className={styles.p_des}>{description}</div>
       <div className={styles.p_des}>
@@ -58,7 +58,7 @@ function ProductItem({
         </Radio.Group>
       </div>
       <div className={styles.btnAddContainer}>
-        <Button onClick={handleAdd} type="primary" icon={<MdAddCircle />} />
+        <Button onClick={handleAdd} type="primary" icon={<MdAddCircle />}/>
       </div>
     </div>
   );

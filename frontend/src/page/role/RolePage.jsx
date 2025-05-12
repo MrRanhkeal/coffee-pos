@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import { Button, Form, Input, message, Modal, Space, Table, Tag } from "antd";
-import { DeleteOutlined, EditOutlined, FileAddTwoTone } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddOutlined, FileAddTwoTone } from "@ant-design/icons";
 import {  } from "react-icons/md";
 
 function RolePage() {
@@ -170,15 +170,17 @@ function RolePage() {
         <div className="page-content" >
             <div className="page-header" style={{display:"flex"}}>
                 <h3>Role Management</h3>
-                <FileAddTwoTone type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))}
-                style={{
-                    marginLeft: "auto",
-                    fontSize: 40,
-                    color: "green",
-                }}
+                <Button type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}
+                // icon={<FileAddTwoTone />}
+                // style={{
+                //     marginLeft: "auto",
+                //     fontSize: 40,
+                //     color: "green",
+                // }}
                 >
-                    New Role
-                </FileAddTwoTone>
+                    <FileAddOutlined/>
+                    Add
+                </Button>
             </div>
 
             <Table

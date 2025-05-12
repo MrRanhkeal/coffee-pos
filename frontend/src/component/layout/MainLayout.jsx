@@ -1,13 +1,29 @@
 import React, { useEffect, useState } from "react";
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  SmileOutlined,
-  TeamOutlined,
+  AccountBookOutlined,
+  AlignCenterOutlined,
+  AppstoreOutlined,
+  DollarOutlined,
+  GlobalOutlined,
+  HomeOutlined,
+  LogoutOutlined,
+  ProfileOutlined,
+  SettingOutlined,
+  ShopOutlined,
+  ShoppingCartOutlined,
+  ShoppingOutlined,
+  SlidersOutlined,
+  SnippetsOutlined,
+  SortDescendingOutlined,
+  StockOutlined,
+  TransactionOutlined,
+  UnorderedListOutlined,
+  UserDeleteOutlined,
+  UsergroupAddOutlined,
   UserOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Button, Dropdown, Input, Layout, Menu, theme } from "antd";
+import {  Dropdown, Input, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import Logo from "../../../../backend/image/product/coffee.jpg";
@@ -22,28 +38,33 @@ import {
 } from "../../store/profile.store";
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
-const { Header, Content, Footer, Sider } = Layout;
+// import { icons } from "antd/es/image/PreviewGroup";
+const {  Content, Sider } = Layout;
 
 const items_menu = [
   {
     key: "",
     label: "Dashabord",
     children: null,
+    icon: <HomeOutlined />
   },
   {
     key: "pos",
     label: "POS",
     children: null,
+    icon: <ShopOutlined />
   },
   {
     key: "customer",
     label: "Customer",
     children: null,
+    icon: <UsergroupAddOutlined/>
   },
   {
     key: "order",
     label: "Order",
     children: null,
+    icon: <ShoppingCartOutlined/>
   },
   {
     label: "Product",
@@ -52,13 +73,16 @@ const items_menu = [
         key: "product",
         label: "List Porduct",
         children: null,
+        icon: <UnorderedListOutlined/>
       },
       {
         key: "category",
         label: "Category",
         children: null,
+        icon: <SortDescendingOutlined/>
       },
     ],
+    icon:<AppstoreOutlined/>
   },
   {
     label: "Purchase",
@@ -67,8 +91,10 @@ const items_menu = [
         key: "supplier",
         label: "Supplier",
         children: null,
+        icon: <UserSwitchOutlined/>
       }
     ],
+    icon: <ShoppingOutlined/>
   },
   {
     label: "Expanse",
@@ -77,8 +103,10 @@ const items_menu = [
         key: "expanse",
         label: "Expanse",
         children: null,
+        icon: <DollarOutlined/>
       },
     ],
+    icon: <TransactionOutlined/>
   },
   {
     label: "Stock",
@@ -87,8 +115,10 @@ const items_menu = [
         key: "stock",
         label: "Stock",
         children: null,
+        icon: <StockOutlined/>
       },
     ],
+    icon:<SlidersOutlined/>
   },
   {
     label: "Report",
@@ -97,13 +127,16 @@ const items_menu = [
         key: "report_sale_summary",
         label: "Sale summary",
         children: null,
+        icon: <AlignCenterOutlined/>
       },
       {
         key: "report_expense_summary",
         label: "Expense Summary",
         children: null,
+        icon: <AccountBookOutlined/>
       }
     ],
+    icon: <SnippetsOutlined/>
   },
 
   {
@@ -113,13 +146,16 @@ const items_menu = [
         key: "user",
         label: "User",
         children: null,
+        icon: <UserOutlined/>
       },
       {
         key: "role",
         label: "Role",
         children: null,
+        icon: <UserDeleteOutlined/>
       }
     ],
+    icon: <UsergroupAddOutlined/>
   },
 
   {
@@ -129,13 +165,16 @@ const items_menu = [
         key: "Currency",
         label: "Currency",
         children: null,
+        icon: <DollarOutlined/>
       },
       {
         key: "langauge",
         label: "Langauge",
         children: null,
+        icon: <GlobalOutlined/>
       },
     ],
+    icon: <SettingOutlined/>
   },
 ];
 
@@ -213,25 +252,27 @@ const MainLayout = () => {
     {
       key: "1",
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="/">
-          profile
+        <a target="_blank" rel="noopener noreferrer" href="/" style={{color:"green-yllow", fontSize:15}}>
+          Profile
         </a>
       ),
+      icon:<ProfileOutlined/>
     },
-    {
-      key: "2",
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="/">
-          chage password
-        </a>
-      ),
-      icon: <SmileOutlined />,
-      disabled: true,
-    },
+    // {
+    //   key: "2",
+    //   label: (
+    //     <a target="_blank" rel="noopener noreferrer" href="/">
+    //       chage password
+    //     </a>
+    //   ),
+    //   icon: <SmileOutlined />,
+    //   disabled: true,
+    // },
     {
       key: "logout",
       danger: true,
       label: "Logout",
+      icon: <LogoutOutlined/>
     },
   ];
 
@@ -274,17 +315,17 @@ const MainLayout = () => {
 
               <div>Coffee Shop & Restaurant</div>
             </div>
-            <div>
+            {/* <div>
               <Input.Search
                 style={{ width: 180, marginLeft: 15, marginTop: 10 }}
                 size="large"
                 placeholder="Search"
               />
-            </div>
+            </div> */}
           </div>
           <div className="admin-header-g2">
-            <IoIosNotifications className="icon-notify" />
-            <MdOutlineMarkEmailUnread className="icon-email" />
+            <IoIosNotifications className="icon-notify" style={{width:30,height:30}} />
+            <MdOutlineMarkEmailUnread className="icon-email" style={{width:30,height:30}}/>
             <div>
               <div className="txt-username">{profile?.name}</div>
               <div>{profile?.role_name}</div>
@@ -299,7 +340,7 @@ const MainLayout = () => {
                 },
               }}
             >
-              <img className="img-user" src={ImgUser} alt="Logo" />
+              <img className="img-user" src={ImgUser} alt="Logo"  style={{width:50,height:50}}/>
             </Dropdown>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Card, message, Image, Tag, Alert } from 'antd';
+import { Table, Card, message, Image, Tag } from 'antd';
 import { request } from '../../util/helper';
+import { FileAddTwoTone } from '@ant-design/icons';
 // import PageContainer from '../container/PageContainer';
 
 const StockPage = () => {
@@ -78,14 +79,14 @@ const StockPage = () => {
                 value ? (
                     <Image
                         src={`http://localhost/coffee/${value}`}
-                        style={{ width: 50, height: 50, objectFit: 'cover' }}
+                        style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 5 }}
                         preview={{
                             mask: 'View'
                         }}
                     />
                 ) : (
                     <div
-                        style={{ backgroundColor: "#EEE", width: 50, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        style={{ backgroundColor: "#EEE", width: 100, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
                         No Image
                     </div>
@@ -99,8 +100,19 @@ const StockPage = () => {
     ];
 
     return (
-        <div className="container-fluid">
-            <Card title="Stock Management">
+        <div className="container-fluid" >
+            <div className="page-header" style={{display:"flex"}} >
+                <FileAddTwoTone type="primary" 
+                style={{
+                    marginLeft: "auto",
+                    fontSize: 40,
+                    color: "green",
+                }}
+                >
+                    New Stock
+                </FileAddTwoTone>
+            </div>
+            <Card >
                 <Table
                     columns={columns}
                     dataSource={list}

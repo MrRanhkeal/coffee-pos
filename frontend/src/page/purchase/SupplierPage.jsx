@@ -5,7 +5,7 @@ import { Button, Form, Input, message, Modal, Space, Table, Select } from "antd"
 import dayjs from "dayjs";
 import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddOutlined } from "@ant-design/icons";
 function SupplierPage() {
     const [form] = Form.useForm();
     const { config } = configStore();
@@ -88,25 +88,31 @@ function SupplierPage() {
 
     const onClickBtnDelete = (items) => {
         Modal.confirm({
-            title: "Delete Suppler",
-            content: "Are you sure to delete?",
+            title: "Delete Supplier",
+            content: "Are you sure you want to delete this supplier?",
             onOk: async () => {
-                setState((p) => ({
-                    ...p,
-                    loading: true,
-                }));
-                const res = await request("supplier", "delete", {
-                    id: items.id,
-                });
-                if (res && !res.error) {
-                    const newList = state.list.filter((item) => item.id != items.id);
+                try {
                     setState((p) => ({
                         ...p,
-                        list: newList,
+                        loading: true,
+                    }));
+                    const res = await request(`supplier/${items.id}`, "delete");
+                    if (res && !res.error) {
+                        const newList = state.list.filter((item) => item.id !== items.id);
+                        setState((p) => ({
+                            ...p,
+                            list: newList,
+                            loading: false,
+                        }));
+                        message.success(res.message);
+                    }
+                } catch (error) {
+                    console.error("Delete supplier error:", error);
+                    message.error("Failed to delete supplier");
+                    setState((p) => ({
+                        ...p,
                         loading: false,
                     }));
-                    // getList();
-                    message.success(res.message);
                 }
             },
         });
@@ -126,8 +132,8 @@ function SupplierPage() {
                         placeholder="Search"
                     />
                 </Space>
-                <Button type="primary" onClick={openModal}>
-                    NEW
+                <Button type="primary" onClick={openModal} >
+                <FileAddOutlined/>Add
                 </Button>
             </div>
             <Modal

@@ -14,8 +14,8 @@ import {
 } from "antd";
 // import { resetWarned } from "antd/es/_util/warning";
 import { configStore } from "../../store/configStore";
-import { MdDelete, MdEdit } from "react-icons/md";
-import {DeleteOutlined, EditOutlined, FileAddFilled} from "@ant-design/icons";
+import { MdAddBox, MdCancel, MdDelete, MdEdit, MdSave } from "react-icons/md";
+import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 
 function UserPage() {
@@ -205,9 +205,9 @@ function UserPage() {
                     <div>User</div>
                     <Input.Search style={{ marginLeft: 10 }} placeholder="Search" />
                 </div>
-                <FileAddFilled type="primary" style={{ fontSize: 30,color:"green" }} onClick={handleOpenModal}>
-                    New
-                </FileAddFilled>
+                <MdAddBox type="primary" style={{ fontSize: 30,color:"green" }} onClick={handleOpenModal} >
+                
+                </MdAddBox>
             </div>
             <Modal
                 title={state.isEdit ? "Edit User" : "New User"}

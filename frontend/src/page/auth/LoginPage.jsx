@@ -7,7 +7,7 @@ import {
   setProfile,
 } from "../../store/profile.store";
 import { useNavigate } from "react-router-dom";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
 import { Checkbox } from "antd";
 import "./LoginPage.css";
 
@@ -66,13 +66,11 @@ function LoginPage() {
 
           <Form.Item>
             <Button block type="primary" htmlType="submit">
+              <LoginOutlined />
               Log In
             </Button>
           </Form.Item>
         </Form>
-        <div className="register-link">
-          Dont have an account? <a href="/register">Register</a>
-        </div>
       </div>
     </div>
   );

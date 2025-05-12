@@ -270,7 +270,7 @@ function OrderPage() {
                 <div>
                   <div style={{ fontWeight: "bold" }}>{data.p_name}</div>
                   <div>
-                    {data.p_category_name} | {data.p_brand}
+                    {data.p_category_name}  {data.p_brand}
                   </div>
                   <div>{data.p_des}</div>
                 </div>

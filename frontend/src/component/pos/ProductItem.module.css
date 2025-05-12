@@ -2,6 +2,8 @@
   padding: 25px;
   background-color: #eeeeee;
   border-radius: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 .p_name {
