@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./Print.css";
-
+import Logo from "../../assets/v-friends.jpg"
 const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashier = '' }, ref) => {
   // Get customer name from objSummary, handle both direct name and customer object
   const customerDisplay = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
@@ -51,17 +51,6 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
     }
     return formatCurrency(total);
   };
-  // const onFinish = async (item) => {
-  //   // Get the current user's name from the profile
-  //   const currentUser = JSON.parse(localStorage.getItem('profile')) || {};
-  //   const cashier = currentUser.name || 'system';
-
-  //   const data = {
-  //       ...item,
-  //       role_id: state.role_id || item.role_id,
-  //       cashier: state.isEdit ? undefined : cashier, // Only set cashier for new users
-  //   };
-  // };
 
   return (
     <div className="invoice-page">
@@ -73,11 +62,27 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
         <div className="invoice-container">
           {/* Invoice Header */}
           <div className="invoice-header row">
-            <div className="col-6">
-              <h1 className="invoice-title">V-Freind Coffee</h1>
-              <p>123 Coffee Street</p>
-              <p>Sihanouk, Cambodia</p>
-              <p>Tel: (855) 123-456-789</p>
+            <div className="col-6 d-flex">
+              <div style={{ marginRight: '15px' }}>
+                <img 
+                  src={Logo} 
+                  alt="V-Friends Coffee Logo" 
+                  className="logo" 
+                  style={{
+                    width: '80px',
+                    height: '80px', 
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '2px solid #ddd'
+                  }} 
+                />
+              </div>
+              <div>
+                <h1 className="invoice-title" style={{ color: '#1890ff', marginBottom: '10px' }}>V-Friends Coffee</h1>
+                <p style={{ margin: '2px 0' }}>Sihanoukville (city), Cambodia</p>
+                <p style={{ margin: '2px 0' }}>Tel: (855) 070-715-751</p>
+                <p style={{ margin: '2px 0',fontSize: '14px' }}>Email: VfriendCoffee10@gmail.com</p>
+              </div>
             </div>
             <div className="col-6 text-end">
               <h2>INVOICE</h2>
@@ -86,13 +91,12 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
               <p>Time: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleTimeString() : new Date().toLocaleTimeString()}</p>
             </div>
           </div>
-
           {/* Customer Details */}
           <div className="invoice-details row">
             <div className="col-6">
               <h5>Bill To:</h5>
               <p className="mb-0">Customer: {customerDisplay}</p>
-              <p>Payment Method: Cash</p>
+              <p>Payment Method: {paymentMethod}</p>
             </div>
             <div className="col-6 text-end">
               <p className="mb-0">Cashier: {cashier || 'Unknown'}</p>
@@ -138,7 +142,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
                 <p className="mb-1"><strong>Payment Method:</strong> {paymentMethod}</p>
                 <p className="mb-1"><strong>Cashier:</strong> {cashierName}</p>
                 <p className="mb-1">Thank you for your business!</p>
-                <p className="mb-1">Please come again</p>
+                <p className="mb-1">Please come again...!</p>
               </div>
             </div>
             <div className="col-6">
@@ -163,7 +167,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
             </div>
           </div>
         </div>
-        <div className="text-center mt-4 print-buttons" style={{ display: 'block', pageBreakAfter: 'avoid' }}>
+        <div className="text-center mt-4 print-buttons" >
           <button className="btn btn-primary me-2" onClick={handlePrint} style={{ backgroundColor: '#1890ff', border: 'none', padding: '8px 16px' }}>Print Invoice</button>
           <button className="btn btn-secondary" onClick={handleClose} style={{ backgroundColor: '#6c757d', border: 'none', padding: '8px 16px' }}>Close</button>
         </div>

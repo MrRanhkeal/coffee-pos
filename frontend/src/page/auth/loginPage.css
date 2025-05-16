@@ -1,7 +1,7 @@
 /* Background and centering */
 .login-page {
     height: 100vh;
-    background-image: url("../../../../frontend/src/assets/coffee-shop.jpg"); /* Put your mountain background image */
+    background-image: url("../../../../frontend/src/assets/v_friend_background_cofe.jpg"); /* Put your mountain background image */
     background-size: cover;
     background-position: center;
     display: flex;
@@ -15,7 +15,7 @@
     backdrop-filter: blur(10px);
     border-radius: 10px;
     padding: 40px;
-    width: 400px;
+    width: 500px;
     height: auto;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     color: white;

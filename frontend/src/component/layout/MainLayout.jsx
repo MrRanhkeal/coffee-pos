@@ -26,7 +26,7 @@ import {
 import {  Dropdown, Input, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
-import Logo from "../../../../backend/image/product/coffee.jpg";
+import Logo from "../../assets/v-friends.jpg";
 import ImgUser from "../../assets/admin.jpg";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
@@ -313,7 +313,7 @@ const MainLayout = () => {
               <div className="txt-brand-name">Coffee-POS</div>
               {/* <div className="txt-brand-name">Count : {count}</div> */}
 
-              <div>Coffee Shop & Restaurant</div>
+              <div>Coffee Shop POS</div>
             </div>
             {/* <div>
               <Input.Search
