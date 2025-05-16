@@ -1,3 +1,0 @@
-Error: Unknown database 'mycofedb' + 2025-04-27 01:11:00 
-Error: Unknown database 'mycofedb' + 2025-04-27 01:11:13 
-Error: Unknown database 'mycofedb' + 2025-04-27 01:11:36 

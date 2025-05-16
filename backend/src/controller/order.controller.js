@@ -61,8 +61,7 @@ exports.getone = async (req, res) => {
             "p.brand p_brand, " +
             "p.description p_des, " +
             "p.image p_image, " +
-            "c.name cate_name, " +
-            "COALESCE(od.sugar, 100) as sugar " +
+            "c.name cate_name " +
             "FROM order_detail od " +
             "inner join products p on od.product_id = p.id " +
             "inner join category c on p.category_id = c.id " +
@@ -95,7 +94,7 @@ exports.create = async (req, res) => {
         await Promise.all(order_details.map(async (item) => {
             // order product
             var sqlOrderDetails =
-                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total,sugar) VALUES (:order_id,:product_id,:qty,:price,:discount,:total,:sugar) ";
+                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total) VALUES (:order_id,:product_id,:qty,:price,:discount,:total) ";
             await db.query(sqlOrderDetails, {
                 ...item,
                 order_id: data.insertId, // override key order_id
