@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Config } from "../../util/config";
 import styles from "./BillItem.module.css";
 import { Button, Col, Row, Space } from "antd";
@@ -13,10 +13,10 @@ function BillItem({
   discount,
   barcode,
   cart_qty,
+  sugarLevel,
   handleIncrease,
   handleDescrease,
   handleRemove,
-  sugar,
 }) {
   var final_price = price;
   if (discount != 0 && discount != null) {
@@ -52,7 +52,7 @@ function BillItem({
             </div>
           </div>
           <div>
-            {barcode} - {category_name} - {brand} - {sugar}
+            {barcode} - {category_name} - {brand} - Sugar: {sugarLevel}%
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {discount != 0 && discount != null ? (
@@ -103,7 +103,7 @@ BillItem.propTypes = {
   handleIncrease: PropTypes.func.isRequired,
   handleDescrease: PropTypes.func.isRequired,
   handleRemove: PropTypes.func.isRequired,
-  sugar: PropTypes.string,
+  sugarLevel: PropTypes.number.isRequired,
 };
 
 export default BillItem;

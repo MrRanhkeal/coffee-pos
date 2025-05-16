@@ -112,6 +112,7 @@ const StockPage = () => {
                     New Stock
                 </FileAddTwoTone>
             </div>
+            {/* page */}
             <Card >
                 <Table
                     columns={columns}

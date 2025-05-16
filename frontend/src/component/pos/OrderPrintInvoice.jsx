@@ -2,6 +2,7 @@ import React from 'react';
 import { useReactToPrint } from 'react-to-print';
 import PrintInvoice from './PrintInvoice';
 import { message } from 'antd';
+import PropTypes from 'prop-types';
 import './print.css';
 
 const OrderPrintInvoice = ({ printData, onPrintComplete }) => {
@@ -45,4 +46,11 @@ const OrderPrintInvoice = ({ printData, onPrintComplete }) => {
     );
 };
 
+OrderPrintInvoice.propTypes = {
+        printData: PropTypes.shape({
+            cart_list: PropTypes.array,
+            objSummary: PropTypes.object,
+        }),
+        onPrintComplete: PropTypes.func,
+};
 export default OrderPrintInvoice;

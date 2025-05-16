@@ -12,12 +12,27 @@ function ProductItem({
   brand,
   price,
   discount,
-  // barcode,
+  barcode,
   handleAdd,
   qty,
 }) 
 {
-  const [sugarLevel, setSugarLevel] = React.useState(100);
+  const [sugarLevel, setSugarLevel] = React.useState(0);
+  
+  const handleAddWithSugar = () => {
+    handleAdd({
+      name,
+      description,
+      image,
+      category_name,
+      brand,
+      price,
+      discount,
+      barcode,
+      qty,
+      sugarLevel: sugarLevel
+    });
+  };
   var final_price = price;
   if (discount != 0 && discount != null) {
     final_price = price - (price * discount) / 100;
@@ -47,10 +62,13 @@ function ProductItem({
           <div className={styles.p_final_price}> {price}$</div>
         </div>
       )}
-      <div>
-        <Radio.Group value={sugarLevel} onChange={(e) => setSugarLevel(e.target.value)}>
+      <div className={styles.p_des}>
+        <Radio.Group 
+          value={sugarLevel} 
+          onChange={(e) => setSugarLevel(e.target.value)}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}
+        >
           <Radio value={0}>0%</Radio>
-          <Radio value={10}>10%</Radio>
           <Radio value={25}>25%</Radio>
           <Radio value={50}>50%</Radio>
           <Radio value={75}>75%</Radio>
@@ -58,7 +76,11 @@ function ProductItem({
         </Radio.Group>
       </div>
       <div className={styles.btnAddContainer}>
-        <Button onClick={handleAdd} type="primary" icon={<MdAddCircle />}/>
+        <Button 
+          onClick={handleAddWithSugar} 
+          type="primary" 
+          icon={<MdAddCircle />}
+        />
       </div>
     </div>
   );

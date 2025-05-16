@@ -52,7 +52,7 @@ function ProductPage() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [imageDefault, setImageDefault] = useState([]);
-  const [imageOptional, setImageOptional] = useState([]);
+  // const [imageOptional, setImageOptional] = useState([]);
   const [imageOptional_Old, setImageOptional_Old] = useState([]);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ function ProductPage() {
       visibleModal: false,
     }));
     setImageDefault([]);
-    setImageOptional([]);
+    // setImageOptional([]);
     form.resetFields();
   };
   const onFinish = async (items) => {
@@ -190,8 +190,8 @@ function ProductPage() {
 
   const handleChangeImageDefault = ({ fileList: newFileList }) =>
     setImageDefault(newFileList);
-  const handleChangeImageOptional = ({ fileList: newFileList }) =>
-    setImageOptional(newFileList);
+  // const handleChangeImageOptional = ({ fileList: newFileList }) =>
+  //   setImageOptional(newFileList);
 
   const onFilter = () => {
     getList();
@@ -228,7 +228,7 @@ function ProductPage() {
             url: "http://localhost:81/fullstack/image_pos/" + item.image,
           });
         });
-        setImageOptional(imageProductOptional);
+        // setImageOptional(imageProductOptional);
         setImageOptional_Old(imageProductOptional);
       }
     }
@@ -414,7 +414,7 @@ function ProductPage() {
             </Upload>
           </Form.Item>
 
-          <Form.Item name={"image_optional"} label="Image (Optional)">
+          {/* <Form.Item name={"image_optional"} label="Image (Optional)">
             <Upload
               customRequest={(options) => {
                 options.onSuccess();
@@ -428,7 +428,7 @@ function ProductPage() {
             >
               <div>+Upload</div>
             </Upload>
-          </Form.Item>
+          </Form.Item> */}
 
           {previewImage && (
             <Image
@@ -455,6 +455,17 @@ function ProductPage() {
       </Modal>
       <Table
         dataSource={state.list}
+        loading={state.loading}
+          rowKey="id"
+          // pagination={{
+          //   defaultPageSize: 10,
+          //     showSizeChanger: true,
+          //     showTotal: (total) => `Total ${total} items`,
+          //     onChange: (page) => {
+          //       refPage.current = page;
+          //       getList();
+          //     }
+          // }}
         pagination={{
           pageSize: 10,
           total: state.total,

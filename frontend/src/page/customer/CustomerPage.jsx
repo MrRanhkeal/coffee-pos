@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Form, Input, message, Modal, Select, Space, Table, Tag } from "antd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
 import { DeleteOutlined, EditOutlined, FileAddTwoTone } from "@ant-design/icons";
+import PropTypes from "prop-types";
 function CustomerPage() {
-  const [formRef] = Form.useForm();
+  const [form] = Form.useForm();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
@@ -18,11 +19,7 @@ function CustomerPage() {
     txtSearch: "",
   });
 
-  useEffect(() => {
-    getList();
-  }, []);
-
-  const getList = async () => {
+  const getList = useCallback(async () => {
     setLoading(true);
     var param = {
       txtSearch: state.txtSearch,
@@ -32,13 +29,18 @@ function CustomerPage() {
     if (res) {
       setList(res.list);
     }
-  };
+  }, [state, setLoading, setList]);
+
+  useEffect(() => {
+    getList();
+  }, [getList]);
   const onClickEdit = (data) => {
     setState({
       ...state,
       visibleModal: true,
+      id: data.id,
     });
-    formRef.setFieldsValue({
+    form.setFieldsValue({
       id: data.id, // hiden id (save? | update?)
       name: data.name,
       phone: data.phone,
@@ -76,7 +78,7 @@ function CustomerPage() {
     });
   };
   const onCloseModal = () => {
-    formRef.resetFields();
+    form.resetFields();
     setState({
       ...state,
       visibleModal: false,
@@ -86,7 +88,7 @@ function CustomerPage() {
 
   const onFinish = async (items) => {
     var data = {
-      id: formRef.getFieldValue("id"),
+      id: form.getFieldValue("id"),
       name: items.name,
       phone: items.phone,
       email: items.email,
@@ -96,7 +98,7 @@ function CustomerPage() {
       parent_id: 0,
     };
     var method = "post";
-    if (formRef.getFieldValue("id")) {
+    if (form.getFieldValue("id")) {
       // case update
       method = "put";
     }
@@ -121,7 +123,7 @@ function CustomerPage() {
             placeholder="Search"
           />
           <Button type="primary" onClick={getList}>
-            Filter
+            Search
           </Button>
         </Space>
         <FileAddTwoTone type="primary" onClick={onClickAddBtn} style={{ color: "green", fontSize: 30 }}>
@@ -130,19 +132,33 @@ function CustomerPage() {
       </div>
       <Modal
         open={state.visibleModal}
-        title={formRef.getFieldValue("id") ? "Edit Customer" : "New Customer"}
+        title={state.id ? "Edit Customer" : "New Customer"}
         footer={null}
         onCancel={onCloseModal}
       >
-        <Form layout="vertical" onFinish={onFinish} form={formRef}>
-          <Form.Item name={"name"} label="Customer name" >
+        <Form layout="vertical" onFinish={onFinish} form={form} initialValues={{
+            status: 1
+          }}>
+          <Form.Item 
+            name="name" 
+            label="Customer name"
+            rules={[{ required: true, message: 'Please input customer name!' }]}
+          >
             <Input placeholder="Input Customer name" />
           </Form.Item>
-          <Form.Item name={"phone"} label="Customer phone">
-            <Input placeholder="Input Customer phone" name="phone" />
+          <Form.Item 
+            name="phone" 
+            label="Customer phone"
+            rules={[{ required: true, message: 'Please input customer phone!' }]}
+          >
+            <Input placeholder="Input Customer phone" />
           </Form.Item>
-          <Form.Item name={"email"} label="Customer email">
-            <Input placeholder="Input Customer email" name="email" />
+          <Form.Item 
+            name="email" 
+            label="Customer email"
+            rules={[{ required: true, message: 'Please input customer email!' }, { type: 'email', message: 'Please enter a valid email!' }]}
+          >
+            <Input placeholder="Input Customer email" />
           </Form.Item>
           <Form.Item name={"address"} label="Customer address">
             <Input placeholder="Input Customer address" name="address" />
@@ -150,7 +166,11 @@ function CustomerPage() {
           <Form.Item name={"description"} label="description">
             <Input.TextArea placeholder="description" />
           </Form.Item>
-          <Form.Item name={"status"} label="status">
+          <Form.Item 
+            name="status" 
+            label="Status"
+            rules={[{ required: true, message: 'Please select a status!' }]}
+          >
             <Select
               placeholder="Select status"
               options={[
@@ -169,7 +189,7 @@ function CustomerPage() {
           <Space>
             <Button type="default" onClick={onCloseModal}>Cancel</Button>
             <Button type="primary" htmlType="submit">
-              {formRef.getFieldValue("id") ? "Update" : "Save"}
+              {form.getFieldValue("id") ? "Update" : "Save"}
             </Button>
           </Space>
         </Form>
@@ -240,5 +260,7 @@ function CustomerPage() {
     </MainPage>
   );
 }
-
+CustomerPage.propTypes = {
+  getFieldValue: PropTypes
+};
 export default CustomerPage;

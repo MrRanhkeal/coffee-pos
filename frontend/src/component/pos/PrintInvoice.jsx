@@ -1,135 +1,205 @@
-import { Col, Flex, Row } from "antd";
 import React from "react";
-import { formatDateClient } from "../../util/helper";
-import logo from "../../assets/coffee-shop.jpg";
 import PropTypes from "prop-types";
+import "./Print.css";
 
-const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {} }, ref) => {
-  // Add print styles
-  React.useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @media print {
-        @page {
-          size: 80mm auto;
-          margin: 0;
-          padding: 0;
-        }
-        body {
-          margin: 0;
-          padding: 0;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
+const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashier = '' }, ref) => {
+  // Get customer name from objSummary, handle both direct name and customer object
+  const customerDisplay = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
+  
+  // Get payment method from objSummary
+  const paymentMethod = objSummary?.payment_method || 'Cash';
+  
+  // Use the cashier prop passed from parent
+  const cashierName = cashier || 'System';
+  const generateInvoiceNumber = () => {
+    // const {config} = configStore
+    const date = new Date();
+    const year = date.getFullYear().toString().substr(-2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `INV-${year}${month}${day}-${random}`;
+  };
+
+  const formatCurrency = (amount) => {
+    const num = parseFloat(amount) || 0;
+    return num.toFixed(2) + ' $';
+  };
+
+  const handlePrint = () => {
+    // Hide the buttons before printing
+    const printButtons = document.querySelector('.print-buttons');
+    if (printButtons) {
+      printButtons.style.display = 'none';
+    }
+    window.print();
+    // Show the buttons after printing
+    if (printButtons) {
+      printButtons.style.display = 'block';
+    }
+  };
+
+  const handleClose = () => {
+    window.close();
+  };
+
   const findTotalItem = (item) => {
-    let total = item.cart_qty * item.price;
+    let total = item.cart_qty * parseFloat(item.price || 0);
     if (item.discount) {
-      let discount_price = (total * item.discount) / 100;
+      let discount_price = (total * parseFloat(item.discount || 0)) / 100;
       total = total - discount_price;
     }
-    return total.toFixed(2);
+    return formatCurrency(total);
   };
+  // const onFinish = async (item) => {
+  //   // Get the current user's name from the profile
+  //   const currentUser = JSON.parse(localStorage.getItem('profile')) || {};
+  //   const cashier = currentUser.name || 'system';
+
+  //   const data = {
+  //       ...item,
+  //       role_id: state.role_id || item.role_id,
+  //       cashier: state.isEdit ? undefined : cashier, // Only set cashier for new users
+  //   };
+  // };
+
   return (
-    <div
-      ref={ref}
-      style={{
-        width: "80mm",
-        padding: "5px",
-        fontFamily: "monospace",
-        fontSize: "10px",
-        backgroundColor: "white",
-        margin: "0 auto",
-      }}
-    >
-      <Flex align="center">
-        <img
-          src={logo}
-          alt=""
-          style={{
-            width: 30,
-            height: 30,
-            marginRight: 10,
-            borderRadius: 15,
-          }}
-        />
-        <div>
-          <div style={{ fontWeight: "bold" }}>Coffee Shop</div>
-          <div style={{ fontSize: 9 }}>V-Freind</div>
+    <div className="invoice-page">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Invoice</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></link>
+      <div className="container my-5"
+        ref={ref}>
+        <div className="invoice-container">
+          {/* Invoice Header */}
+          <div className="invoice-header row">
+            <div className="col-6">
+              <h1 className="invoice-title">V-Freind Coffee</h1>
+              <p>123 Coffee Street</p>
+              <p>Sihanouk, Cambodia</p>
+              <p>Tel: (855) 123-456-789</p>
+            </div>
+            <div className="col-6 text-end">
+              <h2>INVOICE</h2>
+              <p>Invoice #: {objSummary.order_no || generateInvoiceNumber()}</p>
+              <p>Date: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleDateString() : new Date().toLocaleDateString()}</p>
+              <p>Time: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleTimeString() : new Date().toLocaleTimeString()}</p>
+            </div>
+          </div>
+
+          {/* Customer Details */}
+          <div className="invoice-details row">
+            <div className="col-6">
+              <h5>Bill To:</h5>
+              <p className="mb-0">Customer: {customerDisplay}</p>
+              <p>Payment Method: Cash</p>
+            </div>
+            <div className="col-6 text-end">
+              <p className="mb-0">Cashier: {cashier || 'Unknown'}</p>
+              <p>Terminal: POS-001</p>
+            </div>
+          </div>
+
+          {/* Items Table */}
+          <div className="table-responsive mt-4">
+            <table className="table table-items">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Item</th>
+                  <th className="text-center">Qty</th>
+                  <th className="text-end">Price</th>
+                  <th className="text-center">Discount</th>
+                  {/* <th className="text-center">Sugar</th> */}
+                  <th className="text-end">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(cart_list) && cart_list.map((item, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{item.name} {item.sugarLevel}%</td>
+                    <td className="text-center">{item.cart_qty} </td>
+                    <td className="text-end">{formatCurrency(item.price)}</td>
+                    <td className="text-center">{item.discount}%</td>
+                    {/* <td className="text-center">{item.sugarLevel}%</td> */}
+                    <td className="text-end">{findTotalItem(item)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Invoice Summary  */}
+          <div className="invoice-total row">
+            <div className="col-6">
+              <div className="mt-4">
+                <p className="mb-1"><strong>Customer:</strong> {customerDisplay}</p>
+                <p className="mb-1"><strong>Payment Method:</strong> {paymentMethod}</p>
+                <p className="mb-1"><strong>Cashier:</strong> {cashierName}</p>
+                <p className="mb-1">Thank you for your business!</p>
+                <p className="mb-1">Please come again</p>
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="text-end">
+                <div className="row justify-content-end">
+                  <div className="col-7">
+                    <p className="mb-2">Subtotal:</p>
+                    <p className="mb-2">Savings:</p>
+                    <p className="mb-2">Total Amount:</p>
+                    <p className="mb-2">Amount Paid:</p>
+                    <p className="mb-0">Change:</p>
+                  </div>
+                  <div className="col-5 text-end">
+                    <p className="mb-2">{formatCurrency(objSummary.sub_total)}</p>
+                    <p className="mb-2">{formatCurrency(objSummary.save_discount)}</p>
+                    <p className="mb-2">{formatCurrency(objSummary.total)}</p>
+                    <p className="mb-2">{formatCurrency(objSummary.total_paid)}</p>
+                    <p className="mb-0">{formatCurrency(objSummary.total_paid - objSummary.total)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </Flex>
-      <hr />
-        
-      <div style={{ marginBottom: 15, marginTop: 5 }}>
-        {/* {props.objSummary?.order_no}|{" "}
-        {formatDateClient(props.objSummary?.order_date, "DD/MM/YYYY h:mm ss A")} */}
+        <div className="text-center mt-4 print-buttons" style={{ display: 'block', pageBreakAfter: 'avoid' }}>
+          <button className="btn btn-primary me-2" onClick={handlePrint} style={{ backgroundColor: '#1890ff', border: 'none', padding: '8px 16px' }}>Print Invoice</button>
+          <button className="btn btn-secondary" onClick={handleClose} style={{ backgroundColor: '#6c757d', border: 'none', padding: '8px 16px' }}>Close</button>
+        </div>
       </div>
-      <table className="pos_tbl_invoice">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Dis(%)</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(cart_list) && cart_list.map((item, index) => (
-            <tr key={index}>
-              <td style={{ width: "40mm" }}>{item.name}</td>
-              <td>{item.cart_qty}</td>
-              <td>{item.price}$</td>
-              <td>{item.discount}%</td>
-              <td>{findTotalItem(item)}$</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        <div className={"row_between_invoice"}>
-          <div>Total Qty </div>
-          <div>{objSummary.total_qty || 0} Items</div>
-        </div>
-        <div className={"row_between_invoice"}>
-          <div>Sub total </div>
-          <div>{objSummary.sub_total || 0}$</div>
-        </div>
-        <div className={"row_between_invoice"}>
-          <div>Save($) </div>
-          <div>{objSummary.save_discount || 0}$</div>
-        </div>
-        <div className={"row_between_invoice"}>
-          <div style={{ fontWeight: "bold" }}>Total </div>
-          <div style={{ fontWeight: "bold" }}>{objSummary.total || 0}$</div>
-        </div>
-      </div>
-      <p style={{ textAlign: "center" }}>Thank you for your purchase!</p>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     </div>
   );
 });
-//modify
+
 PrintInvoice.propTypes = {
   cart_list: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       cart_qty: PropTypes.number.isRequired,
-      price: PropTypes.number.isRequired,
-      discount: PropTypes.number,
+      price: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ]).isRequired,
+      discount: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+      ])
     })
   ),
   objSummary: PropTypes.shape({
-    total_qty: PropTypes.number,
-    sub_total: PropTypes.number,
-    save_discount: PropTypes.number,
+    customer_name: PropTypes.string,
+    payment_method: PropTypes.string,
     total: PropTypes.number,
+    total_paid: PropTypes.number
   }),
+  cashier: PropTypes.string.isRequired
 };
+
 PrintInvoice.displayName = "PrintInvoice";
+
 PrintInvoice.defaultProps = {
   cart_list: [],
   objSummary: {
@@ -137,7 +207,12 @@ PrintInvoice.defaultProps = {
     sub_total: 0,
     save_discount: 0,
     total: 0,
+    total_paid: 0,
+    customer_name: '',
+    order_no: '',
+    order_date: '',
   },
+  cashier: 'Unknown'
 };
 
 export default PrintInvoice;
