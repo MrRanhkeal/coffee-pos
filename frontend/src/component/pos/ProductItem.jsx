@@ -40,12 +40,12 @@ function ProductItem({
   }
   return (
     <div className={styles.contianer} >
-      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '10px' ,width: '250px', height: '260px',justifyContent: 'center' }}/>
-      <div className={styles.p_name + " truncate-text"}>{name}</div>
+      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '10px' ,width: '350px', height: '280px',justifyContent: 'center' }}/>
+      <div className={styles.p_name + " truncate-text"}>{name} {description} </div>
       <div className={styles.p_des}>
         {category_name} - {brand}
       </div>
-      <div className={styles.p_des}>{description}</div>
+      {/* <div className={styles.p_des}>{description}</div> */}
       <div className={styles.p_des}>
         <Tag color={qty <= 0 ? 'red' : 'green'}>
           {qty <= 0 ? 'Out of Stock' : 'In Stock'}
@@ -66,7 +66,7 @@ function ProductItem({
         <Radio.Group 
           value={sugarLevel} 
           onChange={(e) => setSugarLevel(e.target.value)}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}
         >
           <Radio value={0}>0%</Radio>
           <Radio value={25}>25%</Radio>

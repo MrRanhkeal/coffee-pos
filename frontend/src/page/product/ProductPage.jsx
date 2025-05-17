@@ -16,10 +16,10 @@ import {
   Upload,
 } from "antd";
 import { request } from "../../util/helper";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdAddAPhoto, MdAdUnits, MdDelete, MdEdit, MdImage } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddFilled } from "@ant-design/icons";
 
 //please check this
 const getBase64 = (file) =>
@@ -37,7 +37,7 @@ function ProductPage() {
   const [state, setState] = useState({
     list: [],
     total: 0,
-    loading: true,
+    loading: false,
     visibleModal: false,
   });
 
@@ -282,8 +282,8 @@ function ProductPage() {
             Filter
           </Button>
         </Space>
-        <Button type="primary" onClick={onBtnNew}>
-          NEW
+        <Button type="primary" onClick={onBtnNew} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
+          <FileAddFilled/> New
         </Button>
       </div>
       <Modal
@@ -410,7 +410,7 @@ function ProductPage() {
               onPreview={handlePreview} //please chech this
               onChange={handleChangeImageDefault}
             >
-              <div>+Upload</div>
+              <MdImage style={{ fontSize: "30px" }}/>Picture
             </Upload>
           </Form.Item>
 

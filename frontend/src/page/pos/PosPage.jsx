@@ -41,7 +41,7 @@ function PosPage() {
         tax: 10,
         total: 0,
         total_paid: 0,
-        // customer_id: null,
+        customer_id: null,
         customer_name: null,
         payment_method: null,
         remark: null,
@@ -235,7 +235,7 @@ function PosPage() {
         });
         var param = {
             order: {
-                // customer_id: objSummary.customer_id,
+                customer_id: objSummary.customer_id,
                 customer_name: objSummary.customer_name,
                 total_amount: objSummary.total,
                 paid_amount: objSummary.total_paid,
@@ -395,7 +395,7 @@ function PosPage() {
                                     onSelect={(value) => {
                                         setObjSummary((p) => ({
                                             ...p,
-                                            customer_id: value,
+                                            customer_id: value
                                         }));
                                     }}
                                 /> */}
@@ -404,12 +404,12 @@ function PosPage() {
                                     placeholder="Select Customer"
                                     options={(config?.customer || []).map(cust => ({
                                         label: cust.name,
-                                        value: cust.name
+                                        value: cust.name,
                                     }))}
                                     onSelect={(value) => {
                                         setObjSummary((p) => ({
                                             ...p,
-                                            customer_name: value
+                                            customer_name: value,
                                         }));
                                     }}
                                 />

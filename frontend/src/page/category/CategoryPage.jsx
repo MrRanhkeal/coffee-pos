@@ -3,7 +3,7 @@ import {Button, Form,Input,message,Modal,Select,Space,Table,Tag} from "antd";
 import { request } from "../../util/helper";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddFilled, FileOutlined } from "@ant-design/icons";
 // import { configStore } from "../../store/configStore";
 function CategoryPage() {
   // const { config } = configStore();
@@ -118,8 +118,8 @@ function CategoryPage() {
             placeholder="Search"
           />
         </Space>
-        <Button type="primary" onClick={onClickAddBtn}>
-          NEW
+        <Button type="primary" onClick={onClickAddBtn} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
+          <FileAddFilled/>New
         </Button>
       </div>
       <Modal

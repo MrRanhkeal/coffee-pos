@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import { Button, Form, Input, message, Modal, Space, Table, Tag } from "antd";
-import { DeleteOutlined, EditOutlined, FileAddOutlined, FileAddTwoTone } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddFilled, FileAddOutlined, FileAddTwoTone } from "@ant-design/icons";
 import {  } from "react-icons/md";
 
 function RolePage() {
@@ -178,8 +178,8 @@ function RolePage() {
                 //     color: "green",
                 // }}
                 >
-                    <FileAddOutlined/>
-                    Add
+                    <FileAddFilled/>
+                    New
                 </Button>
             </div>
 

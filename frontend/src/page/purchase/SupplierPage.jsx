@@ -5,7 +5,7 @@ import { Button, Form, Input, message, Modal, Space, Table, Select } from "antd"
 import dayjs from "dayjs";
 import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { DeleteOutlined, EditOutlined, FileAddOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddFilled, FileAddOutlined } from "@ant-design/icons";
 function SupplierPage() {
     const [form] = Form.useForm();
     const { config } = configStore();
@@ -132,8 +132,8 @@ function SupplierPage() {
                         placeholder="Search"
                     />
                 </Space>
-                <Button type="primary" onClick={openModal} >
-                <FileAddOutlined/>Add
+                <Button type="primary" onClick={openModal} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
+                <FileAddFilled/>New
                 </Button>
             </div>
             <Modal

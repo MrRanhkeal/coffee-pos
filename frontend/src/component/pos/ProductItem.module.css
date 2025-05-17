@@ -1,9 +1,11 @@
 .contianer {
-  padding: 25px;
-  background-color: #eeeeee;
+  padding: 4px;
+  /* background-color: #eeeeee; */
+  background-color: rgb(252, 250, 250);
   border-radius: 10px;
   width: 100%;
   height: 100%;
+  display:flexbox;
 }
 
 .p_name {
