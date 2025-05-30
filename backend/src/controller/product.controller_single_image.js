@@ -56,8 +56,8 @@ exports.create = async (req, res) => {
         // var sql = "insert into products(category_id,barcode,name,brand,description,qty,price,discount,status,image,create_by) " +
         //     " values(:category_id,:barcode,:name,:brand,:description,:qty,:price,:discount,:status,:image,:create_by)";
         var sql =
-            " INSERT INTO products (category_id, barcode,name,brand,description,qty,price,discount,status,image,create_by ) " +
-            " VALUES (:category_id, :barcode, :name, :brand, :description, :qty, :price, :discount, :status, :image, :create_by ) ";
+            " INSERT INTO products (category_id, barcode,name,brand,description,price,discount,status,image,create_by ) " +
+            " VALUES (:category_id, :barcode, :name, :brand, :description, :price, :discount, :status, :image, :create_by ) ";
         var [data] = await db.query(sql, {
             ...req.body,
             image: req.file?.filename,
@@ -83,7 +83,7 @@ exports.update = async (req, res) => {
             " name = :name, " +
             " brand = :brand, " +
             " description = :description, " +
-            " qty = :qty, " +
+            // " qty = :qty, " +
             " price = :price, " +
             " discount = :discount, " +
             " status = :status, " +

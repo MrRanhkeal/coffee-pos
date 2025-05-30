@@ -7,7 +7,7 @@ exports.getlist = async (req, res) => {
         //and more
 
         const brand = [
-            { label: "arabia", value: "arabia", country: "th" },
+            { label: "arabia", value: "arabia", country: "th",icon: "https://cdn-icons-png.flaticon.com/512/1040/1040204.png" },
             { label: "mondolkiri", value: "mondolkiri", country: "kh" },
             { label: "green-tea", value: "green-tea", country: "kh" },
             { label: "passion-fruit", value: "passion-fruit", country: "kh" },
@@ -16,14 +16,14 @@ exports.getlist = async (req, res) => {
             { label: "fresh-fruit", value: "fresh-fruit", country: "kh" },
         ];
         //sugar
-        const sugar = [
-            { label: "0%", value: "0", name: "sugar" },
-            { label: "10%", value: "10", name: "sugar" },
-            { label: "25%", value: "25", name: "sugar" },
-            { label: "50%", value: "50", name: "sugar" },
-            { label: "75%", value: "75", name: "sugar" },
-            { label: "100%", value: "100", name: "sugar" }
-        ];
+        // const sugar = [
+        //     { label: "0%", value: "0", name: "sugar" },
+        //     { label: "10%", value: "10", name: "sugar" },
+        //     { label: "25%", value: "25", name: "sugar" },
+        //     { label: "50%", value: "50", name: "sugar" },
+        //     { label: "75%", value: "75", name: "sugar" },
+        //     { label: "100%", value: "100", name: "sugar" }
+        // ];
         //productdetail
         // const productdetail = [
         //     {label:"Flavor", value:"Mocha"},
@@ -137,7 +137,7 @@ exports.getlist = async (req, res) => {
             brand,
             customer,
             expsanse_type,
-            sugar,
+            // sugar,
             product_type,
         })
     }
@@ -146,32 +146,32 @@ exports.getlist = async (req, res) => {
     }
 };
 
-exports.getstocklist = async (req, res) => {
-    try {
-        const sqlSelect =
-            "SELECT " +
-            "p.id, " +
-            "p.name AS p_name, " +
-            "p.qty AS p_qty, " +
-            "p.brand AS p_brand, " +
-            "c.name AS c_name, " +
-            "p.image AS p_image, " +
-            "p.create_by AS create_by, " +  // <-- Added comma here
-            "CASE " +
-            "WHEN p.qty <= 2 THEN 'Low' " +
-            "ELSE 'High' " +
-            "END AS stock_status " +
-            "FROM products p " +
-            "INNER JOIN category c ON p.category_id = c.id " +
-            "ORDER BY p.qty DESC"
+// exports.getstocklist = async (req, res) => {
+//     try {
+//         const sqlSelect =
+//             "SELECT " +
+//             "p.id, " +
+//             "p.name AS p_name, " +
+//             "p.qty AS p_qty, " +
+//             "p.brand AS p_brand, " +
+//             "c.name AS c_name, " +
+//             "p.image AS p_image, " +
+//             "p.create_by AS create_by, " +  // <-- Added comma here
+//             "CASE " +
+//             "WHEN p.qty <= 2 THEN 'Low' " +
+//             "ELSE 'High' " +
+//             "END AS stock_status " +
+//             "FROM products p " +
+//             "INNER JOIN category c ON p.category_id = c.id " +
+//             "ORDER BY p.qty DESC"
 
-        const [stock] = await db.query(sqlSelect);
-        res.json({
-            data: stock,
-            message: "success"
-        });
-    } catch (error) {
-        logErr("config.getstocklist", error, res);
-    }
+//         const [stock] = await db.query(sqlSelect);
+//         res.json({
+//             data: stock,
+//             message: "success"
+//         });
+//     } catch (error) {
+//         logErr("config.getstocklist", error, res);
+//     }
 
-};
+// };

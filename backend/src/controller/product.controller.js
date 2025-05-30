@@ -61,25 +61,25 @@ exports.getlist = async (req, res) => {
 exports.create = async (req, res) => {
     try{
         var sql =
-        " INSERT INTO products (category_id, barcode,name,brand,description,qty,price,discount,status,image,create_by ) " +
-        " VALUES (:category_id, :barcode, :name, :brand, :description, :qty, :price, :discount, :status, :image, :create_by ) ";
+        " INSERT INTO products (category_id, barcode,name,brand,description,price,discount,status,image,create_by ) " +
+        " VALUES (:category_id, :barcode, :name, :brand, :description,  :price, :discount, :status, :image, :create_by ) ";
 
         var [data] = await db.query(sql, {
             ...req.body,
             image: req.files?.upload_image[0]?.filename,
             create_by: req.auth?.name,
         });
-        if (req.files && req.files?.upload_image_optional) {
-            var paramImagePorduct = [];
-            req.files?.upload_image_optional.map((item, index) => {
-                paramImagePorduct.push([data?.insertId, item.filename]);
-            });
-            var sqlImageProduct =
-                "INSERT INTO product_image (product_id,image) VALUES :data";
-            var [dataImage] = await db.query(sqlImageProduct, {
-                data: paramImagePorduct,
-            });
-        }
+        // if (req.files && req.files?.upload_image_optional) {
+        //     var paramImagePorduct = [];
+        //     req.files?.upload_image_optional.map((item, index) => {
+        //         paramImagePorduct.push([data?.insertId, item.filename]);
+        //     });
+        //     var sqlImageProduct =
+        //         "INSERT INTO product_image (product_id,image) VALUES :data";
+        //     var [dataImage] = await db.query(sqlImageProduct, {
+        //         data: paramImagePorduct,
+        //     });
+        // }
         res.json({
             data: data,
             message: "success",
@@ -101,7 +101,7 @@ exports.update = async (req, res) => {
             " name = :name, " +
             " brand = :brand, " +
             " description = :description, " +
-            " qty = :qty, " +
+            // " qty = :qty, " +
             " price = :price, " +
             " discount = :discount, " +
             " status = :status, " +
@@ -135,33 +135,33 @@ exports.update = async (req, res) => {
             create_by: req.auth?.name
         });
         // image opitonal
-        if (req.files && req.files?.upload_image_optional) {
-            var paramImagePorduct = [];
-            req.files?.upload_image_optional.map((item, index) => {
-                paramImagePorduct.push([req.body.id, item.filename]);
-            });
-            var sqlImageProduct =
-                "INSERT INTO product_image (product_id,image) VALUES :data";
-            var [dataImage] = await db.query(sqlImageProduct, {
-                data: paramImagePorduct,
-            });
-        }
+        // if (req.files && req.files?.upload_image_optional) {
+        //     var paramImagePorduct = [];
+        //     req.files?.upload_image_optional.map((item, index) => {
+        //         paramImagePorduct.push([req.body.id, item.filename]);
+        //     });
+        //     var sqlImageProduct =
+        //         "INSERT INTO product_image (product_id,image) VALUES :data";
+        //     var [dataImage] = await db.query(sqlImageProduct, {
+        //         data: paramImagePorduct,
+        //     });
+        // }
         //multiple image  ( case remove)
-        if (req.body.image_optional && req.body.image_optional.length > 0) {
-            // console.log(req.body.image_optional);
-            if (typeof req.body.image_optional == "string") {
-                req.body.image_optional = [req.body.image_optional];
-            }
-            req.body.image_optional?.map(async (item, index) => {
-                // remove database
-                let [data] = await db.query(
-                    "DELETE FROM product_image WHERE image = :image",
-                    { image: item }
-                );
-                // unlink from hard
-                removeFile(item); // remove image
-            });
-        }
+        // if (req.body.image_optional && req.body.image_optional.length > 0) {
+        //     // console.log(req.body.image_optional);
+        //     if (typeof req.body.image_optional == "string") {
+        //         req.body.image_optional = [req.body.image_optional];
+        //     }
+        //     req.body.image_optional?.map(async (item, index) => {
+        //         // remove database
+        //         let [data] = await db.query(
+        //             "DELETE FROM product_image WHERE image = :image",
+        //             { image: item }
+        //         );
+        //         // unlink from hard
+        //         removeFile(item); // remove image
+        //     });
+        // }
 
         res.json({
             data: data,
@@ -212,21 +212,21 @@ exports.newBarcode = async (req, res) => {
         logErr("remove.create", error, res);
     }
 };
-exports.productImage = async (req, res) => {
-    try {
-        var sql = "SELECT *  FROM product_image WHERE product_id=:product_id";
-        var [list] = await db.query(sql, {
-            product_id: req.params.product_id,
-        });
-        res.json({
-            list,
-            message: "success", 
-        });
-    }
-    catch (err) {
-        logErr("remove.create", err, res);
-    }
-};
+// exports.productImage = async (req, res) => {
+//     try {
+//         var sql = "SELECT *  FROM product_image WHERE product_id=:product_id";
+//         var [list] = await db.query(sql, {
+//             product_id: req.params.product_id,
+//         });
+//         res.json({
+//             list,
+//             message: "success", 
+//         });
+//     }
+//     catch (err) {
+//         logErr("remove.create", err, res);
+//     }
+// };
 isExistBarcode = async (barcode) => {
     try {
         var sql = "SELECT COUNT(id) as Total FROM products WHERE barcode=:barcode";

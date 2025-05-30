@@ -100,13 +100,13 @@ exports.create = async (req, res) => {
                 order_id: data.insertId, // override key order_id
             });
 
-            // re stock
-            var sqlReStock =
-                "UPDATE products SET qty = (qty-:order_qty) WHERE id = :product_id ";
-            await db.query(sqlReStock, {
-                order_qty: item.qty,
-                product_id: item.product_id,
-            });
+            // re stock modify stock relation to product_stock
+            // var sqlReStock =
+            //     "UPDATE products SET qty = (qty-:order_qty) WHERE id = :product_id ";
+            // await db.query(sqlReStock, {
+            //     order_qty: item.qty,
+            //     product_id: item.product_id,
+            // });
         }));
 
         const [currentOrder] = await db.query(
