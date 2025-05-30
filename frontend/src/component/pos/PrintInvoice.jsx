@@ -4,7 +4,8 @@ import "./Print.css";
 import Logo from "../../assets/v-friends.jpg"
 const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashier = '' }, ref) => {
   // Get customer name from objSummary, handle both direct name and customer object
-  const customerDisplay = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
+  //const customerDisplay = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
+  const customerDisplay = typeof objSummary?.customer_id === 'string' ? objSummary.customer_id : 'Guest';
   
   // Get payment method from objSummary
   const paymentMethod = objSummary?.payment_method || 'Cash';
@@ -133,7 +134,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
               </tbody>
             </table>
           </div>
-
+            <br/>
           {/* Invoice Summary  */}
           <div className="invoice-total row">
             <div className="col-6">
@@ -162,13 +163,14 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
                     <p className="mb-2">{formatCurrency(objSummary.total_paid)}</p>
                     <p className="mb-0">{formatCurrency(objSummary.total_paid - objSummary.total)}</p>
                   </div>
+                  
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="text-center mt-4 print-buttons" >
-          <button className="btn btn-primary me-2" onClick={handlePrint} style={{ backgroundColor: '#1890ff', border: 'none', padding: '8px 16px' }}>Print Invoice</button>
+          <button className="btn btn-primary me-2" onClick={handlePrint} style={{ backgroundColor: '#1890ff', border: 'none', padding: '8px 16px' }}>Print </button>
           <button className="btn btn-secondary" onClick={handleClose} style={{ backgroundColor: '#6c757d', border: 'none', padding: '8px 16px' }}>Close</button>
         </div>
       </div>
@@ -194,7 +196,7 @@ PrintInvoice.propTypes = {
     })
   ),
   objSummary: PropTypes.shape({
-    customer_name: PropTypes.string,
+    customer_id: PropTypes.string,
     payment_method: PropTypes.string,
     total: PropTypes.number,
     total_paid: PropTypes.number
@@ -212,7 +214,7 @@ PrintInvoice.defaultProps = {
     save_discount: 0,
     total: 0,
     total_paid: 0,
-    customer_name: '',
+    customer_id: '',
     order_no: '',
     order_date: '',
   },

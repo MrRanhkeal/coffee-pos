@@ -18,7 +18,6 @@ import {
   StockOutlined,
   TransactionOutlined,
   UnorderedListOutlined,
-  UserDeleteOutlined,
   UsergroupAddOutlined,
   UserOutlined,
   UserSwitchOutlined,
@@ -115,7 +114,8 @@ const items_menu = [
         key: "stock",
         label: "Stock",
         children: null,
-        icon: <StockOutlined/>
+        icon: "💹"
+        // icon: <StockOutlined/>
       },
     ],
     icon:<SlidersOutlined/>
@@ -152,7 +152,8 @@ const items_menu = [
         key: "role",
         label: "Role",
         children: null,
-        icon: <UserDeleteOutlined/>
+        // icon: <UserDeleteOutlined/>
+        icon: "🔐"
       }
     ],
     icon: <UsergroupAddOutlined/>

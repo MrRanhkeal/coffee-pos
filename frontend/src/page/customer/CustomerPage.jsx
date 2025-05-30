@@ -3,8 +3,9 @@ import { Button, Form, Input, message, Modal, Select, Space, Table, Tag } from "
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
-import { DeleteOutlined, EditOutlined, FileAddTwoTone } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 import PropTypes from "prop-types";
+import { IoMdEye } from "react-icons/io";
 function CustomerPage() {
   const [form] = Form.useForm();
   const [list, setList] = useState([]);
@@ -52,10 +53,27 @@ function CustomerPage() {
     //
     // formRef.getFieldValue("id")
   };
+  const clickReadOnly = (data) => {
+    setState({
+      ...state,
+      visibleModal: true,
+      isReadOnly: true,
+      id: data.id
+    });
+    form.setFieldsValue({
+      id: data.id,
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      address: data.address,
+      description: data.description,
+      status: data.status,
+    });
+  }
   const onClickDelete = async (data) => {
     Modal.confirm({
-      title: "Delete",
-      descriptoin: "Are you sure to remove?",
+      title: "Delete Customer",
+      content: `Are you sure! you want to remove customer ${data.name}?`,
       okText: "Yes",
       onOk: async () => {
         const res = await request("customer", "delete", {
@@ -83,6 +101,7 @@ function CustomerPage() {
       ...state,
       visibleModal: false,
       id: null,
+      isReadOnly: false
     });
   };
 
@@ -126,13 +145,13 @@ function CustomerPage() {
             Search
           </Button>
         </Space>
-        <FileAddTwoTone type="primary" onClick={onClickAddBtn} style={{ color: "green", fontSize: 30 }}>
-          NEW
-        </FileAddTwoTone>
+        <Button type="primary" style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}} onClick={onClickAddBtn} >
+          <FileAddFilled/> New
+        </Button> 
       </div>
       <Modal
         open={state.visibleModal}
-        title={state.id ? "Edit Customer" : "New Customer"}
+        title={state.isReadOnly ? "View Customer" : (state.id ? "Edit Customer" : "New Customer")}
         footer={null}
         onCancel={onCloseModal}
       >
@@ -144,27 +163,27 @@ function CustomerPage() {
             label="Customer name"
             rules={[{ required: true, message: 'Please input customer name!' }]}
           >
-            <Input placeholder="Input Customer name" />
+            <Input placeholder="Input Customer name" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item 
             name="phone" 
             label="Customer phone"
             rules={[{ required: true, message: 'Please input customer phone!' }]}
           >
-            <Input placeholder="Input Customer phone" />
+            <Input placeholder="Input Customer phone" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item 
             name="email" 
             label="Customer email"
             rules={[{ required: true, message: 'Please input customer email!' }, { type: 'email', message: 'Please enter a valid email!' }]}
           >
-            <Input placeholder="Input Customer email" />
+            <Input placeholder="Input Customer email" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item name={"address"} label="Customer address">
-            <Input placeholder="Input Customer address" name="address" />
+            <Input placeholder="Input Customer address" name="address" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item name={"description"} label="description">
-            <Input.TextArea placeholder="description" />
+            <Input.TextArea placeholder="description" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item 
             name="status" 
@@ -173,6 +192,7 @@ function CustomerPage() {
           >
             <Select
               placeholder="Select status"
+              disabled={state.isReadOnly}
               options={[
                 {
                   label: "Active",
@@ -185,13 +205,17 @@ function CustomerPage() {
               ]}
             />
           </Form.Item>
-
-          <Space>
-            <Button type="default" onClick={onCloseModal}>Cancel</Button>
-            <Button type="primary" htmlType="submit">
-              {form.getFieldValue("id") ? "Update" : "Save"}
-            </Button>
-          </Space>
+          <Form.Item style={{ textAlign: "right" }}>
+              <Space>
+              <Button type="default"  onClick={onCloseModal} >Close</Button>
+              {!state.isReadOnly && (
+                <Button type="primary" htmlType="submit">
+                  {form.getFieldValue("id") ? "Update" : "Save"}
+                </Button>
+              )}
+            </Space>
+          </Form.Item>
+          
         </Form>
       </Modal>
       <Table
@@ -251,6 +275,11 @@ function CustomerPage() {
                   style={{ color: "red", fontSize: 20 }}
                   icon={<MdDelete />}
                   onClick={() => onClickDelete(data, index)}
+                />
+                <EyeOutlined
+                  style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                  onClick={() => clickReadOnly(data)}
+                  icon={<IoMdEye/>}
                 />
               </Space>
             ),

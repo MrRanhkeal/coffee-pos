@@ -1,7 +1,7 @@
 /* Background and centering */
 .login-page {
     height: 100vh;
-    background-image: url("../../../../frontend/src/assets/v_friend_background_cofe.jpg"); /* Put your mountain background image */
+    background-image: url("../../../../frontend/src/assets/v_friend_background_cofe.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
@@ -9,23 +9,57 @@
     justify-content: center;
 }
 
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+}
+
 /* Glassmorphism container */
 .login-container {
-    background: rgba(192, 197, 196, 0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
     padding: 40px;
-    width: 500px;
+    width: 400px;
     height: auto;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     text-align: center;
 }
 
 /* Title */
 .login-container h2 {
-    margin-bottom: 20px;
-    font-weight: bold;
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 30px;
+    color: white;
+}
+
+/* Form styling */
+.login-container .ant-form-item-label > label {
+    color: white;
+}
+
+.login-container .ant-input-affix-wrapper {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    color: white !important;
+}
+
+.login-container .ant-input {
+    background: transparent !important;
+    color: white !important;
+}
+
+.login-container .ant-input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.login-container .ant-input-password-icon {
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 /* Form options */
@@ -35,16 +69,39 @@
     align-items: center;
 }
 
-/* Links */
-.forgot-link,
-.register-link a {
-    color: #fff;
-    text-decoration: underline;
+.login-container .ant-checkbox-wrapper {
+    color: white;
 }
 
-/* Register text */
-.register-link {
-    margin-top: 20px;
-    font-size: 14px;
+.login-container .ant-checkbox-inner {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Button styling */
+.login-container .ant-btn-primary {
+    background: rgba(24, 144, 255, 0.8);
+    border: none;
+    height: 40px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.login-container .ant-btn-primary:hover {
+    background: rgba(24, 144, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(24, 144, 255, 0.3);
+}
+
+/* Links */
+.forgot-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
     color: white;
+    text-decoration: underline;
 }

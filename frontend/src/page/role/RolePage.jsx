@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import { Button, Form, Input, message, Modal, Space, Table, Tag } from "antd";
-import { DeleteOutlined, EditOutlined, FileAddFilled, FileAddOutlined, FileAddTwoTone } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FileAddFilled } from "@ant-design/icons";
 import {  } from "react-icons/md";
 
 function RolePage() {
@@ -60,7 +60,7 @@ function RolePage() {
     const handleDelete = (record) => {
         Modal.confirm({
             title: "Delete Role",
-            content: `Are you sure you want to delete ${record.name}?`,
+            content: `Are you sure! you want to delete ${record.name}?`,
             okText: "Yes",
             okType: "danger",
             cancelText: "No",

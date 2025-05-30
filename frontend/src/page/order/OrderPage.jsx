@@ -363,7 +363,7 @@ function OrderPage() {
                         render: (value, data) => (
                             <div>
                                 <div style={{ fontWeight: "bold" }}>{data.customer_name}</div>
-                                <div>{data.customer_tel}</div>
+                                {/* <div>{data.customer_tel}</div> */}
                                 <div>{data.customer_address}</div>
                             </div>
                         ),

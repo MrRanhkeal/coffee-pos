@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import {
     Button,
@@ -14,8 +14,9 @@ import {
 } from "antd";
 // import { resetWarned } from "antd/es/_util/warning";
 import { configStore } from "../../store/configStore";
-import { MdAddBox, MdCancel, MdDelete, MdEdit, MdSave } from "react-icons/md";
-import {DeleteOutlined, EditOutlined, FileAddFilled, FileAddOutlined, PlusOutlined} from "@ant-design/icons";
+import { MdDelete, MdEdit } from "react-icons/md";
+import {DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled} from "@ant-design/icons";
+import { IoMdEye } from "react-icons/io";
 
 
 function UserPage() {
@@ -27,7 +28,8 @@ function UserPage() {
         role_id: null,
         loading: true,
         isEdit: false,
-        editingUser: null
+        editingUser: null,
+        isReadOnly: false
     });
     useEffect(() => {
         getList();
@@ -77,12 +79,28 @@ function UserPage() {
             editingUser: record
         }));
     };
-
+    const clickReadOnly = (record) => {
+        form.setFieldsValue({
+            id: record.id,
+            name: record.name,
+            username: record.username,
+            // role_id: record.role_id,
+            role_id: record.role_id ? record.role_id : null,
+            is_active: record.is_active
+        });
+        setState(prev => ({
+            ...prev,
+            visible: true,
+            isEdit: false,
+            isReadOnly: true,
+            editingUser: record
+        }));
+    };
     const clickBtnDelete = async (record) => {
         try {
             Modal.confirm({
-                title: "delet",
-                descriptoin: "Are you sure to remove?",
+                title: "Delete User",
+                content: `Are you sure! you want to delete user ${record.name}?`,
                 okText: "Ok",
                 onOk: async () => {
                     const res = await request(`auth/delete/${record.id}`, "delete");
@@ -115,11 +133,13 @@ function UserPage() {
     };
 
     const handleCloseModal = () => {
+        form.resetFields();
         setState((pre) => ({
             ...pre,
             visible: false,
             isEdit: false,
-            editingUser: null
+            editingUser: null,
+            isReadOnly: false
         }));
         form.resetFields();
     };
@@ -210,7 +230,7 @@ function UserPage() {
                 </Button>
             </div>
             <Modal
-                title={state.isEdit ? "Edit User" : "New User"}
+                title={state.isEdit ? "Edit User" : "View User"}
                 open={state.visible}
                 onCancel={handleCloseModal}
                 footer={null}
@@ -226,7 +246,7 @@ function UserPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="Name" />
+                        <Input placeholder="Input name" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name={"username"}
@@ -238,7 +258,7 @@ function UserPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="email" />
+                        <Input placeholder="Input email" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name={"password"}
@@ -250,7 +270,7 @@ function UserPage() {
                             },
                         ]}
                     >
-                        <Input.Password placeholder="password" />
+                        <Input.Password placeholder="Input password" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name={"confirm_password"}
@@ -262,12 +282,13 @@ function UserPage() {
                             },
                         ]}
                     >
-                        <Input.Password placeholder="confirm password" />
+                        <Input.Password placeholder="confirm password" disabled={state.isReadOnly} />
                     </Form.Item>
 
                     <Select
                         style={{ width: "100%" }}
                         placeholder="Select role"
+                        disabled={state.isReadOnly}
                         options={(config?.role || []).map(role => ({
                             label: role.name, // or cust.fullName or cust.whatever is correct
                             value: role.id,   // or cust.customer_id depending on your data
@@ -304,6 +325,7 @@ function UserPage() {
                     >
                         <Select
                             placeholder="Select Status"
+                            disabled={state.isReadOnly}
                             options={[
                                 {
                                     label: "Active",
@@ -318,10 +340,12 @@ function UserPage() {
                     </Form.Item>
                     <Form.Item style={{ textAlign: "right" }}>
                         <Space>
-                            <Button onClick={handleCloseModal}>Cancel</Button>
-                            <Button type="primary" htmlType="submit">
-                                Save
-                            </Button>
+                            <Button onClick={handleCloseModal}>{state.isReadOnly ? 'Close' : 'Cancel'}</Button>
+                            {!state.isReadOnly && (
+                                <Button type="primary" htmlType="submit">
+                                    {state.isEdit ? 'Update' : 'Save'}
+                                </Button>
+                            )}
                         </Space>
                     </Form.Item>
                 </Form>
@@ -387,6 +411,12 @@ function UserPage() {
                                     icon={<MdDelete/>}
                                 >
                                 </DeleteOutlined>
+                                <EyeOutlined
+                                    icon={<IoMdEye/>}
+                                    style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                                    onClick={() => clickReadOnly(data)}
+                                >
+                                </EyeOutlined>
                             </Space>
                         ),
                     },

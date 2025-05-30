@@ -52,7 +52,7 @@ function BillItem({
             </div>
           </div>
           <div>
-            {barcode} - {category_name} - {brand} - Sugar: {sugarLevel}%
+            {category_name} - {brand} -sugar {sugarLevel}%
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {discount != 0 && discount != null ? (

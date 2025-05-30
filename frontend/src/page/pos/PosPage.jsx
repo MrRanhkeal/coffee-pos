@@ -10,6 +10,8 @@ import {
     Row,
     Select,
     Space,
+    Card,
+    Typography
 } from "antd";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
@@ -23,9 +25,12 @@ import { getProfile } from "../../store/profile.store";
 // import { request } from "../../util/helper";
 
 function PosPage() {
+    const { Text } = Typography;
+
     const { config } = configStore();
     const profile = getProfile();
     const refInvoice = React.useRef(null);
+
     const [state, setState] = useState({
         list: [],
         total: 0,
@@ -44,7 +49,7 @@ function PosPage() {
         customer_id: null,
         customer_name: null,
         payment_method: null,
-        remark: null,
+        remark: '0',
         order_no: null, // set after order
         order_date: null, // set after order
     });
@@ -55,7 +60,21 @@ function PosPage() {
         txt_search: "",
         category_id: "",
         brand: "",
+
     });
+
+    const categories = [
+        { id: "", name: "All", icon: "🛒" },
+        { id: "Coffee", name: "Coffee", icon: "☕" },
+        { id: "tea", name: "Tea", icon: "🍵" },
+        { id: "smoothie", name: "Smoothie", icon: "🧋" },
+        { id: "juice", name: "Juice", icon: "🥤" },
+        { id: "coconut", name: "Coconut", icon: "🥥" },
+        { id: "soda", name: "Soda", icon: "🍌" },
+        { id: "fruit", name: "Fruit", icon: "🍎" },
+        { id: "snack", name: "Snack", icon: "🍕" },
+        // { id: "cream", name: "Cream", icon: "🍦" }
+    ];
 
     const handleCalSummary = useCallback(() => {
         setState(currentState => {
@@ -64,7 +83,7 @@ function PosPage() {
                 save_discount = 0;
 
             currentState.cart_list.forEach((item) => {
-                total_qty += item.cart_qty;
+                total_qty += item.cart_qty; //check that(-=1 from product_stock.qty)
                 const original_total = Number(item.cart_qty) * Number(item.price);
                 let final_price = original_total;
 
@@ -91,40 +110,14 @@ function PosPage() {
     const handleAdd = useCallback(({ sugarLevel, ...item }) => {
         setState(prevState => {
             const cart_tmp = [...prevState.cart_list];
-            const findIndex = cart_tmp.findIndex((row) => 
+            const findIndex = cart_tmp.findIndex((row) =>
                 row.barcode === item.barcode && row.sugarLevel === sugarLevel
             );
 
             if (findIndex === -1) {
-                if (item.qty > 0) {
-                    cart_tmp.push({ ...item, sugarLevel, cart_qty: 1 });
-                } else {
-                    notification.error({
-                        message: "Warning",
-                        description: "No stock available!",
-                        placement: "top",
-                        style: {
-                            backgroundColor: "hsl(359,100%,98%)",
-                            outline: "1px solid #ff4d4f",
-                        },
-                    });
-                    return prevState;
-                }
+                cart_tmp.push({ ...item, sugarLevel, cart_qty: 1 });
             } else {
-                if (item.qty > cart_tmp[findIndex].cart_qty) {
-                    cart_tmp[findIndex].cart_qty += 1;
-                } else {
-                    notification.error({
-                        message: "Warning",
-                        description: `No more stock available! Currently in stock: ${item.qty}`,
-                        placement: "top",
-                        style: {
-                            backgroundColor: "hsl(359,100%,98%)",
-                            outline: "1px solid #ff4d4f",
-                        },
-                    });
-                    return prevState;
-                }
+                cart_tmp[findIndex].cart_qty += 1;
             }
             return { ...prevState, cart_list: cart_tmp };
         });
@@ -218,47 +211,92 @@ function PosPage() {
 
 
     const handleClickOut = async () => {
-        var order_details = [];
-        state.cart_list.forEach((item) => {
-            var total = Number(item.cart_qty) * Number(item.price);
-            if (item.discount != null && item.discount != 0) {
-                total = total - (total * Number(item.discount)) / 100;
-            }
-            var objItem = {
+        // Check if paid amount is sufficient
+        if (objSummary.total_paid < objSummary.total) {
+            notification.error({
+                message: "Insufficient Payment",
+                description: "Paid amount is not sufficient, please check again!",
+                placement: "top",
+                style: {
+                    backgroundColor: "hsl(359,100%,98%)",
+                    outline: "1px solid #ff4d4f",
+                },
+            });
+            return;
+        }
+
+        try {
+            // Prepare order details with complete item information
+            const order_details = state.cart_list.map(item => ({
                 product_id: item.id,
-                qty: Number(item.cart_qty),
+                product_name: item.name,
+                qty: item.cart_qty,
                 price: Number(item.price),
-                discount: Number(item.discount),
-                total: total,
+                discount: Number(item.discount || 0),
+                total: Number((item.cart_qty * item.price * (1 - (item.discount || 0) / 100)).toFixed(2)),
+                sugarLevel: item.sugarLevel
+            }));
+
+            const param = {
+                order: {
+                    total_amount: objSummary.total,
+                    paid_amount: objSummary.total_paid,
+                    total_qty: objSummary.total_qty,
+                    save_discount: objSummary.save_discount,
+                    customer_id: objSummary.customer_id || 'Guest',
+                    customer_name: objSummary.customer_name || 'Guest',
+                    payment_method: objSummary.payment_method || 'Cash',
+                    remark: objSummary.remark || '',
+                },
+                order_details: order_details,
             };
-            order_details.push(objItem);
-        });
-        var param = {
-            order: {
-                customer_id: objSummary.customer_id,
-                customer_name: objSummary.customer_name,
-                total_amount: objSummary.total,
-                paid_amount: objSummary.total_paid,
-                payment_method: objSummary.payment_method,
-                remark: objSummary.remark,
-            },
-            order_details: order_details,
-        };
-        const res = await request("order", "post", param);
-        if (res && !res.error) {
-            if (res.order) {
-                message.success("Order created success!");
-                setObjSummary((p) => ({
-                    ...p,
+
+            const res = await request("order", "post", param);
+
+            if (res && !res.error) {
+                message.success("Order completed successfully!");
+                
+                // Update order information for the invoice
+                const invoiceData = {
+                    ...objSummary,
                     order_no: res.order?.order_no,
-                    order_date: res.order?.create_at,
-                }));
+                    order_date: res.order?.create_at
+                };
+                
+                setObjSummary(invoiceData);
+
+                // Print invoice first
                 setTimeout(() => {
-                    handlePrintInvoice(); // open print dialog
-                }, 1000);
+                    handlePrintInvoice();
+                    // Clear cart only after printing
+                    setTimeout(() => {
+                        handleClearCart();
+                        // Reset summary after clearing cart
+                        setObjSummary({
+                            sub_total: 0,
+                            total_qty: 0,
+                            save_discount: 0,
+                            tax: 10,
+                            total: 0,
+                            total_paid: 0,
+                            customer_id: null,
+                            customer_name: null,
+                            payment_method: null,
+                            remark: '0',
+                            order_no: null,
+                            order_date: null,
+                        });
+                    }, 1000);
+                }, 500);
+            } else {
+                throw new Error(res.error || 'Failed to complete order');
             }
-        } else {
-            message.success("Order not complete!");
+        } catch (error) {
+            notification.error({
+                message: "Order Failed",
+                description: error.message || "Failed to complete the order. Please try again.",
+                placement: "top",
+            });
         }
     };
 
@@ -297,7 +335,7 @@ function PosPage() {
                 <Col span={16} className={styles.grid1}>
                     <div className="pageHeader">
                         <Space>
-                            <div>Product {state.total}</div>
+                            {/* <div>Product {state.total}</div>
                             <Input.Search
                                 onChange={(event) =>
                                     setFilter((p) => ({ ...p, txt_search: event.target.value }))
@@ -323,10 +361,47 @@ function PosPage() {
                                 onChange={(id) => {
                                     setFilter((pre) => ({ ...pre, brand: id }));
                                 }}
-                            />
-                            <Button onClick={onFilter} type="primary">
+                            /> */}
+                            {/* <Button onClick={onFilter} type="primary">
                                 Search
-                            </Button>
+                            </Button> */}
+                        </Space>
+
+                        <Space >
+                            {/* <div>Category</div> */}
+                            <div style={{ overflowX: 'auto', paddingBottom: 20, display: 'flex', gap: 8 }}>
+                                {categories.map((category) => {
+                                    const isSelected = String(filter.category_id) === String(category.id);
+
+                                    return (
+                                        <Card
+                                            key={category.id}
+                                            hoverable
+                                            size="small"
+                                            onClick={() => setFilter((prev) => ({ ...prev, category_id: category.id }))}
+                                            style={{
+                                                minWidth: 90,
+                                                textAlign: 'center',
+                                                backgroundColor: isSelected ? '#fff176' : '#f5f5f5',
+                                                border: isSelected ? '1px solid #ffd700' : '1px solid transparent',
+                                                borderRadius: 8,
+                                                cursor: 'pointer'
+                                            }}
+                                            bodyStyle={{ padding: 12 }}
+                                        >
+                                            <Space direction="vertical" size={4} align="center">
+                                                <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>{category.icon}</div>
+                                                <Text
+                                                    style={{ fontWeight: isSelected ? 600 : 400, fontSize: 12 }}
+                                                >
+                                                    {category.name}
+                                                </Text>
+                                            </Space>
+                                        </Card>
+                                    );
+                                })}
+                            </div>
+
                         </Space>
                     </div>
                     <Row gutter={[16, 16]}>
@@ -388,7 +463,7 @@ function PosPage() {
                                 }}
                                 /> */}
 
-                                {/* <Select
+                                <Select
                                     style={{ width: "100%" }}
                                     placeholder="Select Customer"
                                     options={config?.customer}
@@ -398,8 +473,8 @@ function PosPage() {
                                             customer_id: value
                                         }));
                                     }}
-                                /> */}
-                                <Select
+                                />
+                                {/* <Select
                                     style={{ width: "100%" }}
                                     placeholder="Select Customer"
                                     options={(config?.customer || []).map(cust => ({
@@ -412,7 +487,7 @@ function PosPage() {
                                             customer_name: value,
                                         }));
                                     }}
-                                />
+                                /> */}
                             </Col>
                             <Col span={12}>
                                 <Select
@@ -424,20 +499,12 @@ function PosPage() {
                                             value: "Cash",
                                         },
                                         {
-                                            label: "Wing",
-                                            value: "Wing",
-                                        },
-                                        {
                                             label: "ABA",
                                             value: "ABA",
                                         },
                                         {
                                             label: "Acleda",
                                             value: "Acleda",
-                                        },
-                                        {
-                                            label: "Crypto",
-                                            value: "Crypto",
                                         },
                                     ]}
                                     onSelect={(value) => {
@@ -474,7 +541,7 @@ function PosPage() {
                             <Col span={12}>
                                 <div><br></br></div>
                                 <Button
-                                    disabled={state.cart_list.length == 0}
+                                    disabled={state.cart_list.length == 0 || objSummary.total_paid < objSummary.total}
                                     block
                                     type="primary"
                                     onClick={handleClickOut}

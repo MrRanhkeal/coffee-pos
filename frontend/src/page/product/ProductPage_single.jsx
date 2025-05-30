@@ -30,7 +30,7 @@ function ProductPage() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [imageDefault, setImageDefault] = useState([]);
-  const [imageOptional, setImageOptional] = useState([]);
+  // const [imageOptional, setImageOptional] = useState([]);
 
   useEffect(() => {
     getList();
@@ -68,7 +68,7 @@ function ProductPage() {
     params.append("barcode", items.barcode); //
     params.append("brand", items.brand);
     params.append("description", items.description);
-    params.append("qty", items.qty);
+    // params.append("qty", items.qty);
     params.append("price", items.price);
     params.append("discount", items.discount);
     params.append("status", items.status);
@@ -122,8 +122,8 @@ function ProductPage() {
 
   const handleChangeImageDefault = ({ fileList: newFileList }) =>
     setImageDefault(newFileList);
-  const handleChangeImageOptional = ({ fileList: newFileList }) =>
-    setImageOptional(newFileList);
+  // const handleChangeImageOptional = ({ fileList: newFileList }) =>
+  //   setImageOptional(newFileList);
 
   const onFilter = () => {
     getList();
@@ -312,7 +312,7 @@ function ProductPage() {
             </Upload>
           </Form.Item>
 
-          <Form.Item name={"image_optional"} label="Image (Optional)">
+          {/* <Form.Item name={"image_optional"} label="Image (Optional)">
             <Upload
               customRequest={(options) => {
                 options.onSuccess();
@@ -320,13 +320,13 @@ function ProductPage() {
               listType="picture-card"
               multiple={true}
               maxCount={5}
-              fileList={imageOptional}
+              //fileList={imageOptional}
               onPreview={handlePreview}
-              onChange={handleChangeImageOptional}
+             // onChange={handleChangeImageOptional}
             >
               <div>+Upload</div>
             </Upload>
-          </Form.Item>
+          </Form.Item> */}
 
           {previewImage && (
             <Image
@@ -380,11 +380,11 @@ function ProductPage() {
             title: "brand",
             dataIndex: "brand",
           },
-          {
-            key: "qty",
-            title: "qty",
-            dataIndex: "qty",
-          },
+          // {
+          //   key: "qty",
+          //   title: "qty",
+          //   dataIndex: "qty",
+          // },
           {
             key: "price",
             title: "price",

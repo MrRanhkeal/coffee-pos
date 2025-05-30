@@ -33,26 +33,33 @@ function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h2>Login</h2>
+        <h2>Welcome</h2>
         <Form
           form={form}
           name="login"
           initialValues={{ remember: true }}
           onFinish={onLogin}
           layout="vertical"
+          size="large"
         >
           <Form.Item
             name="username"
-            rules={[{ required: true, message: "Please input your Username!" }]}
+            rules={[{ required: true, message: "Please input your username" }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Enter your email" />
+            <Input 
+              prefix={<UserOutlined style={{ color: 'rgba(255, 255, 255, 0.7)' }} />} 
+              placeholder="Username or email"
+            />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Please input your Password!" }]}
+            rules={[{ required: true, message: "Please input your password" }]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />
+            <Input.Password 
+              prefix={<LockOutlined style={{ color: 'rgba(255, 255, 255, 0.7)' }} />} 
+              placeholder="Password"
+            />
           </Form.Item>
 
           <Form.Item>
@@ -60,14 +67,14 @@ function LoginPage() {
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox>Remember me</Checkbox>
               </Form.Item>
-              <a className="forgot-link" href="">Forgot password?</a>
+              <a className="forgot-link" href="#">Forgot password?</a>
             </div>
           </Form.Item>
 
           <Form.Item>
-            <Button block type="primary" htmlType="submit">
-              <LoginOutlined />
-              Log In
+            <Button block type="primary" htmlType="submit" size="large">
+              <LoginOutlined/>
+              Login
             </Button>
           </Form.Item>
         </Form>

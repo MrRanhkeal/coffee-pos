@@ -5,7 +5,8 @@ import { Button, Form, Input, message, Modal, Space, Table, Select } from "antd"
 import dayjs from "dayjs";
 import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { DeleteOutlined, EditOutlined, FileAddFilled, FileAddOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
+import { IoMdEye } from "react-icons/io";
 function SupplierPage() {
     const [form] = Form.useForm();
     const { config } = configStore();
@@ -14,6 +15,7 @@ function SupplierPage() {
         loading: false,
         visible: false,
         txtSearch: "",
+        isReadOnly: false,
     });
     const [filter, setFilter] = useState({
         txtSearch: "",
@@ -55,6 +57,7 @@ function SupplierPage() {
         setState((p) => ({
             ...p,
             visible: false,
+            isReadOnly: false
         }));
         form.resetFields();
     };
@@ -85,11 +88,22 @@ function SupplierPage() {
         });
         openModal();
     };
-
+    const clickReadOnly = (items) => {
+        form.setFieldsValue({
+            ...items,
+            id: items.id,
+        });
+        setState(p => ({
+            ...p,
+            visible: true,
+            isReadOnly: true
+        }));
+    };
+    
     const onClickBtnDelete = (items) => {
         Modal.confirm({
             title: "Delete Supplier",
-            content: "Are you sure you want to delete this supplier?",
+            content: `Are you sure! you want to delete supplier ${items.name}?`,
             onOk: async () => {
                 try {
                     setState((p) => ({
@@ -138,7 +152,7 @@ function SupplierPage() {
             </div>
             <Modal
                 open={state.visible}
-                title={form.getFieldValue("id") ? "Edit Supplier" : "New Supplier"}
+                title={state.isReadOnly ? "View Supplier" : (form.getFieldValue("id") ? "Edit Supplier" : "New Supplier")}
                 onCancel={closeModal}
                 footer={null}
             >
@@ -153,7 +167,7 @@ function SupplierPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="Name" />
+                        <Input placeholder="Enter supplier name" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name="product_type"
@@ -182,6 +196,7 @@ function SupplierPage() {
                                 }));
                                 getList();
                             }}
+                            disabled={state.isReadOnly}
                         />
                         
                     </Form.Item>
@@ -195,7 +210,7 @@ function SupplierPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="Enter supplier code" />
+                        <Input placeholder="Enter supplier code" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name="phone"
@@ -207,7 +222,7 @@ function SupplierPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="Phone number" />
+                        <Input placeholder="Enter phone number" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name="email"
@@ -220,7 +235,7 @@ function SupplierPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="Enter email address" />
+                        <Input placeholder="Enter email" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name="address"
@@ -232,20 +247,22 @@ function SupplierPage() {
                             },
                         ]}
                     >
-                        <Input.TextArea placeholder="Enter full address" rows={3} />
+                        <Input.TextArea placeholder="Enter full address" rows={3} disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item
                         name="description"
                         label="Description"
                     >
-                        <Input.TextArea placeholder="Description" />
+                        <Input.TextArea placeholder="Description" disabled={state.isReadOnly} />
                     </Form.Item>
                     <Form.Item style={{ textAlign: "right" }}>
                         <Space>
-                            <Button onClick={closeModal}>Cancel</Button>
-                            <Button type="primary" htmlType="submit">
-                                {form.getFieldValue("id") ? "Update" : "Save"}
-                            </Button>
+                            <Button onClick={closeModal}>Close</Button>
+                            {!state.isReadOnly && (
+                                <Button type="primary" htmlType="submit">
+                                    {form.getFieldValue("id") ? "Update" : "Save"}
+                                </Button>
+                            )}
                         </Space>
                     </Form.Item>
                 </Form>
@@ -313,6 +330,11 @@ function SupplierPage() {
                                     onClick={() => onClickBtnDelete(data)}
                                 >
                                 </DeleteOutlined>
+                                <EyeOutlined
+                                style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                                onClick={() => clickReadOnly(data)}
+                                icon={<IoMdEye/>}
+                                />
                             </Space>
                         ),
                     },

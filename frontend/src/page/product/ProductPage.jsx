@@ -16,10 +16,11 @@ import {
   Upload,
 } from "antd";
 import { request } from "../../util/helper";
-import { MdAddAPhoto, MdAdUnits, MdDelete, MdEdit, MdImage } from "react-icons/md";
+import {MdDelete, MdEdit, MdImage } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
-import { DeleteOutlined, EditOutlined, FileAddFilled } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
+import { IoMdEye } from "react-icons/io";
 
 //please check this
 const getBase64 = (file) =>
@@ -33,7 +34,7 @@ const getBase64 = (file) =>
 function ProductPage() {
   // const { config } = configStore();
   const { config } = configStore();
-  const [form] = Form.useForm();
+  const [formRef] = Form.useForm();
   const [state, setState] = useState({
     list: [],
     total: 0,
@@ -53,7 +54,7 @@ function ProductPage() {
   const [previewImage, setPreviewImage] = useState("");
   const [imageDefault, setImageDefault] = useState([]);
   // const [imageOptional, setImageOptional] = useState([]);
-  const [imageOptional_Old, setImageOptional_Old] = useState([]);
+  // const [imageOptional_Old, setImageOptional_Old] = useState([]);
 
   useEffect(() => {
     getList();
@@ -84,31 +85,33 @@ function ProductPage() {
     setState((p) => ({
       ...p,
       visibleModal: false,
+      id: null,
+      isReadOnly: false
     }));
     setImageDefault([]);
     // setImageOptional([]);
-    form.resetFields();
+    formRef.resetFields();
   };
   const onFinish = async (items) => {
-    // aaaa
-    // console.log("imageProductOptional", imageOptional_Old);
-    // console.log(items);
-    var imageOptional = [];
-    if (imageOptional_Old.length > 0 && items.image_optional) {
-      imageOptional_Old.map((item1) => {
-        var isFound = false;
-        if (items.image_optional) {
-          items.image_optional.fileList?.map((item2) => {
-            if (item1.name === item2.name) {
-              isFound = true;
-            }
-          });
-        }
-        if (isFound == false) {
-          imageOptional.push(item1.name);
-        }
-      });
-    }
+  //   // aaaa
+  //   // console.log("imageProductOptional", imageOptional_Old);
+      //console.log(items);
+  //   // var imageOptional = [];
+  //   if (imageOptional_Old.length > 0 && items.image_optional) {
+  //     imageOptional_Old.map((item1) => {
+  //       var isFound = false;
+  //       if (items.image_optional) {
+  //         items.image_optional.fileList?.map((item2) => {
+  //           if (item1.name === item2.name) {
+  //             isFound = true;
+  //           }
+  //         });
+  //       }
+  //       if (isFound == false) {
+  //         imageOptional.push(item1.name);
+  //       }
+  //     });
+  //   }
 
     var params = new FormData();
     // id	category_id	barcode	name	brand	description	qty	price	discount	status	image
@@ -117,22 +120,22 @@ function ProductPage() {
     params.append("barcode", items.barcode); //
     params.append("brand", items.brand);
     params.append("description", items.description);
-    params.append("qty", items.qty);
+    // params.append("qty", items.qty);
     params.append("price", items.price);
     params.append("discount", items.discount);
     params.append("status", items.status);
 
     // when update this two more key
-    params.append("image", form.getFieldValue("image")); // just name image
+    params.append("image", formRef.getFieldValue("image")); // just name image
 
-    if (imageOptional && imageOptional.length > 0) {
-      // image for remove
-      imageOptional.map((item) => {
-        params.append("image_optional", item); // just name image
-      });
-    }
+    // if (imageOptional && imageOptional.length > 0) {
+    //   // image for remove
+    //   imageOptional.map((item) => {
+    //     params.append("image_optional", item); // just name image
+    //   });
+    // }
 
-    params.append("id", form.getFieldValue("id"));
+    params.append("id", formRef.getFieldValue("id"));
 
     if (items.image_default) {
       if (items.image_default.file.status === "removed") {
@@ -146,17 +149,17 @@ function ProductPage() {
       }
     }
 
-    if (items.image_optional) {
-      items.image_optional.fileList?.map((item) => {
-        // multiple image
-        if (item?.originFileObj) {
-          params.append("upload_image_optional", item.originFileObj, item.name);
-        }
-      });
-    }
+    // if (items.image_optional) {
+    //   items.image_optional.fileList?.map((item) => {
+    //     // multiple image
+    //     if (item?.originFileObj) {
+    //       params.append("upload_image_optional", item.originFileObj, item.name);
+    //     }
+    //   });
+    // }
 
     var method = "post";
-    if (form.getFieldValue("id")) {
+    if (formRef.getFieldValue("id")) {
       method = "put";
     }
     const res = await request("product", method, params);
@@ -171,7 +174,7 @@ function ProductPage() {
   const onBtnNew = async () => {
     const res = await request("new_barcode", "post");
     if (res && !res.error) {
-      form.setFieldValue("barcode", res.barcode);
+      formRef.setFieldValue("barcode", res.barcode);
       setState((p) => ({
         ...p,
         visibleModal: true,
@@ -198,7 +201,7 @@ function ProductPage() {
   };
 
   const onClickEdit = async (item) => {
-    form.setFieldsValue({
+    formRef.setFieldsValue({
       ...item,
     });
     setState((pre) => ({ ...pre, visibleModal: true }));
@@ -208,35 +211,54 @@ function ProductPage() {
           uid: "-1",
           name: item.image,
           status: "done",
-          // url: "http://localhost:81/fullstack/image_pos/" + item.image,
-          url: "http://localhost:81/fullstack/image_pos/" + item.image,
+          url: "http://localhost/coffee/" + item.image,
         },
       ];
       setImageDefault(imageProduct);
     }
+    
     //
     // product_image
-    const res_image = await request("product_image/" + item.id, "get");
-    if (res_image && !res_image.error) {
-      if (res_image.list) {
-        var imageProductOptional = [];
-        res_image.list.map((item, index) => {
-          imageProductOptional.push({
-            uid: index,
-            name: item.image,
-            status: "done",
-            url: "http://localhost:81/fullstack/image_pos/" + item.image,
-          });
-        });
-        // setImageOptional(imageProductOptional);
-        setImageOptional_Old(imageProductOptional);
-      }
-    }
+    // const res_image = await request("product_image/" + item.id, "get");
+    // if (res_image && !res_image.error) {
+    //   if (res_image.list) {
+    //     var imageProductOptional = [];
+    //     res_image.list.map((item, index) => {
+    //       imageProductOptional.push({
+    //         uid: index,
+    //         name: item.image,
+    //         status: "done",
+    //         url: "http://localhost:81/fullstack/image_pos/" + item.image,
+    //       });
+    //     });
+    //     // setImageOptional(imageProductOptional);
+    //     // setImageOptional_Old(imageProductOptional);
+    //   }
+    // }
+  };
+  const clickReadOnly = (item) => {
+    
+    setState((p) => ({
+    ...p,
+    visibleModal: true,
+    isReadOnly: true
+  }))  
+    formRef.setFieldsValue({
+      id: item.id,
+      name: item.name,
+      category_id: item.category_id,
+      barcode: item.barcode,
+      brand: item.brand,
+      description: item.description,
+      price: item.price,
+      discount: item.discount,
+      status: item.status,
+    });
   };
   const onClickDelete = (item) => {
     Modal.confirm({
-      title: "Remove data",
-      content: "Are you want to remove this porduct?",
+      title: "Remove Product",
+      content: `Are you sure! you want to remove porduct ${item.name}?`,
       onOk: async () => {
         const res = await request("product", "delete", item);
         if (res && !res.error) {
@@ -249,6 +271,14 @@ function ProductPage() {
 
   return (
     <MainPage loading={state.loading}>
+      {/* <Modal
+        open={previewOpen}
+        // title="Image Preview"
+        //footer={null}
+        onCancel={() => setPreviewOpen(false)}
+      >
+        <img alt="preview" style={{ width: '100px',height:'100px' }} src={previewImage} />
+      </Modal> */}
       <div className="pageHeader">
         <Space>
           <div>Product {state.total}</div>
@@ -288,12 +318,18 @@ function ProductPage() {
       </div>
       <Modal
         open={state.visibleModal}
-        title={form.getFieldValue("id") ? "Edit Product" : "New Product"}
+        title={state.isReadOnly ? "View Product" : formRef.getFieldValue("id") ? "Edit Product" : "New Product"}
         footer={null}
         onCancel={onCloseModal}
-        width={700}
+        
       >
-        <Form layout="vertical" onFinish={onFinish} form={form}>
+        <Form
+          form={formRef}
+          layout="vertical"
+          onFinish={onFinish}
+          disabled={state.isReadOnly}
+        >
+          <div style={{ marginBottom: '20px' }}>
           <Row gutter={8}>
             <Col span={12}>
               <Form.Item
@@ -333,9 +369,9 @@ function ProductPage() {
                   style={{ width: "100%" }}
                 />
               </Form.Item>
-              <Form.Item name={"qty"} label="Quantity">
+              {/* <Form.Item name={"qty"} label="Quantity">
                 <InputNumber placeholder="Quantity" style={{ width: "100%" }} />
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item name={"discount"} label="Discount">
                 <InputNumber placeholder="Discount" style={{ width: "100%" }} />
               </Form.Item>
@@ -396,7 +432,7 @@ function ProductPage() {
             </Col>
           </Row>
 
-          <Form.Item name={"image_default"} label="Image">
+          <Form.Item name={"image_default"} label="Image" className="product_image" >
             <Upload
               customRequest={(options) => {
                 options.onSuccess();
@@ -441,15 +477,23 @@ function ProductPage() {
                 afterOpenChange: (visible) => !visible && setPreviewImage(""),
               }}
               src={previewImage}
+              style={{
+                width: "50px",
+                height: "50px",
+                objectFit: "contain",
+              }}
             />
           )}
-          <div style={{ textAlign: "right" }}>
+          <Form.Item style={{ textAlign: "right" }}>
             <Space>
-              <Button onClick={onCloseModal}>Cancel</Button>
-              <Button type="primary" htmlType="submit">
-                {form.getFieldValue("id") ? "Update" : "Save"}
-              </Button>
+              <Button onClick={onCloseModal}>{state.isReadOnly ? "Close" : "Cancel"}</Button>
+              {!state.isReadOnly && (
+                <Button type="primary" htmlType="submit">
+                  {formRef.getFieldValue("id") ? "Update" : "Save"}
+                </Button>
+              )}
             </Space>
+          </Form.Item>
           </div>
         </Form>
       </Modal>
@@ -517,11 +561,11 @@ function ProductPage() {
             title: "Brand",
             dataIndex: "brand",
           },
-          {
-            key: "qty",
-            title: "Quantity",
-            dataIndex: "qty",
-          },
+          // {
+          //   key: "qty",
+          //   title: "Quantity",
+          //   dataIndex: "qty",
+          // },
           {
             key: "price",
             title: "price",
@@ -580,6 +624,11 @@ function ProductPage() {
                   style={{ color: "red", fontSize: 20 }}
                   icon={<MdDelete />}
                   onClick={() => onClickDelete(data, index)}
+                />
+                <EyeOutlined
+                  style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                  onClick={() => clickReadOnly(data)}
+                  icon={<IoMdEye/>}
                 />
               </Space>
             ),
