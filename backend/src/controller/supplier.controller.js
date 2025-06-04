@@ -32,12 +32,12 @@ exports.getlist = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         var sql = "insert into supplier(name,product_type,code,phone,email,address,description) values(?,?,?,?,?,?,?)";
-        // var [check] = await db.query("SELECT * FROM supplier WHERE code = ?", req.body.code);
-        // if (check.length > 0) {
-        //     return res.status(400).json({
-        //         message: "Code already exists"
-        //     });
-        // }
+        var [check] = await db.query("SELECT * FROM supplier WHERE code = ?", req.body.code);
+        if (check.length > 0) {
+            return res.status(400).json({
+                message: "Code already exists"
+            });
+        }
         var [data] = await db.query(sql, [
             req.body.name,
             req.body.product_type,

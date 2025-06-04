@@ -8,7 +8,16 @@ try{
             validate_token(),
             report.report_sale_summary
         );
-        app.get("/api/report_top_sale", validate_token(), report.report_top_sale);
+        // app.get("/api/report_expense_summary", 
+        //     validate_token(), 
+        //     report.report_expense_summary);
+        //     //
+        app.get("/api/report_top_sale", 
+            validate_token(), 
+            report.report_sale_summary);
+        app.get("/api/report_top_item", 
+            validate_token(), 
+            report.report_sale_summary);
     };
 }
 catch (error) {
