@@ -1,6 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
-
+import PropTypes from "prop-types";
 export const options = {
   title: "Expense Summary By Month",
   hAxis: { title: "Month", titleTextStyle: { color: "#333" } },
@@ -32,5 +32,7 @@ function HomeExpenseByMonthChart({ data = [] }) {
     </div>
   );
 }
-
+HomeExpenseByMonthChart.propTypes = {
+  data: PropTypes.array,
+}
 export default HomeExpenseByMonthChart;

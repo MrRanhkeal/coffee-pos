@@ -15,14 +15,13 @@ import {
   SlidersOutlined,
   SnippetsOutlined,
   SortDescendingOutlined,
-  StockOutlined,
   TransactionOutlined,
   UnorderedListOutlined,
   UsergroupAddOutlined,
   UserOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import {  Dropdown, Input, Layout, Menu, theme } from "antd";
+import {  Dropdown, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import Logo from "../../assets/v-friends.jpg";

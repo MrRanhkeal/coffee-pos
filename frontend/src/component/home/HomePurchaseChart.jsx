@@ -1,6 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
-
+//import PropTypes from "prop-types";
 export const data = [
   ["Year", "Purchase", "Sale"],
   ["2004", 1000, 400],
@@ -21,10 +21,12 @@ const HomePurchaseChart = (data = []) => {
       chartType="LineChart"
       width="100%"
       height="400px"
-      data={data}
+      // data={data}
       options={options}
     />
   );
 };
-
+// HomePurchaseChart.PropTypes = {
+//   data: PropTypes.array,
+// }
 export default HomePurchaseChart;

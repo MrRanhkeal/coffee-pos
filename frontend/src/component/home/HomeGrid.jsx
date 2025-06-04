@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col } from "antd";
+import PropTypes from "prop-types";
 function HomeGrid({ data = [] }) {
   return (
     <Row>
@@ -32,5 +33,7 @@ function HomeGrid({ data = [] }) {
     </Row>
   );
 }
-
+HomeGrid.propTypes = {
+  data: PropTypes.array,
+}
 export default HomeGrid;

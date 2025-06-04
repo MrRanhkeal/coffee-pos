@@ -164,7 +164,8 @@ function ProductPage() {
     }
     const res = await request("product", method, params);
     if (res && !res.error) {
-      message.success(res.message);
+      // message.success(res.message);
+      message.success(`Product ${method === "put" ? "updated" : "created"} successfully`);
       onCloseModal();
       getList();
     } else {
@@ -257,7 +258,7 @@ function ProductPage() {
   };
   const onClickDelete = (item) => {
     Modal.confirm({
-      title: "Remove Product",
+      title: "Delete Product",
       content: `Are you sure! you want to remove porduct ${item.name}?`,
       onOk: async () => {
         const res = await request("product", "delete", item);

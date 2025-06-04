@@ -4,7 +4,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { IoMdEye } from "react-icons/io";
 function CustomerPage() {
   const [form] = Form.useForm();
@@ -123,7 +123,8 @@ function CustomerPage() {
     }
     const res = await request("customer", method, data);
     if (res && !res.error) {
-      message.success(res.message);
+      // message.success(res.message);
+      message.success(`Customer ${method === "put" ? "updated" : "created"} successfully`);
       getList();
       onCloseModal();
     }
@@ -289,7 +290,5 @@ function CustomerPage() {
     </MainPage>
   );
 }
-CustomerPage.propTypes = {
-  getFieldValue: PropTypes
-};
+
 export default CustomerPage;

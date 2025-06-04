@@ -131,7 +131,8 @@ function CategoryPage() {
     }
     const res = await request("category", method, data);
     if (res && !res.error) {
-      message.success(res.message);
+      // message.success(res.message);
+      message.success(`Category ${method === "put" ? "updated" : "created"} successfully`);
       getList();
       onCloseModal();
     }

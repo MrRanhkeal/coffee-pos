@@ -130,7 +130,10 @@ function PosPage() {
             page: refPage.current,
             is_list_all: 1,
         };
-        setState(pre => ({ ...pre, loading: true }));
+        setState(pre => ({ 
+            ...pre, 
+            // loading: true 
+        }));
         try {
             const res = await request("product", "get", param);
             if (res && !res.error) {
@@ -166,9 +169,9 @@ function PosPage() {
         getList();
     }, [getList]);
 
-    const onFilter = () => {
-        getList();
-    };
+    // const onFilter = () => {
+    //     getList();
+    // };
 
 
     const handleClearCart = () => {
@@ -541,6 +544,7 @@ function PosPage() {
                             <Col span={12}>
                                 <div><br></br></div>
                                 <Button
+                                    //check total_paid it can't string values
                                     disabled={state.cart_list.length == 0 || objSummary.total_paid < objSummary.total}
                                     block
                                     type="primary"

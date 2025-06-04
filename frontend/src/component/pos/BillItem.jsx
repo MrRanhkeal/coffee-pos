@@ -11,7 +11,6 @@ function BillItem({
   category_name,
   price,
   discount,
-  barcode,
   cart_qty,
   sugarLevel,
   handleIncrease,

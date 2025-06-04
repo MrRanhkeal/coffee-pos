@@ -1,6 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
-
+import PropTypes from "prop-types";
 export const options = {
   title: "Sale Summary By Month",
   hAxis: { title: "Month", titleTextStyle: { color: "#333" } },
@@ -32,5 +32,9 @@ function HomeSaleChart({ data = [] }) {
     </div>
   );
 }
+
+HomeSaleChart.propTypes = {
+  data: PropTypes.array,
+};
 
 export default HomeSaleChart;

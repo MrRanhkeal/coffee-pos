@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import HomeGrid from "../../component/home/HomeGrid";
 import HomeSaleChart from "../../component/home/HomeSaleChart";
 import HomePurchaseChart from "../../component/home/HomePurchaseChart";
-import { Button, Col, Row } from "antd";
-import { configStore } from "../../store/configStore";
+import { Col, Row } from "antd";
+// import { configStore } from "../../store/configStore";
 import HomeExpenseByMonthChart from "../../component/home/HomeExpenseByMonthChart";
 import { getPermission } from "../../store/profile.store";
 
@@ -55,6 +56,9 @@ function HomePage() {
         <Col span={12}>
           <HomeExpenseByMonthChart data={expenseByMonth} />
         </Col>
+        <Col span={12}>
+          <HomePurchaseChart data={expenseByMonth} />
+        </Col>
       </Row>
       <HomeExpenseByMonthChart data={expenseByMonth} />
     </div>
@@ -62,3 +66,5 @@ function HomePage() {
 }
 
 export default HomePage;
+
+

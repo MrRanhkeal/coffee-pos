@@ -78,7 +78,8 @@ function SupplierPage() {
         if (res && !res.error) {
             getList();
             closeModal();
-            message.success(res.message);
+            // message.success(res.message);
+            message.success(`Supplier ${method === "put" ? "updated" : "created"} successfully`);
         }
     };
     const onClickBtnEdit = (items) => {
@@ -99,34 +100,24 @@ function SupplierPage() {
             isReadOnly: true
         }));
     };
+
     
     const onClickBtnDelete = (items) => {
         Modal.confirm({
             title: "Delete Supplier",
             content: `Are you sure! you want to delete supplier ${items.name}?`,
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
             onOk: async () => {
-                try {
-                    setState((p) => ({
-                        ...p,
-                        loading: true,
-                    }));
-                    const res = await request(`supplier/${items.id}`, "delete");
-                    if (res && !res.error) {
-                        const newList = state.list.filter((item) => item.id !== items.id);
-                        setState((p) => ({
-                            ...p,
-                            list: newList,
-                            loading: false,
-                        }));
-                        message.success(res.message);
+                try{
+                    const res = await request("supplier", "delete", { id: items.id });
+                    if (res) {
+                        message.success("Supplier deleted successfully");
+                        getList();
                     }
-                } catch (error) {
-                    console.error("Delete supplier error:", error);
+                }catch{
                     message.error("Failed to delete supplier");
-                    setState((p) => ({
-                        ...p,
-                        loading: false,
-                    }));
                 }
             },
         });

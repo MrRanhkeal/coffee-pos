@@ -7,8 +7,7 @@ import {
   Modal,
   Select,
   Space,
-  Table,
-  Tag,
+  Table
 } from "antd";
 import { request } from "../../util/helper";
 import { MdDelete, MdEdit } from "react-icons/md";
