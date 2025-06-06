@@ -5,10 +5,8 @@
 // import { DeleteFilled } from "@ant-design/icons";
 // import { MdDelete } from "react-icons/md";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import HomePage from "./page/home/HomePage";
+import { BrowserRouter, Routes, Route } from "react-router-dom"; 
 import RegisterPage from "./page/auth/RegisterPage";
-
 import MainLayout from "./component/layout/MainLayout";
 import CustomerPage from "./page/customer/CustomerPage";
 import CategoryPage from "./page/category/CategoryPage";
@@ -26,16 +24,12 @@ import ExchangePage from "./page/currency/ExchangePage";
 import LangaugePage from "./page/langauge/LangaugePage";
 import StockPage from "./page/stock/StockPage";
 import Dashboard from "./page/dashboard/Dashboard";
-// import HomePage from "./page/home/HomePage";
-// import Dashboard from "./page/dashboard";
-// import Dashboard from "./page/dashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          {/* <Route path="/" element={<HomePage />} /> */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/pos" element={<PosPage />} />
           <Route path="/customer" element={<CustomerPage />} />

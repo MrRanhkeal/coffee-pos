@@ -1,20 +1,39 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col, Space, Statistic, Table, Typography } from 'antd';
-import { DollarCircleFilled, MonitorOutlined, ProductOutlined, ProfileFilled, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons';
+import { Card, Space, Statistic, Table, Typography } from 'antd';
+import { AppstoreOutlined, DollarCircleFilled, ProductOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import PropTypes from "prop-types";
-// import { Bar } from 'react-chartjs-2';
 import RevenueChart from '../../component/home/RevenueChart';
-import { request, formatDateClient } from "../../util/helper"; // Added import for request helper and formatDateClient
-// import {HomeSaleChart} from '../../component/home/HomeSaleChart';
+import { request, formatDateClient } from "../../util/helper"; // Added import for request helper and formatDateClient 
 function Dashboard() {
 
     const [orders, setOrders] = useState(0);
     const [customers, setCustomers] = useState(0);
     const [products, setProducts] = useState(0);
-    const [category, setCategory] = useState(0);
-    const [inventory, setInventory] = useState(0);
+    const [category, setCategory] = useState(0); 
     const [revenue, setRevenue] = useState(0);
-    const [report, setReport] = useState([]); // This state appears unused. Consider removing if not needed in the future.
+
+    // Calculate total revenue from orders
+    useEffect(() => {
+        const fetchRevenue = async () => {
+            try {
+                const res = await request("order", "get", {});
+                if (res && res.list && Array.isArray(res.list)) {
+                    // Calculate total revenue from all orders
+                    const totalRevenue = res.list.reduce((sum, order) => {
+                        const amount = parseFloat(order.total_amount) || 0;
+                        return sum + amount;
+                    }, 0);
+                    setRevenue(totalRevenue);
+                } else {
+                    setRevenue(0);
+                }
+            } catch (error) {
+                console.error("Error fetching revenue:", error);
+                setRevenue(0);
+            }
+        };
+        fetchRevenue();
+    }, []);
 
     // Fetch orders
     useEffect(() => {
@@ -99,10 +118,9 @@ function Dashboard() {
 
     return (
         <Space size={20} direction='vertical'>
-            <Typography.Title level={3}>Dashboard</Typography.Title>
-            <Space direction='horizontal'>
-                
-                <DashboardCard
+            <Typography.Title level={4}>Dashboard Overview</Typography.Title>
+            <Space direction='horizontal'> 
+                <DashboarProduct 
                     icon={
                         <ProductOutlined
                             style={{
@@ -117,9 +135,9 @@ function Dashboard() {
                     title={'Products'}
                     value={products}
                 />
-                <DashboardCard
+                <DashboardCategory
                     icon={
-                        <ProfileFilled
+                        <AppstoreOutlined
                             style={{
                                 color: "blue",
                                 backgroundColor: "rgba(0,0,255,0.25)",
@@ -132,12 +150,12 @@ function Dashboard() {
                     title={"Category"}
                     value={category}
                 />
-                <DashboardCard
+                <DashboardOrder
                     icon={
                         <ShoppingCartOutlined
                             style={{
-                                color: "green",
-                                backgroundColor: "rgba(0,255,0,0.25)",
+                                color: "red",
+                                backgroundColor: "rgba(216, 168, 35, 0.25)",
                                 borderRadius: 20,
                                 fontSize: 24,
                                 padding: 8,
@@ -147,41 +165,26 @@ function Dashboard() {
                     title={"Orders"}
                     value={orders}
                 />
-                <DashboardCard
-                    icon={
-                        <ShoppingOutlined
-                            style={{
-                                color: "blue",
-                                backgroundColor: "rgba(0,0,255,0.25)",
-                                borderRadius: 20,
-                                fontSize: 24,
-                                padding: 8,
-                            }}
-                        />
-                    }
-                    title={"Inventory"}
-                    value={inventory}
-                />
-                <DashboardCard
+                <DashboardCustomer
                     icon={
                         <UserOutlined
                             style={{
                                 color: "purple",
-                                backgroundColor: "rgba(0,255,255,0.25)",
+                                backgroundColor: "rgba(128,0,128,0.25)",
                                 borderRadius: 20,
                                 fontSize: 24,
                                 padding: 8,
                             }}
                         />
                     }
-                    title={"Customer"}
+                    title={"Customers"}
                     value={customers}
                 />
-                <DashboardCard
+                <DashboardReven
                     icon={
                         <DollarCircleFilled
                             style={{
-                                color: "red",
+                                color: "green",
                                 backgroundColor: "rgba(255,0,0,0.25)",
                                 borderRadius: 20,
                                 fontSize: 24,
@@ -191,21 +194,6 @@ function Dashboard() {
                     }
                     title={"Revenue"}
                     value={revenue}
-                />
-                <DashboardCard
-                    icon={
-                        <MonitorOutlined
-                            style={{
-                                color: "green",
-                                backgroundColor: "rgba(95, 185, 95, 0.25)",
-                                borderRadius: 20,
-                                fontSize: 24,
-                                padding: 8,
-                            }}
-                        />
-                    }
-                    title={"Reports"}
-                    value={report}
                 />
             </Space>
             
@@ -220,18 +208,56 @@ function Dashboard() {
 
     )
 }
-function DashboardCard({ title, value, icon }) {
+function DashboarProduct({ title, value, icon }) {
     return (
-        <Card direction='horizontal'>
-            <Space>
+        <Card direction='horizontal' style={{width: "210px",height: "120px", backgroundColor: "rgba(46, 71, 182, 0.53)", display: "flex", alignItems: "center" }}>
+            <Space >
                 {icon}
                 <Statistic title={title} value={value} />
             </Space>
         </Card>
     );
-
 }
-
+function DashboardCategory({ title, value, icon }) {
+    return (
+        <Card direction='horizontal' style={{width: "210px",height: "120px", backgroundColor: "rgba(5, 243, 57, 0.46)", display: "flex", alignItems: "center" }}>
+            <Space >
+                {icon}
+                <Statistic title={title} value={value} />
+            </Space>
+        </Card>
+    );
+}
+function DashboardOrder({ title, value, icon }) {
+    return (
+        <Card direction='horizontal' style={{width: "210px",height: "120px", backgroundColor: "rgba(155, 25, 231, 0.47)", display: "flex", alignItems: "center" }}>
+            <Space >
+                {icon}
+                <Statistic title={title} value={value} />
+            </Space>
+        </Card>
+    );
+}
+function DashboardCustomer({ title, value, icon }) {
+    return (
+        <Card direction='horizontal' style={{width: "210px",height: "120px", backgroundColor: "rgba(235, 42, 39, 0.55)", display: "flex", alignItems: "center" }}>
+            <Space >
+                {icon}
+                <Statistic title={title} value={value} />
+            </Space>
+        </Card>
+    );
+}
+function DashboardReven({ title, value, icon }) {
+    return (
+        <Card direction='horizontal' style={{width: "210px",height: "120px", backgroundColor: "rgba(79, 255, 10, 0.5)", display: "flex", alignItems: "center" }}>
+            <Space >
+                {icon}
+                <Statistic title={title} value={value} />
+            </Space>
+        </Card>
+    );
+}
 function RecentOrders() {
     const [dataSource, setDataSource] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
@@ -263,26 +289,29 @@ function RecentOrders() {
     return (
         <>
             <Typography.Text strong>Recent Orders</Typography.Text>
-            <Space>
-                <Table style={{width: '90%'}}
+            <Space style={{ width: '100%' }}>
+                <Table style={{ width: '100%' }}
                     columns={[
                         {
+                            key: "order_no",
                             title: "Order No",
                             dataIndex: "order_no",
+                            width: 120,
+                            align: 'left'
                         },
                         {
+                            key: "customer_name",
                             title: "Customer",
                             dataIndex: "customer_name",
+                            width: 120,
+                            align: 'left'
                         },
-                        // {
-                        //     title: "Total",
-                        //     dataIndex: "total_amount",
-                        //     render: (value) => typeof value === 'number' ? `$${value.toFixed(2)}` : '$0.00'
-                        // },
                         {
                             key: "total_amount",
                             title: "Total",
                             dataIndex: "total_amount",
+                            width: 120,
+                            align: 'left',
                             render: (value) => {
                                 const numValue = parseFloat(value);
                                 return !isNaN(numValue) ? `$${numValue.toFixed(2)}` : '$0.00';
@@ -292,41 +321,63 @@ function RecentOrders() {
                             key: "paid_amount",
                             title: "Paid Amount",
                             dataIndex: "paid_amount",
+                            width: 120,
+                            align: 'left',
+                            render: (value) => {
+                                const numValue = parseFloat(value);
+                                return !isNaN(numValue) ? `$${numValue.toFixed(2)}` : '$0.00';
+                            }
                         },
                         {
                             key: "payment_method",
                             title: "Payment Method",
                             dataIndex: "payment_method",
+                            width: 120,
+                            align: 'left'
                         },
-                        // {
-                        //     title: "Remark",
-                        //     dataIndex: "remark",
-                        // },
                         {
+                            key: "create_at",
                             title: "Date",
                             dataIndex: "create_at",
+                            width: 120,
+                            align: 'left',
                             render: (value) => value ? formatDateClient(value, "DD/MM/YYYY") : "N/A"
-                        },
+                        }
                     ]}
                     dataSource={dataSource}
                     loading={loading}
                     pagination={false}
-                    scroll={{ y: 300 }} // Added scroll prop for fixed height and vertical scroll
+                    scroll={{ y: 300 }}
+                    rowClassName={() => 'table-row-hover'}
+                    bordered
                 ></Table>
             </Space>
         </>
     );
 }
-DashboardCard.propTypes = {
+DashboarProduct.propTypes = {
     title: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
     icon: PropTypes.node.isRequired
 }
-
-// DashboardCard.PropTypes = {
-//     title: PropTypes.string.isRequired,
-//     value: PropTypes.number.isRequired,
-//     icon: PropTypes.object.isRequired
-// }
-
+DashboardCategory.propTypes = {
+    title: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+    icon: PropTypes.node.isRequired
+}
+DashboardOrder.propTypes = {
+    title: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+    icon: PropTypes.node.isRequired
+}
+DashboardCustomer.propTypes = {
+    title: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+    icon: PropTypes.node.isRequired
+}
+DashboardReven.propTypes = {
+    title: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+    icon: PropTypes.node.isRequired
+}
 export default Dashboard;
