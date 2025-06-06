@@ -10,3 +10,7 @@
 
 #Categories
 ![image](https://github.com/user-attachments/assets/32c91a62-8fbf-4c54-b839-3057f7df6ff3)
+
+#Products
+![image](https://github.com/user-attachments/assets/6ce7ee9e-0806-46e9-b02c-2f5c65f87cbf)
+
