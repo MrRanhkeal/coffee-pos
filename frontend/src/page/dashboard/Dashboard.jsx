@@ -3,7 +3,10 @@ import { Card, Space, Statistic, Table, Typography } from 'antd';
 import { AppstoreOutlined, DollarCircleFilled, ProductOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import PropTypes from "prop-types";
 import RevenueChart from '../../component/home/RevenueChart';
+import Calendar from '../../component/home/Calendar';
 import { request, formatDateClient } from "../../util/helper"; // Added import for request helper and formatDateClient 
+// import ReactCalendar from '../../component/home/ReactCalendar';
+// import GoogleCalendar from '../../component/home/GoogleCalendar';
 function Dashboard() {
 
     const [orders, setOrders] = useState(0);
@@ -187,13 +190,13 @@ function Dashboard() {
                                 color: "green",
                                 backgroundColor: "rgba(255,0,0,0.25)",
                                 borderRadius: 20,
-                                fontSize: 24,
+                                fontSize: 26,
                                 padding: 8,
                             }}
                         />
                     }
-                    title={"Revenue"}
-                    value={revenue}
+                    title={"Total Revenue"}
+                    value={revenue} 
                 />
             </Space>
             
@@ -201,9 +204,14 @@ function Dashboard() {
                 <RecentOrders /> 
                 {/* <RevenueChart/> */}
             </Space>
-            <Space>
-                <RevenueChart/>
+            <Space style={{width: "100%",height: "100%",display:"flex"}}>
+                <RevenueChart/> 
+                <Calendar/>
+                {/* <GoogleCalendar/> */}
+                {/* <ReactCalendar/> */}
+                
             </Space>
+            
         </Space>
 
     )

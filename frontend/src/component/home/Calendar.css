@@ -1,0 +1,25 @@
+.calendar-container {
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    /* box-shadow: 0 2px 4px rgba(47, 18, 18, 0.1); */
+}
+
+.custom-calendar {
+    border: none;
+    width: 100%;
+}
+
+.calendar-tile {
+    padding: 0.75rem !important;
+    font-size: 0.9rem;
+}
+
+.react-calendar__tile--active {
+    background: #4a90e2 !important;
+    color: white;
+}
+
+.react-calendar__tile--now {
+    background: #e6f3ff !important;
+}
