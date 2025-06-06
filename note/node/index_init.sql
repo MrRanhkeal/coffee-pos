@@ -57,3 +57,32 @@ CREATE TABLE expenses (
     FOREIGN KEY (expense_type_id) REFERENCES expense_type(id),
     FOREIGN KEY (create_by) REFERENCES users(id)
 );
+
+-- roles
+CREATE TABLE `roles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER  NOT NULL,
+  `permissions` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+)
+INSERT INTO `roles` VALUES (1,'Admin','{\"all\": true}','2025-04-19 18:17:02','2025-04-19 18:17:02'),(2,'Cashier','{\"pos\": true, \"orders\": true}','2025-04-19 18:17:02','2025-04-19 18:17:02');
+
+create table stock(
+    id int primary key auto_increment,
+    stock_name VARCHAR(120) NOT NULL,
+    category VARCHAR(120),
+    stock_qty INT,
+    price DECIMAL(7,2) DEFAULT 0.00,
+    cost DECIMAL(7,2) DEFAULT 0.00,
+    barcode VARCHAR(18),
+    brand VARCHAR(120),
+    unit VARCHAR(120),
+    description TEXT,
+    image VARCHAR(120),
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)

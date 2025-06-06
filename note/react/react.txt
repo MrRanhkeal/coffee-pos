@@ -1,0 +1,127 @@
+backend{
+    -Node.js with express{
+        -node.js ? is(JavaScript runtime) an open-source and cross-platform built on Chrome's V8 JavaScript engine
+        -express.js ?
+        -async function (AJAX)
+        -await function
+        -query 
+        -json{
+            -request
+            -response
+        }
+        -controll statment{
+            -if
+            -else
+        }
+        -javascript_arrow_function
+        -import module
+        -exports module
+        -method 'get,post,put,delete'
+        -CommonJS ? ex: const fs = require('fs');
+        -ES modules ? ex: import fs from 'fs';
+        -route
+        -controller
+        -try...catch block
+        -Callback
+        -Promises
+    }
+    -MySql{
+        -field_name
+        -data type
+        -data strore
+        -table strore
+        -relationship
+        -pk
+        -fk
+    }
+    -JWT(json web token) authentication{
+        -What't JSON? :(JavaScript Object Notation) is lightweight data interchange format, that easy use for read and write
+            -JSON: it easily transfer data between Server and Client.
+            -JSON: it allows share key-values pairs, array, object between Client and Server.
+        -jsonwebtoken
+        -jwt.sign
+        -jwt.verify
+        -access_token_key
+        -bcrypt
+        -bcrypt.hashSync
+    }
+}
+frontend{
+    -React.js{
+        -What's Framework? : is a structued foundation or system of guidelines and tools used to build something(Web,App,Game), often software applications and system.
+        -What's React? : is JavaScript Library used for buil User Interface(UI), it allows developters to create ineractive UI and reusable components.
+        -What's React components? : is a components a building block that encapsulates a piece of the User Interface(UI)
+        -React : also utilizes JSX extension
+        -What JSX? : is Standard for JavaScript XML, that allows developters to write HTML tags in React, and then JSX convert HTML tags into React elements.
+        -What's React Hook? : functions that allows developters use state and other React features in functional components.
+            React Hook{
+                -useState
+                -useEffect
+                -useContext
+                -useRef
+                -useReducer
+                -useForm
+            }
+            -Hooks effective bridge that gap, allowing developters to write entire React applications using only functional components.
+        -What's React Router? : is a powerful and widely used library for handling routing and navigation in React applications.
+        -What't React DOM? : is a crucial part of the React ecosystem, specifically the bridge between us React components and the actual web browser's (DOM)Document Object Model.
+        -React function()
+        -React components
+        -React exports function
+        -React useForm
+        -React useState
+        -React useNavigate
+        -React useCallback function
+        -React icons
+        -React Router
+        -React Dom
+        -React Roouter DOM
+        -React FormInstance<Values> 
+            ex: getFieldValue,setFieldValue, ...
+        -React useRef
+        -React Storeage 
+            ex: localStorage.setItem("permission", array);
+        -React Hook[]
+        -React useEffect
+    }
+    -Vite-tool{
+        -vite : a blazing fast frontend build tool powering the next generation of web applications.
+        -vite : a build tool that aims to provide a faster 
+            and leaner development experience for modern web projects.
+        -vite : a frontend tool that is used for building fast and optimized web applications.
+    }
+    -HTTP Request {
+        -What's axios? : is a powerful promise-based HTTP Client formating request to Server, it widely JavaScript library that simplefile process of fectching and sending data over REST API.
+        -What's HTTP Request? : is the fundamental way that web browsers (clients) communicate with web servers to retrieve or send informations.
+        -HTTP Request consists:
+            -GET: get data from servers.
+            -POST: send data to servers for create resouces.
+            -PUT: send data to servers for update an existing resouces.
+            -DELETE: remove resouces from servers.
+
+
+    }
+    -ant design{
+        -ant design layout
+        -ant design naviation
+        -ant design notification
+        -ant design result
+        -ant design icons
+        -ant design components
+            ex: Form,Select,Button,....
+        -ant design data display
+    }
+    -bootstrap{
+        -bootstrap layout
+        -bootstrap content
+        -bootstrap from
+        -bootstrap icons
+        ...
+    }
+    -tailwind{
+        - use to build and design web pages directly in your markup
+        -components
+        -layout
+        ...
+    }
+}

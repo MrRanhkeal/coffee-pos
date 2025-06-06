@@ -1,0 +1,130 @@
+
+frontend{
+    -react.js with vite tool
+    -ant design UI
+    -bootstrapcss 
+    -tailwindcss 
+}
+backend{
+    -node.js with express
+    -MySql
+    -jwt(json web token) authentication
+}
+-NodeJs{
+    - Node.js ? : Node.js is(JavaScript runtime) an open-source and cross-platform built on Chrome's V8 JavaScript engine.
+    - REPL in Node.js ? : is REPL stands for Read-Eval-Print-Loop. It is an interactive shell that allows you to execute JavaScript code and view the output immediately. It is useful for testing small snippets of code and experimenting with the Node.js API.
+    - difference between Node.js and JavaScript? : 
+        -Node.js : is a runtime environment for JavaScript. 
+            Node.js is a runtime environment for JavaScript. JavaScript is a programming language used to create web applications.
+        -JavaScript : is a programming language used to create web applications.
+        -Node.js is a runtime environment for JavaScript. JavaScript is a programming language used to create web applications.
+    - Event Loop in Node.js? 
+    - difference between Node.js and AJAX? 
+        -Node.js is a server-side runtime for JavaScript.
+        -AJAX is a client-side technique for asynchronous communication with the server.
+    - modules in Node.js? Modules are reusable blocks of code that can be imported into other files.
+        They are used to encapsulate related code into a single unit of code that can be used in other parts of the program. 
+        It allow us to split our code into multiple files and reuse it across multiple files. Some built-in modules include fs, http, path, url, util, etc.
+    - between CommonJS and ESM?
+        -CommonJS is the module system used in Node.js
+            ex: const fs = require('fs'); CommonJS modules are loaded synchronously. This means that the module is loaded and evaluated before the code using the module is executed. It uses require() to load modules and module.exports to export modules.
+        -ES modules are a way to organize JavaScript code into reusable modules(used in browsers and tyoescript).
+            ex: import fs from 'fs'; ES Modules are loaded asynchronously. This means that the module is loaded and evaluated when the module is used. It uses import to load modules and export to export modules.
+    - `global` object in Node.js? : The global object is a global namespace object that contains all global variables, functions, and objects. It is similar to the window object in the browser. It can be accessed from anywhere in the program without importing it.
+    - `setTimeout()`? : setTimeout() is a global function that helps you execute a function after a specified delay. It returns a timeout ID that uniquely identifies the timeout, which can be used to cancel the timeout using the clearTimeout() function.
+    - Event Emitters in Node.js? : Event Emitters is a class that can be used to emit named events and register listeners for those events. It is used to handle asynchronous events in Node.js.
+    - `npm`? : npm is a package manager for Node.js. It is used to install, update, and remove packages from the Node.js ecosystem. It is also used to manage dependencies for Node.js projects
+    - `npx`? : npx is a tool that allows you to run Node.js packages without installing them. It is used to execute Node.js packages that are not installed globally.
+    - `process.cwd()`? : process.cwd() returns the current working directory of the Node.js process. It is similar to pwd in Unix.
+    - `__filename`? __filename is a global variable that contains the absolute path of the current file.
+    -  purpose of `fs` module? The File System (fs) module is used to perform file operations such as reading, writing, and deleting files. All file system operations have synchronous and asynchronous forms.
+    -  purpose of `path` module? The Path module is used to perform operations on file and directory paths. It provides methods for resolving and normalizing paths, joining paths, and extracting file and directory names.
+    - read a file in Node.js? The fs.readFile() method is used to read the contents of a file asynchronously. It takes the path of the file to be read and a callback function as arguments. The callback function is called with two arguments, err and data. 
+        If an error occurs while reading the file, the err argument will contain the error object. Otherwise, the data argument will contain the contents of the file.
+    - load environment variables from a `.env` file in Node.js? The dotenv package is used to load environment variables from a .env file into process.env. It is used to store sensitive information such as API keys, database credentials, etc. in a .env file instead of hardcoding them in the source code.
+    - access environment variables in Node.js? Environment variables can be accessed using the process.env object. It is an object that contains all the environment variables defined in the current process.
+    - create a web server in Node.js? To create a minimal Hello, World! HTTP server in Node.js, you can use the http module. It provides an HTTP server, and the createServer() method sets up a server instance with a callback function to handle incoming requests
+        ex: {
+            import http from 'node:http';
+            const server = http.createServer((req, res) => {
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end('Hello World\n');
+            });
+            server.listen(3000, () => {
+            console.log('Server running at http://localhost:3000/');
+            });
+        }
+    - streams in Node.js? Streams are objects that allow you to read data from a source or write data to a destination in a continuous manner. 
+        They are used to handle large amounts of data efficiently.
+    - the `os` module? The os module provides methods for interacting with the operating system. 
+        It can be used to get information about the operating system, such as the hostname, platform, architecture, etc.
+    -  access the DOM in Node.js?  No, you cannot access the DOM in Node.js because it does not have a DOM. 
+        It is a server-side runtime for JavaScript, so it does not have access to the browser's DOM.
+    - Clustering in Node.js? Clustering is a technique used to distribute the load across multiple processes. 
+        It is used to improve the performance and scalability of Node.js applications.
+    - `process.exit()`? process.exit() is a method that can be used to exit the current process. It takes an optional exit code as an argument. If no exit code is specified, it defaults to 0.
+    - exit codes in Node.js? 
+        The following exit codes are used in Node.js:
+            0: Success
+            1: Uncaught Fatal Exception
+            2: Unused
+            3: Internal JavaScript Parse Error
+            4: Internal JavaScript Evaluation Failure
+            5: Fatal Error
+            6: Non-function Internal Exception Handler
+            7: Internal Exception Handler Run-Time Failure
+            8: Unused
+            9: Invalid Argument
+            10: Internal JavaScript Run-Time Failure
+            12: Invalid Debug Argument
+            13: Uncaught Exception
+            14: Unhandled Promise Rejection
+            15: Fatal Exception
+            16: Signal Exits
+    - Node.js handle errors? 
+        -try...catch blocks{
+            import fs from 'node:fs';
+            try {
+            const data = fs.readFileSync('file.md', 'utf-8');
+            console.log(data);
+            } catch (err) {
+            console.error(err);
+        }
+        -Callbacks{
+            import fs from 'node:fs';
+            fs.readFile('file.md', 'utf-8', (err, data) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log(data);
+            });
+        }
+        -Promises{
+            import fs from 'node:fs/promises';
+            fs.readFile('file.md', 'utf-8')
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        }
+        -Event emitters{
+            import fs from 'node:fs';
+            const reader = fs.createReadStream('file.md', 'utf-8');
+            reader.on('data', (data) => {
+            console.log(data);
+            });
+            reader.on('error', (err) => {
+            console.error(err);
+            });
+        }
+    -else
+}
+MySql{
+
+}
+JWT{
+    
+}
