@@ -5,11 +5,11 @@ import Logo from "../../assets/v-friends.jpg"
 const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashier = '' }, ref) => {
   // Get customer name from objSummary, handle both direct name and customer object
   //const customerDisplay = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
-  const customerDisplay = typeof objSummary?.customer_id === 'string' ? objSummary.customer_id : 'Guest';
-  
+  const customerDisplay = typeof objSummary?.customer_id === 'string' ? objSummary.customer_id : 'Customer 1';
+
   // Get payment method from objSummary
   const paymentMethod = objSummary?.payment_method || 'Cash';
-  
+
   // Use the cashier prop passed from parent
   const cashierName = cashier || 'System';
   const generateInvoiceNumber = () => {
@@ -26,19 +26,35 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
     const num = parseFloat(amount) || 0;
     return num.toFixed(2) + ' $';
   };
-
   const handlePrint = () => {
-    // Hide the buttons before printing
     const printButtons = document.querySelector('.print-buttons');
+
     if (printButtons) {
+      // Hide the buttons before the print dialog appears
       printButtons.style.display = 'none';
-    }
-    window.print();
-    // Show the buttons after printing
-    if (printButtons) {
+
+      // Call the browser's print function.
+      // This call is synchronous and blocks further JavaScript execution
+      // until the print dialog is closed by the user (either print or cancel).
+      window.print();
+
+      // After the print dialog is closed (user has printed or cancelled),
+      // show the buttons again.
       printButtons.style.display = 'block';
     }
   };
+  // const handlePrint = () => {
+  //   // Hide the buttons before printing
+  //   const printButtons = document.querySelector('.print-buttons');
+  //   if (printButtons) {
+  //     printButtons.style.display = 'none';
+  //   }
+  //   window.print();
+  //   // Show the buttons after printing
+  //   if (printButtons) {
+  //     printButtons.style.display = 'block';
+  //   }
+  // };
 
   const handleClose = () => {
     window.close();
@@ -65,24 +81,24 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
           <div className="invoice-header row">
             <div className="col-6 d-flex">
               <div style={{ marginRight: '15px' }}>
-                <img 
-                  src={Logo} 
-                  alt="V-Friends Coffee Logo" 
-                  className="logo" 
+                <img
+                  src={Logo}
+                  alt="V-Friends Coffee Logo"
+                  className="logo"
                   style={{
                     width: '80px',
-                    height: '80px', 
+                    height: '80px',
                     borderRadius: '50%',
                     objectFit: 'cover',
                     border: '2px solid #ddd'
-                  }} 
+                  }}
                 />
               </div>
               <div>
                 <h1 className="invoice-title" style={{ color: '#1890ff', marginBottom: '10px' }}>V-Friends Coffee</h1>
                 <p style={{ margin: '2px 0' }}>Sihanoukville (city), Cambodia</p>
                 <p style={{ margin: '2px 0' }}>Tel: (855) 070-715-751</p>
-                <p style={{ margin: '2px 0',fontSize: '14px' }}>Email: VfriendCoffee10@gmail.com</p>
+                <p style={{ margin: '2px 0', fontSize: '14px' }}>Email: VfriendCoffee10@gmail.com</p>
               </div>
             </div>
             <div className="col-6 text-end">
@@ -134,7 +150,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
               </tbody>
             </table>
           </div>
-            <br/>
+          <br />
           {/* Invoice Summary  */}
           <div className="invoice-total row">
             <div className="col-6">
@@ -163,7 +179,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
                     <p className="mb-2">{formatCurrency(objSummary.total_paid)}</p>
                     <p className="mb-0">{formatCurrency(objSummary.total_paid - objSummary.total)}</p>
                   </div>
-                  
+
                 </div>
               </div>
             </div>

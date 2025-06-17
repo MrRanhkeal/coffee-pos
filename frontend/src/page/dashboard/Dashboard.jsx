@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React,{} from 'react'
 import { Space, Typography } from 'antd';
 // import { DollarCircleFilled } from '@ant-design/icons';
 import DashboarProduct from '../../component/home/product/DashboarProduct';

@@ -1,9 +1,4 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-// import { Button } from "antd";
-// import { DeleteFilled } from "@ant-design/icons";
-// import { MdDelete } from "react-icons/md";
+  
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom"; 
 import RegisterPage from "./page/auth/RegisterPage";
@@ -20,8 +15,7 @@ import OrderPage from "./page/order/OrderPage";
 import ReportSaleSummaryPage from "./page/report/ReportSaleSummaryPage";
 import ReportExpenseSummaryPage from "./page/report/ReportExpenseSummaryPage";
 import LoginPage from "./page/auth/LoginPage";
-import ExchangePage from "./page/currency/ExchangePage";
-import LangaugePage from "./page/langauge/LangaugePage";
+import ExchangePage from "./page/currency/ExchangePage"; 
 import StockPage from "./page/stock/StockPage";
 import Dashboard from "./page/dashboard/Dashboard";
 
@@ -43,8 +37,7 @@ function App() {
           <Route path="/expanse" element={<ExpansePage />} />
           <Route path="/stock" element={<StockPage />} />
           
-          <Route path="/currency" element={<ExchangePage/>}/>
-          <Route path="/langauge" element={<LangaugePage/>}/>
+          <Route path="/currency" element={<ExchangePage/>}/> 
 
           <Route
             path="/report_sale_summary"

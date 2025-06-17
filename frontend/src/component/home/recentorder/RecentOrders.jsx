@@ -39,7 +39,7 @@ function RecentOrders() {
                             key: "order_no",
                             title: "Order No",
                             dataIndex: "order_no",
-                            width: 120,
+                            width: 80,
                             align: 'left'
                         },
                         {
@@ -90,10 +90,11 @@ function RecentOrders() {
                     dataSource={dataSource}
                     loading={loading}
                     pagination={false}
-                    scroll={{ y: 300 }}
-                    rowClassName={() => 'table-row-hover'}
-                    bordered
-                ></Table>
+                    scroll={{ y: 220 }}
+                    // rowClassName={() => 'table-row-hover'}
+                    // bordered
+                    size="small" 
+                />
             </Space>
         </>
     )

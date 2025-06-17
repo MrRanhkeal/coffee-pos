@@ -48,7 +48,7 @@ function LoginPage() {
           >
             <Input 
               prefix={<UserOutlined style={{ color: 'rgba(255, 255, 255, 0.7)' }} />} 
-              placeholder="Username or email"
+              placeholder="Username Email"
             />
           </Form.Item>
 

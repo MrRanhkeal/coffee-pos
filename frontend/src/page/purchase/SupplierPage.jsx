@@ -76,10 +76,10 @@ function SupplierPage() {
             id: form.getFieldValue("id"),
         });
         if (res && !res.error) {
-            getList();
-            closeModal();
             // message.success(res.message);
             message.success(`Supplier ${method === "put" ? "updated" : "created"} successfully`);
+            getList();
+            closeModal();
         }
     };
     const onClickBtnEdit = (items) => {
@@ -87,6 +87,7 @@ function SupplierPage() {
             ...items,
             id: items.id,
         });
+        getList();
         openModal();
     };
     const clickReadOnly = (items) => {
@@ -101,7 +102,7 @@ function SupplierPage() {
         }));
     };
 
-    
+
     const onClickBtnDelete = (items) => {
         Modal.confirm({
             title: "Delete Supplier",
@@ -110,14 +111,12 @@ function SupplierPage() {
             okType: "danger",
             cancelText: "No",
             onOk: async () => {
-                try{
-                    const res = await request("supplier", "delete", { id: items.id });
-                    if (res) {
-                        message.success("Supplier deleted successfully");
-                        getList();
-                    }
-                }catch{
-                    message.error("Failed to delete supplier");
+                const res = await request("supplier", "delete", { id: items.id });
+                if (res && !res.error) {
+                    // message.success("Supplier deleted successfully");
+                    message.success(res.message);
+                    const newList = state.list.filter((item) => item.id != items.id);
+                    getList(newList);
                 }
             },
         });
@@ -137,8 +136,8 @@ function SupplierPage() {
                         placeholder="Search"
                     />
                 </Space>
-                <Button type="primary" onClick={openModal} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
-                <FileAddFilled/>New
+                <Button type="primary" onClick={openModal} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}>
+                    <FileAddFilled />New
                 </Button>
             </div>
             <Modal
@@ -189,7 +188,7 @@ function SupplierPage() {
                             }}
                             disabled={state.isReadOnly}
                         />
-                        
+
                     </Form.Item>
                     <Form.Item
                         name="code"
@@ -302,16 +301,16 @@ function SupplierPage() {
                         dataIndex: "create_at",
                         render: (value) => dayjs(value).format("DD/MM/YYYY"),
                     },
-                    
+
                     {
                         key: "action",
                         title: "action",
                         render: (value, data) => (
                             <Space>
-                                <EditOutlined type="primary" 
-                                icon={<MdEdit/>}
-                                style={{ color: "green", fontSize: 20 }}
-                                onClick={() => onClickBtnEdit(data)}>
+                                <EditOutlined type="primary"
+                                    icon={<MdEdit />}
+                                    style={{ color: "green", fontSize: 20 }}
+                                    onClick={() => onClickBtnEdit(data)}>
                                 </EditOutlined>
                                 <DeleteOutlined
                                     type="primary"
@@ -322,9 +321,9 @@ function SupplierPage() {
                                 >
                                 </DeleteOutlined>
                                 <EyeOutlined
-                                style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
-                                onClick={() => clickReadOnly(data)}
-                                icon={<IoMdEye/>}
+                                    style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                                    onClick={() => clickReadOnly(data)}
+                                    icon={<IoMdEye />}
                                 />
                             </Space>
                         ),

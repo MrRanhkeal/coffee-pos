@@ -3,8 +3,7 @@ import {
   AccountBookOutlined,
   AlignCenterOutlined,
   AppstoreOutlined,
-  DollarOutlined,
-  GlobalOutlined,
+  DollarOutlined, 
   HomeOutlined,
   LogoutOutlined,
   ProfileOutlined,
@@ -21,13 +20,14 @@ import {
   UserOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
-import {  Dropdown, Layout, Menu, theme } from "antd";
+import { Dropdown, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import Logo from "../../assets/v-friends.jpg";
 import ImgUser from "../../assets/admin.jpg";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
+import { GrLanguage } from "react-icons/gr";
 import {
   getPermission,
   getProfile,
@@ -37,7 +37,7 @@ import {
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
 // import { icons } from "antd/es/image/PreviewGroup";
-const {  Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const items_menu = [
   {
@@ -56,13 +56,13 @@ const items_menu = [
     key: "customer",
     label: "Customer",
     children: null,
-    icon: <UsergroupAddOutlined/>
+    icon: <UsergroupAddOutlined />
   },
   {
     key: "order",
     label: "Order",
     children: null,
-    icon: <ShoppingCartOutlined/>
+    icon: <ShoppingCartOutlined />
   },
   {
     label: "Product",
@@ -71,16 +71,16 @@ const items_menu = [
         key: "product",
         label: "List Porduct",
         children: null,
-        icon: <UnorderedListOutlined/>
+        icon: <UnorderedListOutlined />
       },
       {
         key: "category",
         label: "Category",
         children: null,
-        icon: <SortDescendingOutlined/>
+        icon: <SortDescendingOutlined />
       },
     ],
-    icon:<AppstoreOutlined/>
+    icon: <AppstoreOutlined />
   },
   {
     label: "Purchase",
@@ -89,10 +89,10 @@ const items_menu = [
         key: "supplier",
         label: "Supplier",
         children: null,
-        icon: <UserSwitchOutlined/>
+        icon: <UserSwitchOutlined />
       }
     ],
-    icon: <ShoppingOutlined/>
+    icon: <ShoppingOutlined />
   },
   {
     label: "Expanse",
@@ -101,10 +101,10 @@ const items_menu = [
         key: "expanse",
         label: "Expanse",
         children: null,
-        icon: <DollarOutlined/>
+        icon: <DollarOutlined />
       },
     ],
-    icon: <TransactionOutlined/>
+    icon: <TransactionOutlined />
   },
   {
     label: "Stock",
@@ -117,7 +117,7 @@ const items_menu = [
         // icon: <StockOutlined/>
       },
     ],
-    icon:<SlidersOutlined/>
+    icon: <SlidersOutlined />
   },
   {
     label: "Report",
@@ -126,16 +126,16 @@ const items_menu = [
         key: "report_sale_summary",
         label: "Sale summary",
         children: null,
-        icon: <AlignCenterOutlined/>
+        icon: <AlignCenterOutlined />
       },
       {
         key: "report_expense_summary",
         label: "Expense Summary",
         children: null,
-        icon: <AccountBookOutlined/>
+        icon: <AccountBookOutlined />
       }
     ],
-    icon: <SnippetsOutlined/>
+    icon: <SnippetsOutlined />
   },
 
   {
@@ -145,7 +145,7 @@ const items_menu = [
         key: "user",
         label: "User",
         children: null,
-        icon: <UserOutlined/>
+        icon: <UserOutlined />
       },
       {
         key: "role",
@@ -155,7 +155,7 @@ const items_menu = [
         icon: "🔐"
       }
     ],
-    icon: <UsergroupAddOutlined/>
+    icon: <UsergroupAddOutlined />
   },
 
   {
@@ -165,16 +165,10 @@ const items_menu = [
         key: "Currency",
         label: "Currency",
         children: null,
-        icon: <DollarOutlined/>
-      },
-      {
-        key: "langauge",
-        label: "Langauge",
-        children: null,
-        icon: <GlobalOutlined/>
-      },
+        icon: <DollarOutlined />
+      } 
     ],
-    icon: <SettingOutlined/>
+    icon: <SettingOutlined />
   },
 ];
 
@@ -252,11 +246,11 @@ const MainLayout = () => {
     {
       key: "1",
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="/" style={{color:"green-yllow", fontSize:15}}>
+        <a target="_blank" rel="noopener noreferrer" href="/" style={{ color: "green-yllow", fontSize: 15 }}>
           Profile
         </a>
       ),
-      icon:<ProfileOutlined/>
+      icon: <ProfileOutlined />
     },
     // {
     //   key: "2",
@@ -272,7 +266,7 @@ const MainLayout = () => {
       key: "logout",
       danger: true,
       label: "Logout",
-      icon: <LogoutOutlined/>
+      icon: <LogoutOutlined />
     },
   ];
 
@@ -323,9 +317,41 @@ const MainLayout = () => {
               />
             </div> */}
           </div>
+
           <div className="admin-header-g2">
-            <IoIosNotifications className="icon-notify" style={{width:30,height:30}} />
-            <MdOutlineMarkEmailUnread className="icon-email" style={{width:30,height:30}}/>
+            <div>
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      key: "en",
+                      label: "English",
+                    },
+                    {
+                      key: "kh",
+                      label: "Khmer",
+                    },
+                  ],
+                  onClick: (event) => {
+                    if (event.key == "en") {
+                      setConfig({ lang: "en" });
+                    } else if (event.key == "kh") {
+                      setConfig({ lang: "kh" });
+                    }
+                  },
+                }}
+                trigger={['click']}
+                placement="bottomRight"
+              >
+                <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span>Language</span>
+                  <GrLanguage style={{ fontSize: '18px' }} />
+                </div>
+              </Dropdown>
+            </div>
+            <div>&nbsp;&nbsp;&nbsp;</div>
+            <IoIosNotifications className="icon-notify" style={{ width: 30, height: 30 }} />
+            <MdOutlineMarkEmailUnread className="icon-email" style={{ width: 30, height: 30 }} />
             <div>
               <div className="txt-username">{profile?.name}</div>
               <div>{profile?.role_name}</div>
@@ -340,7 +366,7 @@ const MainLayout = () => {
                 },
               }}
             >
-              <img className="img-user" src={ImgUser} alt="Logo"  style={{width:50,height:50}}/>
+              <img className="img-user" src={ImgUser} alt="Logo" style={{ width: 50, height: 50 }} />
             </Dropdown>
           </div>
         </div>

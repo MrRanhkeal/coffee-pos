@@ -1,4 +1,4 @@
-import { Button, Image, Radio, Tag } from "antd";
+import { Button, Image, Radio } from "antd";
 import React from "react";
 import { Config } from "../../util/config";
 import styles from "./ProductItem.module.css";
@@ -40,7 +40,7 @@ function ProductItem({
   }
   return (
     <div className={styles.contianer} >
-      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '10px' ,width: '350px', height: '280px',justifyContent: 'center' }}/>
+      <Image src={Config.image_path + image} alt={name} style={{borderRadius: '20px' ,width: '350px', height: '300px',justifyContent: 'center' }}/>
       <div className={styles.p_name + " truncate-text"}>{name} {description} </div>
       <div className={styles.p_des}>
         {category_name} - {brand}

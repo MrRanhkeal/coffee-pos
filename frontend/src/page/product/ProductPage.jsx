@@ -238,24 +238,40 @@ function ProductPage() {
     // }
   };
   const clickReadOnly = (item) => {
-    
+  
     setState((p) => ({
     ...p,
     visibleModal: true,
     isReadOnly: true
   }))  
-    formRef.setFieldsValue({
-      id: item.id,
-      name: item.name,
-      category_id: item.category_id,
-      barcode: item.barcode,
-      brand: item.brand,
-      description: item.description,
-      price: item.price,
-      discount: item.discount,
-      status: item.status,
-    });
-  };
+
+  // Handle image display for view mode
+  if (item.image) {
+    setImageDefault([
+      {
+        uid: '-1',
+        name: item.image,
+        status: 'done',
+        url: `http://localhost/coffee/${item.image}`,
+      }
+    ]);
+  } else {
+    setImageDefault([]);
+  }
+
+  formRef.setFieldsValue({
+    id: item.id,
+    name: item.name,
+    category_id: item.category_id,
+    barcode: item.barcode,
+    brand: item.brand,
+    description: item.description,
+    price: item.price,
+    discount: item.discount,
+    status: item.status,
+    image: item.image,
+  });
+};
   const onClickDelete = (item) => {
     Modal.confirm({
       title: "Delete Product",
@@ -320,7 +336,26 @@ function ProductPage() {
       <Modal
         open={state.visibleModal}
         title={state.isReadOnly ? "View Product" : formRef.getFieldValue("id") ? "Edit Product" : "New Product"}
-        footer={null}
+        footer={
+          state.isReadOnly ? (
+            // View Product modal - only show Close button
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button onClick={onCloseModal}>
+                Close
+              </Button>
+            </div>
+          ) : (
+            // Edit/New Product modal - show Save and Cancel buttons
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+              <Button onClick={onCloseModal}>
+                Cancel
+              </Button>
+              <Button type="primary" onClick={() => formRef.submit()}>
+                {formRef.getFieldValue("id") ? "Update" : "Save"}
+              </Button>
+            </div>
+          )
+        }
         onCancel={onCloseModal}
         
       >
@@ -485,7 +520,7 @@ function ProductPage() {
               }}
             />
           )}
-          <Form.Item style={{ textAlign: "right" }}>
+          {/* <Form.Item style={{ textAlign: "right" }}>
             <Space>
               <Button onClick={onCloseModal}>{state.isReadOnly ? "Close" : "Cancel"}</Button>
               {!state.isReadOnly && (
@@ -494,7 +529,7 @@ function ProductPage() {
                 </Button>
               )}
             </Space>
-          </Form.Item>
+          </Form.Item> */}
           </div>
         </Form>
       </Modal>
