@@ -158,9 +158,10 @@ function CategoryPage() {
       </div>
       <Modal
         open={state.visibleModal}
-        title={formRef.getFieldValue("id") ? "Edit Category" : "New Category"}
+        // title={formRef.getFieldValue("id") ? "Edit Category" : "New Category"}
+        title={state.isReadOnly ? "View Category" : (formRef.getFieldValue("id") ? "Edit Category" : "New Category")}
         footer={null}
-        onCancel={onCloseModal}
+        onCancel={onCloseModal} 
       >
         <Form layout="vertical" onFinish={onFinish} form={formRef}>
           <Form.Item name={"name"} label="Category name">

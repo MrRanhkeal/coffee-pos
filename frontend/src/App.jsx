@@ -15,9 +15,10 @@ import OrderPage from "./page/order/OrderPage";
 import ReportSaleSummaryPage from "./page/report/ReportSaleSummaryPage";
 import ReportExpenseSummaryPage from "./page/report/ReportExpenseSummaryPage";
 import LoginPage from "./page/auth/LoginPage";
-import ExchangePage from "./page/currency/ExchangePage"; 
-import StockPage from "./page/stock/StockPage";
+import ExchangePage from "./page/currency/ExchangePage";  
 import Dashboard from "./page/dashboard/Dashboard";
+import Stock_CupPage from "./page/stock/Stock_CupPage";
+import Stock_CoffeePage from "./page/stock/Stock_CoffeePage";
 
 function App() {
   return (
@@ -35,7 +36,8 @@ function App() {
           <Route path="/role" element={<RolePage />} />
 
           <Route path="/expanse" element={<ExpansePage />} />
-          <Route path="/stock" element={<StockPage />} />
+          <Route path="/stock-cup" element={<Stock_CupPage />} />
+          <Route path="/stock-coffee" element={<Stock_CoffeePage />} />
           
           <Route path="/currency" element={<ExchangePage/>}/> 
 

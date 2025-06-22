@@ -230,8 +230,8 @@ function UserPage() {
                 </Button>
             </div>
             <Modal
-                title={state.isEdit ? "Edit User" : "New User"}
                 open={state.visible}
+                title={state.isReadOnly ? "View User" : (state.isEdit ? "Edit User" : "New User")}  
                 onCancel={handleCloseModal}
                 footer={null}
             >

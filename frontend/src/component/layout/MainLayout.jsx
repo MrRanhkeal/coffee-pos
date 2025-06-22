@@ -14,6 +14,7 @@ import {
   SlidersOutlined,
   SnippetsOutlined,
   SortDescendingOutlined,
+  StockOutlined,
   TransactionOutlined,
   UnorderedListOutlined,
   UsergroupAddOutlined,
@@ -110,11 +111,18 @@ const items_menu = [
     label: "Stock",
     children: [
       {
-        key: "stock",
-        label: "Stock",
+        key: "stock-cup",
+        label: "Stock_Cup",
         children: null,
         icon: "💹"
         // icon: <StockOutlined/>
+      },
+      {
+        key: "stock-coffee",
+        label: "Stock_Coffee",
+        children: null,
+        // icon: "💹"
+        icon: <StockOutlined/>
       },
     ],
     icon: <SlidersOutlined />

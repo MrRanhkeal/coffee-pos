@@ -62,18 +62,9 @@ function PosPage() {
 
     });
 
-    const categories = [
-        { id: "", name: "All", icon: "🛒" },
-        { id: "Coffee", name: "Coffee", icon: "☕" },
-        { id: "tea", name: "Tea", icon: "🍵" },
-        { id: "smoothie", name: "Smoothie", icon: "🧋" },
-        { id: "juice", name: "Juice", icon: "🥤" },
-        { id: "coconut", name: "Coconut", icon: "🥥" },
-        { id: "soda", name: "Soda", icon: "🍌" },
-        { id: "fruit", name: "Fruit", icon: "🍎" },
-        { id: "snack", name: "Snack", icon: "🍕" },
-        // { id: "cream", name: "Cream", icon: "🍦" }
-    ];
+    const [categories, setCategories] = useState([
+        { id: "", name: "All", icon: "🛒" }
+    ]);
 
     const handleCalSummary = useCallback(() => {
         setState(currentState => {
@@ -176,10 +167,56 @@ function PosPage() {
         }
     }, []);
 
+    const getCategories = useCallback(async () => {
+        try {
+            const res = await request('category', 'get');
+            if (res && !res.error && res.list) {
+                // Create category icons mapping
+                const categoryIcons = {
+                    'Coffee': '☕',
+                    'Tea': '🍵',   
+                    'Coconut': '🥥',
+                    'Soda': '🥤',   
+                    'Milk': '🥛',
+                };
+
+                const categoriesFromBackend = res.list.map(category => ({
+                    id: category.id,
+                    name: category.name,
+                    icon: categoryIcons[category.name] || '📦'
+                }));
+
+                setCategories([
+                    { id: "", name: "All", icon: "🛒" },
+                    ...categoriesFromBackend
+                ]);
+            }
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            // Keep default "All" category if fetch fails
+            setCategories([
+                { id: "", name: "All", icon: "🛒" }
+            ]);
+        }
+    }, []);
+
     useEffect(() => {
         getList();
+    }, [getList]);
+
+    useEffect(() => {
         getCustomers();
-    }, [getList, getCustomers, filter]);
+    }, [getCustomers]);
+
+    useEffect(() => {
+        getCategories();
+    }, [getCategories]);
+
+    useEffect(() => {
+        if (filter.category_id !== undefined) {
+            getList();
+        }
+    }, [filter.category_id, getList]);
 
     const onFilter = () => {
         getList();
@@ -372,10 +409,13 @@ function PosPage() {
                                             key={category.name}
                                             hoverable
                                             size="small"
-                                            onClick={() => setFilter((prev) => ({
-                                                ...prev,
-                                                category_id: category.id,
-                                            }))}
+                                            onClick={() => {
+                                                setFilter((prev) => ({
+                                                    ...prev,
+                                                    category_id: category.id,
+                                                }));
+                                                // Filtering will be triggered automatically by useEffect
+                                            }}
                                             style={{
                                                 minWidth: 90,
                                                 textAlign: 'center',

@@ -43,12 +43,12 @@ function LoginPage() {
           size="large"
         >
           <Form.Item
-            name="username"
+            name="username"  
             rules={[{ required: true, message: "Please input your username" }]}
           >
             <Input 
               prefix={<UserOutlined style={{ color: 'rgba(255, 255, 255, 0.7)' }} />} 
-              placeholder="Username Email"
+              placeholder="@gmail.com"
             />
           </Form.Item>
 
