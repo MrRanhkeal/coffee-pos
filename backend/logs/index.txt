@@ -1,1 +1,114 @@
-Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-04 12:50:48 
+SyntaxError: Unexpected token 'var' + 2025-06-18 23:01:13 
+SyntaxError: Unexpected identifier 'UPDATE' + 2025-06-18 23:03:28 
+SyntaxError: Unexpected token '.' + 2025-06-18 23:05:02 
+SyntaxError: Unexpected token '.' + 2025-06-18 23:05:04 
+SyntaxError: Unexpected token '.' + 2025-06-18 23:05:06 
+SyntaxError: Unexpected token '.' + 2025-06-18 23:05:08 
+SyntaxError: Unexpected token '.' + 2025-06-18 23:05:11 
+Error: Cannot find module '../controller/stock.controller'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-19 22:44:20 
+Error: Cannot find module '../controller/stock.controller'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_cup.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-19 22:44:35 
+SyntaxError: Invalid or unexpected token + 2025-06-19 22:44:45 
+TypeError: route is not a function + 2025-06-20 00:53:56 
+TypeError: route is not a function + 2025-06-20 00:54:03 
+TypeError: route is not a function + 2025-06-20 00:54:47 
+ReferenceError: modu is not defined + 2025-06-20 00:54:51 
+SyntaxError: Unexpected end of input + 2025-06-20 00:54:58 
+ReferenceError: validate_token is not defined + 2025-06-20 00:55:16 
+SyntaxError: Identifier 'module' has already been declared + 2025-06-20 00:55:27 
+ReferenceError: validate_token is not defined + 2025-06-20 00:55:28 
+Error: Cannot find module '../middleware/auth.middleware'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:55:29 
+TypeError: validate_token is not a function + 2025-06-20 00:55:41 
+TypeError: validate_token is not a function + 2025-06-20 00:55:45 
+Error: Cannot find module '../'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:55:46 
+Error: Cannot find module '../middleware'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:55:58 
+Error: Cannot find module '../middleware/'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:55:59 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 00:56:10 
+SyntaxError: Unexpected end of input + 2025-06-20 00:56:57 
+SyntaxError: Missing catch or finally after try + 2025-06-20 00:56:59 
+SyntaxError: Unexpected token 'catch' + 2025-06-20 00:57:02 
+SyntaxError: Unexpected token '{' + 2025-06-20 00:57:38 
+SyntaxError: Unexpected token 'catch' + 2025-06-20 00:57:39 
+SyntaxError: Unexpected token 'catch' + 2025-06-20 00:57:43 
+SyntaxError: Unexpected token 'catch' + 2025-06-20 00:57:51 
+SyntaxError: Unexpected token 'catch' + 2025-06-20 00:57:54 
+SyntaxError: Unexpected end of input + 2025-06-20 00:58:05 
+SyntaxError: Unexpected token 'catch' + 2025-06-20 00:58:09 
+SyntaxError: Unexpected end of input + 2025-06-20 00:58:11 
+SyntaxError: Unexpected end of input + 2025-06-20 00:58:14 
+SyntaxError: Missing catch or finally after try + 2025-06-20 00:58:24 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 00:58:25 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 00:58:39 
+SyntaxError: Unexpected end of input + 2025-06-20 00:59:01 
+SyntaxError: Missing initializer in destructuring declaration + 2025-06-20 00:59:05 
+ReferenceError: req is not defined + 2025-06-20 00:59:10 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 00:59:12 
+Error: Cannot find module '../'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\controller\stock_coffee.controller.js
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:59:16 
+Error: Cannot find module '../util'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\controller\stock_coffee.controller.js
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:59:20 
+Error: Cannot find module '../util/'
+Require stack:
+- E:\IT_Class\Project\coffee-pos\backend\src\controller\stock_coffee.controller.js
+- E:\IT_Class\Project\coffee-pos\backend\src\route\stock_coffee.route.js
+- E:\IT_Class\Project\coffee-pos\backend\index.js + 2025-06-20 00:59:21 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 00:59:38 
+SyntaxError: Unexpected token '.' + 2025-06-20 00:59:45 
+SyntaxError: Invalid destructuring assignment target + 2025-06-20 00:59:50 
+SyntaxError: Unexpected token '(' + 2025-06-20 00:59:54 
+SyntaxError: Unexpected token '(' + 2025-06-20 00:59:55 
+SyntaxError: Invalid destructuring assignment target + 2025-06-20 00:59:58 
+SyntaxError: Invalid destructuring assignment target + 2025-06-20 01:00:07 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 01:00:13 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 01:00:19 
+Error: Route.get() requires a callback function but got a [object Undefined] + 2025-06-20 01:00:25 
+Error: Route.post() requires a callback function but got a [object Undefined] + 2025-06-20 01:00:48 
+Error: Route.post() requires a callback function but got a [object Undefined] + 2025-06-20 01:02:00 
+ReferenceError: ex is not defined + 2025-06-20 01:02:32 
+SyntaxError: Unexpected end of input + 2025-06-20 01:02:34 
+Error: Route.put() requires a callback function but got a [object Undefined] + 2025-06-20 01:02:36 
+ReferenceError: ex is not defined + 2025-06-20 01:02:39 
+SyntaxError: Unexpected token 'export' + 2025-06-20 01:02:40 
+Error: Route.delete() requires a callback function but got a [object Undefined] + 2025-06-20 01:02:43 
+Error: Route.delete() requires a callback function but got a [object Undefined] + 2025-06-20 01:02:45 
+ReferenceError: ex is not defined + 2025-06-20 01:02:48 
+SyntaxError: Unexpected token 'const' + 2025-06-20 01:08:49 
+SyntaxError: Missing initializer in destructuring declaration + 2025-06-20 01:10:17 
+SyntaxError: Missing initializer in destructuring declaration + 2025-06-20 01:10:21 
+SyntaxError: Missing initializer in destructuring declaration + 2025-06-20 01:10:22 
+SyntaxError: Missing initializer in destructuring declaration + 2025-06-20 01:10:24 
+SyntaxError: Unexpected identifier 'data' + 2025-06-20 01:21:49 
+SyntaxError: Unexpected token '=' + 2025-06-20 01:25:34 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:25:54 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:25:54 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:25:57 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:26:01 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:26:04 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:26:06 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:26:08 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:26:14 
+SyntaxError: Unexpected token ')' + 2025-06-20 01:26:17 
+SyntaxError: Unexpected identifier 'UPDATE' + 2025-06-20 01:29:47 

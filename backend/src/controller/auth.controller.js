@@ -42,14 +42,14 @@ exports.register = async (req, res) => {
 
         const hashedPassword = bcrypt.hashSync(password, 10);
         
-        const sql = `INSERT INTO users (
+        const sql = `INSERT INTO users (  
             role_id,
             name,
             username,
             password,
             is_active,
-            create_by
-        ) VALUES (
+            create_by 
+        ) VALUES (  
             :role_id,
             :name,
             :username,
@@ -314,7 +314,7 @@ exports.update = async (req, res) => {
     }
 };
 
-exports.delete = async (req, res) => {
+exports.remove = async (req, res) => {
     try {
         const { id } = req.params;
         

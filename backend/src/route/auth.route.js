@@ -1,4 +1,4 @@
-const { getlist, register, login, profile, logout, verify_email, reset_password, forgot_password, update, delete: deleteUser } = require("../controller/auth.controller");
+const { getlist, register, login, profile, logout, verify_email, reset_password, forgot_password, update, remove } = require("../controller/auth.controller");
 const { logErr } = require("../util/logErr");
 const { validate_token } = require("../middleware/jwt_token");
 try {
@@ -12,7 +12,7 @@ try {
         app.put("/api/auth/forgot-password", forgot_password);
         app.put("/api/auth/reset-password", reset_password);
         app.put("/api/auth/update", validate_token(), update);
-        app.delete("/api/auth/delete/:id", validate_token(), deleteUser);
+        app.delete("/api/auth/delete/:id", validate_token(), remove);
     }
 }
 catch (err) {

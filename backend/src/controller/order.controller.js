@@ -52,21 +52,33 @@ exports.getlist = async (req, res) => {
         logErr("order.getlist", error, res);
     }
 };
+
 exports.getone = async (req, res) => {
     try {
-        var sql = 
-            "SELECT " +
-            "od.*, " +
-            "p.name p_name, " +
-            "p.brand p_brand, " +
-            "p.description p_des, " +
-            "p.image p_image, " +
-            "c.name cate_name " +
-            "FROM order_detail od " +
-            "inner join products p on od.product_id = p.id " +
-            "inner join category c on p.category_id = c.id " +
-            "where od.order_id = :id";
-    
+        // var sql = 
+        //     "SELECT " +
+        //     "od.*, " +
+        //     "p.name p_name, " +
+        //     "p.brand p_brand, " +
+        //     "p.description p_des, " +
+        //     "p.image p_image, " +
+        //     "c.name cate_name " +
+        //     "FROM order_detail od " +
+        //     "inner join products p on od.product_id = p.id " +
+        //     "inner join category c on p.category_id = c.id " +
+        //     "where od.order_id = :id";
+        var sql =
+            " select  " +
+            "   od.*, " +
+            "   p.name p_name, " +
+            "   p.brand p_brand, " +
+            "   p.description p_des, " +
+            "   p.image p_image, " +
+            "   c.name p_category_name " +
+            " from order_detail od  " +
+            " inner join products p on od.product_id = p.id " +
+            " inner join category c on p.category_id = c.id " +
+            " where od.order_id = :id ";
         const [list] = await db.query(sql, { id: req.params.id });
         res.json({
             list: list,
@@ -99,7 +111,7 @@ exports.create = async (req, res) => {
                 ...item,
                 order_id: data.insertId, // override key order_id
             });
-
+            //cut stock when order =1 set stock_cup(qty - 1)
             // re stock modify stock relation to product_stock
             // var sqlReStock =
             //     "UPDATE products SET qty = (qty-:order_qty) WHERE id = :product_id ";
