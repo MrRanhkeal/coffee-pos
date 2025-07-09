@@ -3,12 +3,12 @@ module.exports = {
     config: {
         app_name: "backend",
         app_version: "1.0",
-        image_path: "C:/laragon/www/coffee", //please change path
+        image_path: "C:/laragon/www/coffee", //local path
         db: {
             HOST: 'localhost',
             USER: 'root',
             PASSWORD: '',
-            DATABASE: 'mycoffee',
+            DATABASE: 'mydb',
             PORT: 3307
         },
         token: {

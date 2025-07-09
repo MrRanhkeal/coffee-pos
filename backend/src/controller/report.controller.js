@@ -6,14 +6,14 @@ exports.report_sale_summary = async (req, res) => {
     try {
         let { from_date, to_date, category_id, brand_id } = req.query;
         let sql =
-            " select  " +
+            " select " +
             "  DATE_FORMAT(o.create_at,'%d/%m/%Y') title, " +
             "  sum(od.total_qty) total_qty, " +
             "    sum(od.total_amount)  total_amount " +
             " from orders o " +
             " inner join  " +
             " ( " +
-            "    select  " +
+            "   select  " +
             "      od1.order_id, " +
             "      sum(od1.qty) total_qty, " +
             "      sum(od1.total) total_amount " +

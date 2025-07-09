@@ -14,15 +14,13 @@ exports.getList = async (req, res) => {
             list: list,
         });
     } catch (error) {
-        logErr("customer.getList", error, res);
+        logErr("expense.getList", error, res);
     }
-};
-// id,name,code,tel,email,address,website,note,create_by,create_at
-// id,:name,:code,:tel,:email,:address,:website,:note,:create_by,:create_at
+}; 
 exports.create = async (req, res) => {
     try {
         var sql =
-            "INSERT INTO customer (name,code,tel,email,address,website,note,create_by) VALUES (:name,:code,:tel,:email,:address,:website,:note,:create_by) ";
+            "INSERT INTO expenses (product_id,ref_no,name,amount,remarks,expense_date,expanse_type,create_by) VALUES (?) ";
         var [data] = await db.query(sql, {
             ...req.body,
             create_by: req.auth?.name,
@@ -32,7 +30,7 @@ exports.create = async (req, res) => {
             message: "Insert success!",
         });
     } catch (error) {
-        logErr("customer.create", error, res);
+        logErr("expense.create", error, res);
     }
 };
 
@@ -48,13 +46,13 @@ exports.update = async (req, res) => {
             message: "Update success!",
         });
     } catch (error) {
-        logErr("customer.update", error, res);
+        logErr("expense.update", error, res);
     }
 };
 
 exports.remove = async (req, res) => {
     try {
-        var [data] = await db.query("DELETE FROM customer WHERE id = :id", {
+        var [data] = await db.query("DELETE FROM expenses WHERE id = :id", {
             ...req.body,
         });
         res.json({
@@ -62,6 +60,6 @@ exports.remove = async (req, res) => {
             message: "Data delete success!",
         });
     } catch (error) {
-        logErr("customer.remove", error, res);
+        logErr("expense.remove", error, res);
     }
 };

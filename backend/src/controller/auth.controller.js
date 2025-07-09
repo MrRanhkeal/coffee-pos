@@ -2,6 +2,7 @@ const { db, logErr } = require("../util/helper");
 const bcrypt = require("bcrypt");
 const { getAccessToken } = require("../middleware/jwt_token");
 
+//getlist
 exports.getlist = async (req, res) => {
     try {
         let sql =
@@ -27,7 +28,7 @@ exports.getlist = async (req, res) => {
         logErr("auth.get-list", error, res);
     }
 };
-
+//register
 exports.register = async (req, res) => {
     try {
         const { password, role_id, name, username, is_active, create_by } = req.body;
@@ -80,6 +81,7 @@ exports.register = async (req, res) => {
         });
     }
 };
+//login
 exports.login = async (req, res) => {
     try {
         let { username, password } = req.body;
@@ -115,7 +117,7 @@ exports.login = async (req, res) => {
                 delete data[0].password;
                 let obj = {
                     profile: data[0],
-                    permission: ["view", "create", "update", "delete"]
+                    permission: data[0].role_name === 'Admin' ? ["view", "create", "update", "delete"] : ["view"]
                 }
                 res.json({
                     message: "login success",
@@ -131,7 +133,7 @@ exports.login = async (req, res) => {
         logErr("auth.login", error, res);
     }
 };
-
+//profile
 exports.profile = async (req, res) => {
     try {
         res.json({
@@ -249,6 +251,7 @@ exports.reset_password = async (req, res) => {
         logErr("auth.reset_password", err, res);
     }
 }
+//verify email
 exports.verify_email = async (req, res) => {
     try {
         var data = "email verified";
@@ -262,7 +265,7 @@ exports.verify_email = async (req, res) => {
         logErr("auth.verify_email", err, res);
     }
 }
-
+//update
 exports.update = async (req, res) => {
     try {
         const { id, role_id, name, username, password, is_active } = req.body;
@@ -313,7 +316,7 @@ exports.update = async (req, res) => {
         });
     }
 };
-
+//remove
 exports.remove = async (req, res) => {
     try {
         const { id } = req.params;

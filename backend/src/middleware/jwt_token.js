@@ -4,6 +4,25 @@ const jwt = require("jsonwebtoken");
 const config = require("../util/config");
 const { logErr } = require("../util/helper");
 
+//refresh token
+// exports.getRefreshToken = async (paramData) => {
+//     try{
+//         const refresh_token = await jwt.sign({
+//             data: paramData,
+//         },
+//             config.config.token.refresh_token_key,
+//             {
+//                 expiresIn: "30d",
+//             }
+//         );
+//         return refresh_token;
+        
+//     }
+//     catch(error){
+//         logErr("auth.getRefreshToken", error, res);
+
+// }
+
 //verify token auth
 exports.validate_token = () => {
     try {

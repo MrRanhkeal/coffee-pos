@@ -3,7 +3,7 @@ const {db, logErr, isEmpty, isArray} = require('../util/helper');
 exports.getlist = async (req, res) => {
     try {
         
-        var [data] = await db.query('SELECT * FROM stock_coffee ORDER BY id DESC');
+        var [data] = await db.query('SELECT * FROM stock_coffee ORDER BY id desc');
         res.json({
             // data: result.rows, 
             data: data, 
@@ -16,16 +16,16 @@ exports.getlist = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const { name, qty } = req.body;
-        if (isEmpty(name) || isEmpty(qty)) {
+        const { product_name, qty } = req.body;
+        if (isEmpty(product_name) || isEmpty(qty)) {
             return res.status(400).json({ status: 'error', message: 'Invalid input' });
         }
         
-        const sqlInsert = "INSERT INTO stock_coffee (name, supplier_id, qty,description,status) values(?,?,?,?,?)"; 
+        const sqlInsert = "INSERT INTO stock_coffee (product_name, supplier_id, qty,description,status) values(?,?,?,?,?)"; 
         //values ($1, $2, $3, $4, $5) RETURNING *
         //RETURNING * for return values from rows affected by insert updata or deleted 
         const data = await db.query(sqlInsert, [
-            req.body.name,
+            req.body.product_name,
             req.body.supplier_id,
             req.body.qty,
             req.body.description || null, // Optional field
@@ -44,50 +44,46 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const { id, name, quantity, price } = req.body;
-        if (isEmpty(id) || isEmpty(name) || isEmpty(quantity) || isEmpty(price)) {
+        const { id, product_name, qty, supplier_id, description, status } = req.body;
+        if (isEmpty(id) || isEmpty(product_name) || isEmpty(qty)) {
             return res.status(400).json({ status: 'error', message: 'Invalid input' });
         }
         
-        const query = `UPDATE stock_coffee SET name = $1, quantity = $2, price = $3 WHERE id = $4 RETURNING *`;
-        const values = [name, quantity, price, id];
+        const sqlUpdate = "UPDATE stock_coffee SET product_name = ?, supplier_id = ?, qty = ?, description = ?, status = ? WHERE id = ?";
+        const [result] = await db.query(sqlUpdate, [
+            product_name,
+            supplier_id || null,
+            qty,
+            description || null,
+            status || null,
+            id
+        ]);
         
-        const result = await db.query(query, values);
-        if (result.rowCount === 0) {
+        if (result.affectedRows === 0) {
             return res.status(404).json({ status: 'error', message: 'Coffee not found' });
         }
         
         res.json({
             status: 'success',
-            data: result.rows[0]
+            data: { id, product_name, qty, supplier_id, description, status },
+            message: 'Coffee stock updated successfully'
         });
     } catch (err) {
         logErr("stock_coffee.controller.update", err);
         res.status(500).json({ status: 'error', message: 'Internal Server Error' });
     }
-}
+};
 
 exports.remove = async (req, res) => {
     try {
-        const { id } = req.body;
-        if (isEmpty(id)) {
-            return res.status(400).json({ status: 'error', message: 'Invalid input' });
-        }
-        
-        const query = `DELETE FROM stock_coffee WHERE id = $1 RETURNING *`;
-        const values = [id];
-        
-        const result = await db.query(query, values);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ status: 'error', message: 'Coffee not found' });
-        }
-        
+        const sqlDelete = "DELETE FROM stock_coffee WHERE id=?";
+        var [data] = await db.query(sqlDelete, [req.body.id]);
+
         res.json({
-            status: 'success',
-            data: result.rows[0]
+            data: data,
+            message: "Stock coffee deleted successfully"
         });
-    } catch (err) {
-        logErr("stock_coffee.controller.remove", err);
-        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    } catch (error) {
+        logErr("stock_coffee.remove", error, res);
     }
-}
+};

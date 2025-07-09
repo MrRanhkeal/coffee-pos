@@ -81,7 +81,7 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
     try {
         var sql = "DELETE FROM supplier WHERE id=?";
-        var [list] = await db.query(sql, req.body.id);
+        var [list] = await db.query(sql, req.params.id);
         res.json({
             data: list,
             message: "success"
