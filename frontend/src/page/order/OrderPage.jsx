@@ -11,16 +11,15 @@ import {
     Tag,
 } from "antd";
 import { formatDateClient, formatDateServer, request } from "../../util/helper";
-import { MdDelete, MdPrint } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { IoMdEye } from "react-icons/io";
 import { Config } from "../../util/config";
 import dayjs from "dayjs";
-import {DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { FaSearch } from "react-icons/fa";
 
 import { useReactToPrint } from "react-to-print";
-// import OrderPrint from "./OrderPrint";
 import PrintInvoice from "../../component/pos/PrintInvoice";
 
 function OrderPage() {
@@ -33,7 +32,7 @@ function OrderPage() {
         visibleModal: false,
         txtSearch: "",
     });
-
+    const user = JSON.parse(localStorage.getItem("user")); //check it for get user 
     const [filter, setFiler] = useState({
         from_date: dayjs(), // current
         to_date: dayjs(), // current
@@ -69,33 +68,7 @@ function OrderPage() {
             });
         }
     };
-    // Print single order using a single ref and handler
     const refInvoice = React.useRef(null);
-    const [printOrderData, setPrintOrderData] = useState(null);
-
-    const getOrderDetailByOrderNo = async (order_no) => {
-        setLoading(true);
-        const order = list.find(o => o.order_no === order_no);
-        if (!order) {
-            setLoading(false);
-            message.error('Order not found');
-            return;
-        }
-        const res = await request("order_detail/" + order.id, "get");
-        setLoading(false);
-        if (res && res.list) {
-            console.log('Order:', order);
-            console.log('Order Details:', res.list);
-            setPrintOrderData({
-                order,
-                order_details: res.list
-            });
-            setTimeout(() => {
-                handlePrintInvoice();
-            }, 300);
-        }
-    };
-    //
     const handlePrintInvoice = useReactToPrint({
         contentRef: refInvoice,
         onBeforePrint: () => {
@@ -108,18 +81,6 @@ function OrderPage() {
             window.close();
         }
     });
-    // const handlePrint = useReactToPrint({
-    //     content: () => printRef.current,
-    //     documentTitle: printOrderData ? `Order_${printOrderData.order_no}` : 'Order',
-    // });
-    // const PrintOrder = (order_no) => {
-    //     const order = list.find(o => o.order_no === order_no);
-    //     if (order) {
-    //         // Close modal if open and prepare data for printing
-    //         setState((prev) => ({ ...prev, visibleModal: false }));
-    //         setPrintOrderData(order);
-    //     }
-    // };
     const onClickDelete = async (data) => {
         Modal.confirm({
             title: "Delete Order",
@@ -138,24 +99,16 @@ function OrderPage() {
             },
         });
     };
-    
-
-    // Automatically trigger print dialog whenever printOrderData is set
-    useEffect(() => { 
-            handlePrintInvoice();
+    useEffect(() => {
+        handlePrintInvoice();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
-
-
-
     const onCloseModal = () => {
         setState({
             ...state,
             visibleModal: false,
         });
     };
-
     return (
         <MainPage loading={loading}>
             <div className="pageHeader">
@@ -232,21 +185,21 @@ function OrderPage() {
                                 <Image
                                     src={Config.image_path + value}
                                     alt=""
-                                    style={{ width: 60 ,borderRadius: 5,margin:0,padding:0}}
+                                    style={{ width: 60, borderRadius: 5, margin: 0, padding: 0 }}
                                 />
                             ),
                         },
-
+                        {
+                            // key: "sugar_level",
+                            // title: "Sugar",
+                            // dataIndex: "sugar_level",
+                            // render: (value) => <Tag color="blue">{value}%</Tag>,
+                        },
                         {
                             key: "qty",
                             title: "Qty",
                             dataIndex: "qty",
                         },
-                        // {
-                        //     key: "sugar",
-                        //     title: "Sugar",
-                        //     dataIndex: "sugar",
-                        // },
                         {
                             key: "price",
                             title: "Price",
@@ -267,22 +220,17 @@ function OrderPage() {
                         }
                     ]}
                 />
-                <div style={{marginTop: 16, textAlign: "right" }}>
+                <div style={{ marginTop: 16, textAlign: "right" }}>
                     <Button onClick={onCloseModal}>Close</Button>
                     <Button
                         type="primary"
                         style={{ marginLeft: 10 }}
                         onClick={() => {
-                            // Find the order in the list that matches the current modal
+                            // Use getOrderDetail data for printing
                             if (orderDetail && orderDetail.length > 0) {
-                                // Try to get order_no from orderDetail or from the parent order context
                                 const detail = orderDetail[0];
                                 const order = list.find(o => o.id === detail.order_id);
                                 if (order) {
-                                    setPrintOrderData({
-                                        order,
-                                        order_details: orderDetail
-                                    });
                                     setTimeout(() => {
                                         handlePrintInvoice();
                                     }, 300);
@@ -299,34 +247,32 @@ function OrderPage() {
                 </div>
             </Modal>
             {/* Hidden print component for current order */}
-            <div style={{ display: 'none' }}>
-                <PrintInvoice  
-                    ref={refInvoice}
-                    orderDetail={orderDetail}
-                    order={list.find(o => o.id === orderDetail[0]?.order_id)}
-                />
-            </div>
-            {/* <div style={{ display: 'none' }}>
-                <PrintInvoice
-                    ref={refInvoice}
-                    orderDetail={orderDetail}
-                    order={list.find(o => o.id === orderDetail[0]?.order_id)}
-                />
-            </div>
-            <div style={{ display: 'none' }}>
-                <PrintInvoice
-                    ref={refInvoice}
-                    orderDetail={orderDetail}
-                    order={list.find(o => o.id === orderDetail[0]?.order_id)}
-                />
-            </div> */}
-            {/* <div style={{ display: 'none' }}>
-                <PrintInvoice
-
-                    order={printOrderData?.order}
-                    order_details={printOrderData?.order_details}
-                />
-            </div> */}
+            {state.visibleModal && (
+                <div style={{ display: 'none' }}>
+                    <PrintInvoice
+                        ref={refInvoice}
+                        cart_list={orderDetail.map(item => ({
+                            name: item.p_name,
+                            cart_qty: item.qty,
+                            price: item.price,
+                            discount: item.discount,
+                            sugarLevel: item.sugar_level || 0
+                        }))}
+                        objSummary={{
+                            ...list.find(o => o.id === orderDetail[0]?.order_id),
+                            order_no: list.find(o => o.id === orderDetail[0]?.order_id)?.order_no,
+                            order_date: list.find(o => o.id === orderDetail[0]?.order_id)?.order_date,
+                            customer_id: list.find(o => o.id === orderDetail[0]?.order_id)?.customer_name,
+                            payment_method: list.find(o => o.id === orderDetail[0]?.order_id)?.payment_method,
+                            sub_total: list.find(o => o.id === orderDetail[0]?.order_id)?.sub_total,
+                            save_discount: list.find(o => o.id === orderDetail[0]?.order_id)?.save_discount,
+                            total: list.find(o => o.id === orderDetail[0]?.order_id)?.total,
+                            total_paid: list.find(o => o.id === orderDetail[0]?.order_id)?.total_paid
+                        }}
+                        cashier={user?.name}
+                    />
+                </div>
+            )}
             <Table
                 dataSource={list}
                 columns={[
@@ -403,7 +349,7 @@ function OrderPage() {
                                     type="primary"
                                     icon={<IoMdEye />}
                                     onClick={() => getOrderDetail(data, index)}
-                                />     
+                                />
                                 <DeleteOutlined
                                     danger
                                     type="primary"
