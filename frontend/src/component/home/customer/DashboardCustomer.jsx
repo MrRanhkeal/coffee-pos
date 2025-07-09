@@ -7,9 +7,9 @@ function DashboardCustomer() {
     const [customers, setCustomers] = useState(0);
 
 
-    // Fetch customers
+    // get customers
     useEffect(() => {
-        const fetchCustomers = async () => {
+        const getCustomers = async () => {
             try {
                 const res = await request("customer", "get", {}); // Using request helper
                 if (res && res.list && Array.isArray(res.list)) {
@@ -25,7 +25,7 @@ function DashboardCustomer() {
                 setCustomers(0); // Set to 0 on error
             }
         };
-        fetchCustomers();
+        getCustomers();
     }, []); // Empty dependency array ensures this runs once on mount
     function DashboardCustomer({ title, value, icon }) {
     return (
@@ -38,15 +38,15 @@ function DashboardCustomer() {
     );
 }
     return (
-        <Space>
+        <Space style={{fontWeight: "bold"}}>
             <DashboardCustomer
                 icon={
                     <UserOutlined
                         style={{
                             color: "purple",
                             backgroundColor: "rgba(128,0,128,0.25)",
-                            borderRadius: 20,
-                            fontSize: 24,
+                            borderRadius: 50,
+                            fontSize: 40,
                             padding: 8,
                         }}
                     />

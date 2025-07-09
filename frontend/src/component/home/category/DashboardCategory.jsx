@@ -10,7 +10,7 @@ function DashboardCategory() {
 
 // Fetch category count
 useEffect(() => {
-    const fetchCategories = async () => {
+    const getCategories = async () => {
         try {
             const res = await request("category", "get"); // Using request helper
             if (res && res.list && Array.isArray(res.list)) {
@@ -24,7 +24,7 @@ useEffect(() => {
             setCategory(0);
         }
     };
-    fetchCategories();
+    getCategories();
 }, []); // Empty dependency array ensures this runs once on mount
 function DashboardCategory({ title, value, icon }) {
     return (
@@ -37,15 +37,15 @@ function DashboardCategory({ title, value, icon }) {
     );
 }
     return (
-        <Space>
+        <Space style={{fontWeight: "bold"}}>
             <DashboardCategory
                 icon={
                     <AppstoreAddOutlined
                         style={{
                             color: "blue",
                             backgroundColor: "rgba(0,0,255,0.25)",
-                            borderRadius: 20,
-                            fontSize: 24,
+                            borderRadius: 50,
+                            fontSize: 40,
                             padding: 8,
                         }}
                     />

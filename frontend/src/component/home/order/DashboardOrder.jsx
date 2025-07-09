@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
 function DashboardOrder() {
     const [orders, setOrders] = useState(0);
 
-    // Fetch orders
+    // get orders
     useEffect(() => {
-        const fetchOrders = async () => {
+        const getOrders = async () => {
             try {
                 const res = await request("order", "get", {}); // Use request helper, no params for all orders
                 if (res && res.list && Array.isArray(res.list)) {
@@ -24,7 +24,7 @@ function DashboardOrder() {
                 setOrders(0); // Set to 0 on error
             }
         };
-        fetchOrders();
+        getOrders();
     }, []);
 
     function DashboardOrder({ title, value, icon }) {
@@ -38,15 +38,15 @@ function DashboardOrder() {
         );
     }
     return (
-        <Space>
+        <Space style={{ fontWeight: "bold" }}>
             <DashboardOrder
                 icon={
                     <ShoppingCartOutlined
                         style={{
                             color: "red",
-                            backgroundColor: "rgba(216, 168, 35, 0.25)",
-                            borderRadius: 20,
-                            fontSize: 24,
+                            backgroundColor: "rgba(234, 229, 216, 0.25)",
+                            borderRadius: 50,
+                            fontSize: 40,
                             padding: 8,
                         }}
                     />

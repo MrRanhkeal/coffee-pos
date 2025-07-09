@@ -31,7 +31,8 @@ function RecentOrders() {
     }, []);
     return (
         <>
-            <Typography.Text strong>Recent Orders</Typography.Text>
+            {/* <Typography.Text strong>Recent Orders</Typography.Text> */}
+            <div style={{fontWeight:'bold',color:'#833AB4'}}>Recent Orders</div>
             <Space style={{ width: '100%' ,display:"block",overflowX:"auto"}}>
                 <Table style={{ width: 1450, minWidth: 1200, maxWidth: "100%", display: "block", overflowX: "auto" }}
                     columns={[

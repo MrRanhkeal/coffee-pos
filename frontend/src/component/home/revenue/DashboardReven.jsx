@@ -39,15 +39,15 @@ function DashboardReven() {
         );
     }
     return (
-        <Space>
+        <Space style={{ fontWeight: "bold" }}>
             <DashboardReven
                 icon={
                     <DollarCircleFilled
                         style={{
                             color: "green",
                             backgroundColor: "rgba(255,0,0,0.25)",
-                            borderRadius: 20,
-                            fontSize: 26,
+                            borderRadius: 50,
+                            fontSize: 40,
                             padding: 8,
                         }}
                     />

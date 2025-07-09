@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
 function DashboarProduct() {
     const [products, setProducts] = useState(0);
 
-    // Fetch products count
+    // get products count
     useEffect(() => {
-        const fetchProducts = async () => {
+        const getProducts = async () => {
             try {
                 const res = await request("product", "get", {}); // Using request helper
                 if (res && !res.error) {
@@ -23,7 +23,7 @@ function DashboarProduct() {
                 setProducts(0);
             }
         };
-        fetchProducts();
+        getProducts();
     }, []);
 function DashboarProduct({ title, value, icon }) {
     return (
@@ -36,21 +36,21 @@ function DashboarProduct({ title, value, icon }) {
     );
 }
     return (
-        <Space >
+        <Space style={{fontWeight: "bold"}}>
             <DashboarProduct
                 icon={
                     <ProductOutlined
                         style={{
                             color: 'green',
                             backgroundColor: 'rgba(0,255,0,0.25)',
-                            borderRadius: 20,
-                            fontSize: 24,
+                            borderRadius: 50,
+                            fontSize: 40,
                             padding: 8
                         }}
                     />
                 }
-                title={'Products'}
-                value={products}
+                title={'Products' }
+                value={products} 
             />
         </Space>
     )
