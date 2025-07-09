@@ -24,7 +24,7 @@ function Dashboard() {
                 <DashboardOrder/>
                 <DashboardReven/>
             </Space>
-            <Space > 
+            <Space style={{width: "100%",height: "100%",display:"content",overflow:"hidden"}}> 
                 <RecentOrders /> 
             </Space>
             <Space style={{width: "100%",height: "100%",display:"flex"}}>

@@ -5,6 +5,7 @@ export const configStore = create((set) => ({
     category: null,
     role: null,
     supplier: null,
+    product_name: null,
     purchase_status: null,
     brand: null,
     customer: null,

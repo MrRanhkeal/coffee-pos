@@ -5,6 +5,7 @@ import styles from "./ProductItem.module.css";
 import { MdAddCircle } from "react-icons/md";
 import PropTypes from "prop-types";
 function ProductItem({
+  id,
   name,
   description,
   image,
@@ -21,6 +22,7 @@ function ProductItem({
   
   const handleAddWithSugar = () => {
     handleAdd({
+      id, // Ensure id is included for product_id
       name,
       description,
       image,
@@ -86,6 +88,7 @@ function ProductItem({
   );
 }
 ProductItem.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,

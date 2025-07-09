@@ -1,16 +1,24 @@
-// src/components/ProtectedRoute.jsx
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { PropTypes } from 'prop-types';
 
-const ProtectedRoute = ({ allowedRoles }) => {
-    const { role } = useAuth();
+import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
+// import { getPermission } from "../store/profile.store";
+import { getPermission } from "../../store/profile.store";
 
-    return allowedRoles.includes(role) ? <Outlet /> : <Navigate to="/unauthorized" />;
-};
+// Usage: <ProtectedRoute permissionKey="user" element={<UserPage />} />
+export default function ProtectedRoute({ permissionKey, element }) {
+    const permission = getPermission();
+
+    // Admin can access everything
+    if (permission?.all) return element;
+
+    // If the permissionKey is found in permission object, allow
+    if (permission && permission[permissionKey]) return element;
+
+    // Otherwise, block access
+    return <Navigate to="/" replace />;
+}
 
 ProtectedRoute.propTypes = {
-    allowedRoles: PropTypes.array.isRequired,
+    permissionKey: PropTypes.string.isRequired,
+    element: PropTypes.node.isRequired,
 };
-
-export default ProtectedRoute;

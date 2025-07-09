@@ -3,7 +3,7 @@ import {
   AccountBookOutlined,
   AlignCenterOutlined,
   AppstoreOutlined,
-  DollarOutlined, 
+  DollarOutlined,
   HomeOutlined,
   LogoutOutlined,
   ProfileOutlined,
@@ -13,8 +13,7 @@ import {
   ShoppingOutlined,
   SlidersOutlined,
   SnippetsOutlined,
-  SortDescendingOutlined,
-  StockOutlined,
+  SortDescendingOutlined, 
   TransactionOutlined,
   UnorderedListOutlined,
   UsergroupAddOutlined,
@@ -111,18 +110,11 @@ const items_menu = [
     label: "Stock",
     children: [
       {
-        key: "stock-cup",
-        label: "Stock_Cup",
+        key: "stock",
+        label: "Stock",
         children: null,
         icon: "💹"
         // icon: <StockOutlined/>
-      },
-      {
-        key: "stock-coffee",
-        label: "Stock_Coffee",
-        children: null,
-        // icon: "💹"
-        icon: <StockOutlined/>
       },
     ],
     icon: <SlidersOutlined />
@@ -174,7 +166,7 @@ const items_menu = [
         label: "Currency",
         children: null,
         icon: <DollarOutlined />
-      } 
+      }
     ],
     icon: <SettingOutlined />
   },
@@ -202,33 +194,42 @@ const MainLayout = () => {
 
   const getMenuByUser = () => {
     let new_item_menu = [];
-    items_menu?.map((item1) => {
-      // level one
-      const p1 = permission?.findIndex(
-        (data1) => data1.web_route_key == "/" + item1.key
-      );
-      if (p1 != -1) {
-        new_item_menu.push(item1);
-      }
-
-      // level two
-      if (item1?.children && item1?.children.length > 0) {
-        let childTmp = [];
-        item1?.children.map((data1) => {
-          permission?.map((data2) => {
-            if (data2.web_route_key == "/" + data1.key) {
-              childTmp.push(data1);
-            }
-          });
-        });
-        if (childTmp.length > 0) {
-          item1.children = childTmp; // update new child dreen
+    if (permission?.all) {
+      // Admin: show all menu items
+      new_item_menu = [...items_menu];
+    } else if (permission?.pos, permission?.order,permission?.customer) {
+      // POS: show POS, Dashboard, Order, Customer and permission any route
+      new_item_menu = items_menu.filter(item => ["", "pos", "order", "customer"].includes(item.key));
+    } else if (Array.isArray(permission)) {
+      // Fallback to old array logic
+      items_menu?.map((item1) => {
+        // level one
+        const p1 = permission?.findIndex(
+          (data1) => data1.web_route_key == "/" + item1.key
+        );
+        if (p1 != -1) {
           new_item_menu.push(item1);
         }
-      }
-    });
+        // level two
+        if (item1?.children && item1?.children.length > 0) {
+          let childTmp = [];
+          item1?.children.map((data1) => {
+            permission?.map((data2) => {
+              if (data2.web_route_key == "/" + data1.key) {
+                childTmp.push(data1);
+              }
+            });
+          });
+          if (childTmp.length > 0) {
+            item1.children = childTmp; // update new child
+            new_item_menu.push(item1);
+          }
+        }
+      });
+    }
     setItems(new_item_menu);
   };
+
 
   const getConfig = async () => {
     const res = await request("config", "get");
@@ -254,7 +255,7 @@ const MainLayout = () => {
     {
       key: "1",
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="/" style={{ color: "green-yllow", fontSize: 15 }}>
+        <a target="_blank" rel="noopener noreferrer" href="/" style={{ color: "green-yellow", fontSize: 15 }}>
           Profile
         </a>
       ),
@@ -312,10 +313,10 @@ const MainLayout = () => {
               <img className="admin-logo" src={Logo} alt="Logo" />
             </div>
             <div>
-              <div className="txt-brand-name">Coffee-POS</div>
+              <div className="txt-brand-name">V-Friends POS</div>
               {/* <div className="txt-brand-name">Count : {count}</div> */}
 
-              <div>Coffee Shop POS</div>
+              <div style={{fontWeight: 'bold',color: 'green'}}>Coffee Shop</div>
             </div>
             {/* <div>
               <Input.Search

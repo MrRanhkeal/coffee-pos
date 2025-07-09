@@ -80,34 +80,42 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
           {/* Invoice Header */}
           <div className="invoice-header row">
             <div className="col-6 d-flex">
-              <div style={{ marginRight: '15px' }}>
+              {/* logo */}
+              <div >
                 <img
                   src={Logo}
                   alt="V-Friends Coffee Logo"
                   className="logo"
                   style={{
-                    width: '80px',
-                    height: '80px',
+                    width: '50px',
+                    height: '50px',
+                    display: 'block',
+                    margin: '0 auto',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     borderRadius: '50%',
                     objectFit: 'cover',
                     border: '2px solid #ddd'
+
                   }}
                 />
               </div>
               <div>
-                <h1 className="invoice-title" style={{ color: '#1890ff', marginBottom: '10px' }}>V-Friends Coffee</h1>
-                <p style={{ margin: '2px 0' }}>Sihanoukville (city), Cambodia</p>
-                <p style={{ margin: '2px 0' }}>Tel: (855) 070-715-751</p>
-                <p style={{ margin: '2px 0', fontSize: '14px' }}>Email: VfriendCoffee10@gmail.com</p>
+                <h4 className="invoice-title" style={{ color: '#1890ff', marginBottom: '10px',fontSize: '26px' }}>V-Friends Coffee</h4>
+                <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>Sihanoukville (city), Cambodia</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>Tel: (855) 070-715-751</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: '12px' }}>Email: VfriendCoffee10@gmail.com</p>
               </div>
             </div>
             <div className="col-6 text-end">
               <h2>INVOICE</h2>
               <p>Invoice #: {objSummary.order_no || generateInvoiceNumber()}</p>
               <p>Date: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleDateString() : new Date().toLocaleDateString()}</p>
-              <p>Time: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleTimeString() : new Date().toLocaleTimeString()}</p>
+              {/* <p>Time: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleTimeString() : new Date().toLocaleTimeString()}</p> */}
+              <p>Time: {objSummary.order_date ? new Date(objSummary.order_date).toLocaleTimeString('en-US', { hour12: false }) : new Date().toLocaleTimeString('en-US', { hour12: false })}</p>
             </div>
           </div>
+
           {/* Customer Details */}
           <div className="invoice-details row">
             <div className="col-6">
@@ -158,7 +166,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
                 <p className="mb-1"><strong>Customer:</strong> {customerDisplay}</p>
                 <p className="mb-1"><strong>Payment Method:</strong> {paymentMethod}</p>
                 <p className="mb-1"><strong>Cashier:</strong> {cashierName}</p>
-                <p className="mb-1">Thank you for your business!</p>
+                <p className="mb-1">Thank you for your purchase!</p>
                 <p className="mb-1">Please come again...!</p>
               </div>
             </div>
@@ -166,7 +174,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
               <div className="text-end">
                 <div className="row justify-content-end">
                   <div className="col-7">
-                    <p className="mb-2">Subtotal:</p>
+                    <p className="mb-2" style={{fontWeight:'bold'}}>Subtotal:</p>
                     <p className="mb-2">Savings:</p>
                     <p className="mb-2">Total Amount:</p>
                     <p className="mb-2">Amount Paid:</p>

@@ -21,6 +21,7 @@ import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
+import { FaSearch } from "react-icons/fa";
 
 //please check this
 const getBase64 = (file) =>
@@ -198,7 +199,7 @@ function ProductPage() {
   //   setImageOptional(newFileList);
 
   const onFilter = () => {
-    getList();
+    getList(); 
   };
 
   const onClickEdit = async (item) => {
@@ -237,8 +238,7 @@ function ProductPage() {
     //   }
     // }
   };
-  const clickReadOnly = (item) => {
-  
+  const clickReadOnly = (item) => { 
     setState((p) => ({
     ...p,
     visibleModal: true,
@@ -326,7 +326,7 @@ function ProductPage() {
             }}
           />
           <Button onClick={onFilter} type="primary">
-            Filter
+            <FaSearch />Filter
           </Button>
         </Space>
         <Button type="primary" onClick={onBtnNew} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
@@ -468,7 +468,7 @@ function ProductPage() {
             </Col>
           </Row>
 
-          <Form.Item name={"image_default"} label="Image" className="product_image" >
+          <Form.Item name={"image_default"} label="Image" className="product_image">
             <Upload
               customRequest={(options) => {
                 options.onSuccess();
@@ -503,7 +503,7 @@ function ProductPage() {
           </Form.Item> */}
 
           {previewImage && (
-            <Image
+            <Image  
               wrapperStyle={{
                 display: "none",
               }}
@@ -513,10 +513,11 @@ function ProductPage() {
                 afterOpenChange: (visible) => !visible && setPreviewImage(""),
               }}
               src={previewImage}
+              // style={{ width: 50, height: 50 ,borderRadius:2}}
               style={{
-                width: "50px",
-                height: "50px",
-                objectFit: "contain",
+                width: 30,
+                height: 30, 
+                borderRadius: 2,
               }}
             />
           )}
@@ -626,15 +627,12 @@ function ProductPage() {
           {
             key: "image",
             title: "Image",
-            dataIndex: "image",
-            // render: (value) =>
-            //   "http://localhost:81/fullstack/image_pos/" + value,
+            dataIndex: "image", 
             render: (value) =>
               value ? (
-                <Image
-                  // src={"http://localhost:81/fullstack/image_pos/" + value}
+                <Image 
                   src={"http://localhost/coffee/" + value}
-                  style={{ width: 50, height: 50 }}
+                  style={{ width: 50, height: 50 ,borderRadius:3}}
                 />
               ) : (
                 <div

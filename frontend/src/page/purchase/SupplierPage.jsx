@@ -19,7 +19,8 @@ function SupplierPage() {
     });
     const [filter, setFilter] = useState({
         txtSearch: "",
-        product_type: "",
+        product_type: "", 
+        product_name: "",
         code: "",
     });
     const getList = useCallback(async () => {
@@ -31,6 +32,7 @@ function SupplierPage() {
         var param = {
             txtSearch: state.txtSearch,
             product_type: filter.product_type,
+            product_name: filter.product_name, 
         };
         const res = await request("supplier", "get", param);
         if (res && !res.error) {
@@ -40,7 +42,7 @@ function SupplierPage() {
                 loading: false,
             }));
         }
-    }, [state.txtSearch, setState, filter.product_type]);
+    }, [state.txtSearch, setState, filter.product_type, filter.product_name]);
 
     useEffect(() => {
         getList();
@@ -111,9 +113,8 @@ function SupplierPage() {
             okType: "danger",
             cancelText: "No",
             onOk: async () => {
-                const res = await request("supplier", "delete", { id: items.id });
+                const res = await request(`supplier/${items.id}`, "delete");
                 if (res && !res.error) {
-                    // message.success("Supplier deleted successfully");
                     message.success(res.message);
                     const newList = state.list.filter((item) => item.id != items.id);
                     getList(newList);
@@ -190,6 +191,38 @@ function SupplierPage() {
                         />
 
                     </Form.Item>
+                    {/* product name */}
+                    <Form.Item
+                        name="product_name"
+                        label="Product Name"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Product Name required!",
+                            },
+                        ]}
+                    >
+                        <Select
+                            placeholder="Select product name"
+                            showSearch
+                            allowClear
+                            options={Object.entries(config.product_name || {}).flatMap(([category, items]) =>
+                                items.map(item => ({
+                                    label: `${category} - ${item.label}`,
+                                    value: item.value
+                                }))
+                            )}
+                            onChange={(value) => {
+                                setFilter(prev => ({
+                                    ...prev,
+                                    product_name: value
+                                }));
+                                getList();
+                            }}
+                            disabled={state.isReadOnly}
+                        />
+
+                    </Form.Item>
                     <Form.Item
                         name="code"
                         label="Code"
@@ -247,7 +280,7 @@ function SupplierPage() {
                     </Form.Item>
                     <Form.Item style={{ textAlign: "right" }}>
                         <Space>
-                            <Button onClick={closeModal}>Close</Button>
+                            <Button onClick={closeModal}>{state.isReadOnly ? 'Close' : 'Cancel'}</Button>
                             {!state.isReadOnly && (
                                 <Button type="primary" htmlType="submit">
                                     {form.getFieldValue("id") ? "Update" : "Save"}
@@ -261,6 +294,11 @@ function SupplierPage() {
                 dataSource={state.list}
                 columns={[
                     {
+                        key: "No",
+                        title: "No",
+                        render: (item, data, index) => index + 1,
+                    },
+                    {
                         key: "name",
                         title: "Name",
                         dataIndex: "name",
@@ -269,6 +307,11 @@ function SupplierPage() {
                         key: "product_type",
                         title: "Product Type",
                         dataIndex: "product_type",
+                    },
+                    {
+                        key: "product_name",
+                        title: "Product Name",
+                        dataIndex: "product_name",
                     },
                     {
                         key: "code",

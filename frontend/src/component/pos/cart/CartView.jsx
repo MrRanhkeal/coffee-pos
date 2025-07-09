@@ -128,13 +128,13 @@ function CartView({
                             <label>Scan QR Code to Pay</label>
                         </div>
                         <div style={{
-                            padding: '20px',
-                            backgroundColor: '#f5f5f5',
+                            padding: '2px',
+                            backgroundColor: "rgb(240, 241, 240)",
                             borderRadius: '8px',
                             border: '1px solid #d9d9d9'
                         }}>
                             <div style={{ display: 'flex' }}>
-                                <img src={MyQRCode} alt="QR Code" style={{ width: '30%', height: '30%' }} />
+                                <img src={MyQRCode} alt="QR Code" style={{ width: '25%', height: 'auto' }} />
                                 <div style={{
                                     marginTop: '10px',
                                     fontSize: '14px',
@@ -152,6 +152,7 @@ function CartView({
                                 <div style={{ margin: '10% 10% 0 10%' }}>
                                     <PulsingText style={{ fontSize: '16px', fontWeight: 'bold' }}>
                                         Pay to this QR Code
+                                        <br></br>
                                         Amount: ${objSummary.total.toFixed(2)}
                                     </PulsingText>
                                     <br></br>
@@ -173,7 +174,7 @@ function CartView({
                         value={objSummary.remark}
                         onChange={(e) => setObjSummary(prev => ({ ...prev, remark: e.target.value }))}
                         placeholder="Add any special instructions"
-                        autoSize={{ minRows: 2, maxRows: 4 }}
+                        autoSize={{ minRows: 1, maxRows: 2 }}
                     />
                 </div>
 

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 
 export const request = (url = "", method = "get", data = {}) => {
   var access_token = getAcccessToken();
+  // var permission = getPermission();
   // in react
   var headers = { "Content-Type": "application/json" };
   if (data instanceof FormData) {

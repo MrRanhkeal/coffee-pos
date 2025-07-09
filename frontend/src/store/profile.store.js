@@ -29,8 +29,17 @@ export const setPermission = (array) => {
 };
 
 export const getPermission = () => {
-  // convert string json to object
   try {
+    //allow permission on any profile
+    const profile = getProfile();
+    if (profile && profile.role_name) {
+      if (profile.role_name === 'Admin') {
+        return { all: true };
+      } else {
+        return { pos: true, order: true, customer: true };
+      }
+    }
+    // fallback to old permission array if needed
     var permission = localStorage.getItem("permission");
     if (permission !== "" && permission !== null && permission !== undefined) {
       return JSON.parse(permission);

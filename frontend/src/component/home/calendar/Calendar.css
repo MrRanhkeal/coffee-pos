@@ -2,11 +2,14 @@
     padding: 1rem;
     background: white;
     border-radius: 8px;
-    /* box-shadow: 0 2px 4px rgba(47, 18, 18, 0.1); */
+    box-shadow: 1px  2px 4px rgba(47, 18, 18, 0.1);
 }
 
 .custom-calendar {
-    border: none;
+    border: none;  
+    /* border: 1px solid rgba(238, 227, 227, 0.95); */
+    /* box-shadow: inset 0 0 0 1px rgba(235, 236, 232, 0.982); */
+    /* border-radius: 8px; */
     width: 100%;
 }
 

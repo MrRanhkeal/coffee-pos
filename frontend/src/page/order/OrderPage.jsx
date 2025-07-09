@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     DatePicker,
@@ -11,11 +11,18 @@ import {
     Tag,
 } from "antd";
 import { formatDateClient, formatDateServer, request } from "../../util/helper";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdPrint } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { IoMdEye } from "react-icons/io";
 import { Config } from "../../util/config";
 import dayjs from "dayjs";
+import {DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { FaSearch } from "react-icons/fa";
+
+import { useReactToPrint } from "react-to-print";
+// import OrderPrint from "./OrderPrint";
+import PrintInvoice from "../../component/pos/PrintInvoice";
+
 function OrderPage() {
     const [list, setList] = useState([]);
     const [orderDetail, setOrderDetails] = useState([]);
@@ -62,11 +69,64 @@ function OrderPage() {
             });
         }
     };
+    // Print single order using a single ref and handler
+    const refInvoice = React.useRef(null);
+    const [printOrderData, setPrintOrderData] = useState(null);
+
+    const getOrderDetailByOrderNo = async (order_no) => {
+        setLoading(true);
+        const order = list.find(o => o.order_no === order_no);
+        if (!order) {
+            setLoading(false);
+            message.error('Order not found');
+            return;
+        }
+        const res = await request("order_detail/" + order.id, "get");
+        setLoading(false);
+        if (res && res.list) {
+            console.log('Order:', order);
+            console.log('Order Details:', res.list);
+            setPrintOrderData({
+                order,
+                order_details: res.list
+            });
+            setTimeout(() => {
+                handlePrintInvoice();
+            }, 300);
+        }
+    };
+    //
+    const handlePrintInvoice = useReactToPrint({
+        contentRef: refInvoice,
+        onBeforePrint: () => {
+            // Any setup before printing can be done here
+            console.log("`onBeforePrint` called");
+            return Promise.resolve();
+        },
+        onAfterPrint: () => {
+            // Reset the print data after printing
+            window.close();
+        }
+    });
+    // const handlePrint = useReactToPrint({
+    //     content: () => printRef.current,
+    //     documentTitle: printOrderData ? `Order_${printOrderData.order_no}` : 'Order',
+    // });
+    // const PrintOrder = (order_no) => {
+    //     const order = list.find(o => o.order_no === order_no);
+    //     if (order) {
+    //         // Close modal if open and prepare data for printing
+    //         setState((prev) => ({ ...prev, visibleModal: false }));
+    //         setPrintOrderData(order);
+    //     }
+    // };
     const onClickDelete = async (data) => {
         Modal.confirm({
-            title: "លុ​ប",
-            description: "Are you sure to remove?",
-            okText: "យល់ព្រម",
+            title: "Delete Order",
+            content: `Are you sure you want to delete order no. ${data.order_no}?`,
+            okText: "Delete",
+            cancelText: "Cancel",
+            okType: "danger",
             onOk: async () => {
                 const res = await request("order", "delete", {
                     id: data.id,
@@ -78,6 +138,16 @@ function OrderPage() {
             },
         });
     };
+    
+
+    // Automatically trigger print dialog whenever printOrderData is set
+    useEffect(() => { 
+            handlePrintInvoice();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
+
+
 
     const onCloseModal = () => {
         setState({
@@ -120,7 +190,7 @@ function OrderPage() {
                         }}
                     />
                     <Button type="primary" onClick={getList}>
-                        Filter
+                        <FaSearch />Filter
                     </Button>
                 </Space>
             </div>
@@ -139,15 +209,20 @@ function OrderPage() {
                             key: "p_name",
                             title: "Product",
                             dataIndex: "p_name",
-                            render: (item, data) => (
+                            render: (data, row) => (
                                 <div>
-                                    <div style={{ fontWeight: "bold" }}>{data.p_name}</div>
+                                    <div style={{ fontWeight: "bold" }}>{data}</div>
                                     <div>
-                                        {data.p_category_name} | {data.p_brand}
+                                        {row.p_brand} -{row.p_des}
                                     </div>
-                                    <div>{data.p_des}</div>
+                                    {/* <div>{row.p_des}</div> */}
                                 </div>
                             ),
+                        },
+                        {
+                            key: "p_category_name",
+                            title: "Categories",
+                            dataIndex: "p_category_name",
                         },
                         {
                             key: "p_image",
@@ -157,7 +232,7 @@ function OrderPage() {
                                 <Image
                                     src={Config.image_path + value}
                                     alt=""
-                                    style={{ width: 80 }}
+                                    style={{ width: 60 ,borderRadius: 5,margin:0,padding:0}}
                                 />
                             ),
                         },
@@ -167,6 +242,11 @@ function OrderPage() {
                             title: "Qty",
                             dataIndex: "qty",
                         },
+                        // {
+                        //     key: "sugar",
+                        //     title: "Sugar",
+                        //     dataIndex: "sugar",
+                        // },
                         {
                             key: "price",
                             title: "Price",
@@ -184,10 +264,69 @@ function OrderPage() {
                             title: "Total",
                             dataIndex: "total",
                             render: (value) => <Tag color="green">{value}$</Tag>,
-                        },
+                        }
                     ]}
                 />
+                <div style={{marginTop: 16, textAlign: "right" }}>
+                    <Button onClick={onCloseModal}>Close</Button>
+                    <Button
+                        type="primary"
+                        style={{ marginLeft: 10 }}
+                        onClick={() => {
+                            // Find the order in the list that matches the current modal
+                            if (orderDetail && orderDetail.length > 0) {
+                                // Try to get order_no from orderDetail or from the parent order context
+                                const detail = orderDetail[0];
+                                const order = list.find(o => o.id === detail.order_id);
+                                if (order) {
+                                    setPrintOrderData({
+                                        order,
+                                        order_details: orderDetail
+                                    });
+                                    setTimeout(() => {
+                                        handlePrintInvoice();
+                                    }, 300);
+                                } else {
+                                    message.error('Order info not found for printing');
+                                }
+                            } else {
+                                message.error('No order details available to print');
+                            }
+                        }}
+                    >
+                        Print
+                    </Button>
+                </div>
             </Modal>
+            {/* Hidden print component for current order */}
+            <div style={{ display: 'none' }}>
+                <PrintInvoice  
+                    ref={refInvoice}
+                    orderDetail={orderDetail}
+                    order={list.find(o => o.id === orderDetail[0]?.order_id)}
+                />
+            </div>
+            {/* <div style={{ display: 'none' }}>
+                <PrintInvoice
+                    ref={refInvoice}
+                    orderDetail={orderDetail}
+                    order={list.find(o => o.id === orderDetail[0]?.order_id)}
+                />
+            </div>
+            <div style={{ display: 'none' }}>
+                <PrintInvoice
+                    ref={refInvoice}
+                    orderDetail={orderDetail}
+                    order={list.find(o => o.id === orderDetail[0]?.order_id)}
+                />
+            </div> */}
+            {/* <div style={{ display: 'none' }}>
+                <PrintInvoice
+
+                    order={printOrderData?.order}
+                    order_details={printOrderData?.order_details}
+                />
+            </div> */}
             <Table
                 dataSource={list}
                 columns={[
@@ -259,16 +398,18 @@ function OrderPage() {
                         align: "center",
                         render: (item, data, index) => (
                             <Space>
-                                <Button
+                                <EyeOutlined
+                                    style={{ color: "rgb(12, 59, 4)", fontSize: 20 }}
                                     type="primary"
                                     icon={<IoMdEye />}
                                     onClick={() => getOrderDetail(data, index)}
-                                />
-                                <Button
+                                />     
+                                <DeleteOutlined
                                     danger
                                     type="primary"
                                     icon={<MdDelete />}
                                     onClick={() => onClickDelete(data)}
+                                    style={{ color: "red", fontSize: 20 }}
                                 />
                             </Space>
                         ),

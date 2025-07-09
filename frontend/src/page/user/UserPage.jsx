@@ -1,19 +1,8 @@
 import { useEffect, useState } from "react";
 import { request } from "../../util/helper";
-import {
-    Button,
-    Form,
-    Input,
-    message,
-    Modal,
-    Select,
-    Space,
-    Table,
-    Tag,
-    
-} from "antd";
+import {Button,Form,Input,message,Modal,Select,Space,Table,Tag, } from "antd";
 // import { resetWarned } from "antd/es/_util/warning";
-import { configStore } from "../../store/configStore";
+// import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
 import {DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled} from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
@@ -21,11 +10,12 @@ import { IoMdEye } from "react-icons/io";
 
 function UserPage() {
     const [form] = Form.useForm();
-    const { config } = configStore();
+    // const { config } = configStore();
     const [list, setList] = useState([]);
+    const [roles, setRoles] = useState([]);
     const [state, setState] = useState({
         list: [],
-        role_id: null,
+        role_id: null, 
         loading: true,
         isEdit: false,
         editingUser: null,
@@ -33,6 +23,7 @@ function UserPage() {
     });
     useEffect(() => {
         getList();
+        gethRoles();
     }, []);
     const getList = async () => {
         setState((prev) => ({ ...prev, loading: true }));
@@ -51,18 +42,19 @@ function UserPage() {
         } finally {
             setState((prev) => ({ ...prev, loading: false }));
         }
-    };
+    }; 
 
-    // const getList = async () => {
-    //   const res = await request("auth/get-list", "get");
-    //   if (res && !res.error) {
-    //     setState((pre) => ({
-    //       ...pre,
-    //       list: res.list,
-    //       role: res.role,
-    //     }));
-    //   }
-    // };
+    const gethRoles = async () => {
+        try {
+            const res = await request("role", "get");
+            if (res?.data) {
+                setRoles(res.data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch roles:", error);
+            message.error("Failed to fetch roles");
+        }
+    };
 
     const clickBtnEdit = (record) => {
         form.setFieldsValue({
@@ -116,20 +108,7 @@ function UserPage() {
         catch (error) {
             console.error("Delete error:", error);
             message.error("Failed to delete user");
-        }
-        
-        // try {
-        //   const res = await request(`auth/delete/${record.id}`, "delete");
-        //   if (res && !res.error) {
-        //     message.success("User deleted successfully");
-        //     getList();
-        //   } else {
-        //     message.error(res.message || "Failed to delete user");
-        //   }
-        // } catch (error) {
-        //   console.error("Delete error:", error);
-        //   message.error("Failed to delete user");
-        // }
+        } 
     };
 
     const handleCloseModal = () => {
@@ -149,25 +128,7 @@ function UserPage() {
             ...pre,
             visible: true,
         }));
-    };
-    // {"name":"a","username":"b","password":"12","role_id":2,"is_active":0}
-    // const onFinish = async (item) => {
-    //   if (item.password !== item.confirm_password) {
-    //     message.warning("Password and Confirm Password Not Match!");
-    //     return;
-    //   }
-    //   var data = {
-    //     ...item,
-    //   };
-    //   const res = await request("auth/register", "post", data);
-    //   if (res && !res.error) {
-    //     message.success(res.message);
-    //     getList();
-    //     handleCloseModal();
-    //   } else {
-    //     message.warning(res.message);
-    //   }
-    // };
+    }; 
 
     const onFinish = async (item) => {
         if (!state.isEdit && item.password !== item.confirm_password) {
@@ -285,34 +246,25 @@ function UserPage() {
                         <Input.Password placeholder="confirm password" disabled={state.isReadOnly} />
                     </Form.Item>
 
-                    <Select
-                        style={{ width: "100%" }}
-                        placeholder="Select role"
-                        disabled={state.isReadOnly}
-                        options={(config?.role || []).map(role => ({
-                            label: role.name, // or cust.fullName or cust.whatever is correct
-                            value: role.id,   // or cust.customer_id depending on your data
-                        }))}
-                        onSelect={(value) => {
-                            setState((p) => ({
-                                ...p,
-                                role_id: value,
-                            }));
-                        }}
-                    />
-
-                    {/* <Form.Item
-                        name={"role_id"}
+                    <Form.Item
+                        name="role_id"
                         label="Role"
                         rules={[
-                        {
-                            required: true,
-                            message: "Please select role",
-                        },
+                            {
+                                required: true,
+                                message: "Please select role",
+                            },
                         ]}
                     >
-                        <Select placeholder="Select Role" options={state.role} />
-                    </Form.Item> */}
+                        <Select
+                            placeholder="Select role"
+                            disabled={state.isReadOnly}
+                            options={roles.map(role => ({
+                                label: role.name,
+                                value: role.id,
+                            }))}
+                        />
+                    </Form.Item>
                     <Form.Item
                         name={"is_active"}
                         label="Status"
