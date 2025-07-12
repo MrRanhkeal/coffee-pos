@@ -143,7 +143,7 @@ exports.create = async (req, res) => {
 
             // Insert order detail
             var sqlOrderDetails =
-                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total,stockproduct_id) VALUES (:order_id,:product_id,:qty,:price,:discount,:total,:stockproduct_id)";
+                "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total,stockproduct_id,sugarLevel) VALUES (:order_id,:product_id,:qty,:price,:discount,:total,:stockproduct_id,:sugarLevel)";
             return connection.query(sqlOrderDetails, { // Use connection for query
                 ...item,
                 order_id: orderId, // Use the newly inserted order ID
