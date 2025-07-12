@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Table, Modal, Form, Input, message, Select, Tag, Space, InputNumber } from 'antd';
-import useProductList from './useProductList';
+import ProductList from './ProductList';
 import { request } from '../../util/helper';
 import { DeleteOutlined, EditOutlined, FileAddFilled } from '@ant-design/icons';
 import { MdDelete, MdEdit } from 'react-icons/md';
@@ -22,7 +22,7 @@ function Stock_ProductPage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
     const [editingId, setEditingId] = useState({ id: null, status: null });
-    const { products, loading: productLoading } = useProductList();
+    const { products, loading: productLoading,setProducts } = ProductList();
 
     // get suppliers list
     const getSuppliers = useCallback(async () => {
@@ -35,8 +35,19 @@ function Stock_ProductPage() {
             console.error('Failed to get suppliers:', error);
         }
     }, []);
+    //get product list
+    const getProducts = useCallback(async () => {
+        try {
+            const res = await request('product', 'get', {});
+            if (res && !res.error && res.list) {
+                setProducts(res.list);
+            }
+        } catch (error) {
+            console.error('Failed to get products:', error);
+        }
+    }, []); 
 
-    // Fetch stock list
+    // get stock list
     const getList = useCallback(async () => {
         try {
             setState((p) => ({
@@ -64,6 +75,7 @@ function Stock_ProductPage() {
     useEffect(() => {
         getList();
         getSuppliers();
+        getProducts();
     }, [getList, getSuppliers]);
 
     // Helper function to get supplier name by ID
@@ -182,10 +194,17 @@ function Stock_ProductPage() {
             render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
         },
         {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះផលិតផល</span>,
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះផលិត</span>,
             dataIndex: 'product_id',
             key: 'product_id',
-            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
+            render: (productId) => {
+                const product = products.find(p => p.id === productId);
+                return (
+                    <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                        {product ? product.name : `ID: ${productId}`}
+                    </span>
+                );
+            },
         },
         {
             title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួន</span>,
@@ -282,7 +301,7 @@ function Stock_ProductPage() {
                     </Form.Item> 
                     <Form.Item
                         name="qty"
-                        label="ចំនួន"
+                        label="ចំនួនស្តុកចាស់"
                         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     >
                         <InputNumber disabled min={0} style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />

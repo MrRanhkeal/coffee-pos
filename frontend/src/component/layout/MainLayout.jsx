@@ -9,13 +9,11 @@ import {
   ProfileOutlined,
   SettingOutlined,
   ShopOutlined,
-  ShoppingCartOutlined,
-  ShoppingOutlined,
+  ShoppingCartOutlined, 
   SlidersOutlined,
-  SnippetsOutlined,
-  SortDescendingOutlined, 
+  SnippetsOutlined, 
   TransactionOutlined,
-  UnorderedListOutlined,
+  AppstoreAddOutlined,
   UsergroupAddOutlined,
   UserOutlined,
   UserSwitchOutlined,
@@ -66,33 +64,37 @@ const items_menu = [
   },
   {
     label: "Product",
-    children: [
-      {
-        key: "product",
-        label: "List Porduct",
-        children: null,
-        icon: <UnorderedListOutlined />
-      },
-      {
-        key: "category",
-        label: "Category",
-        children: null,
-        icon: <SortDescendingOutlined />
-      },
-    ],
+    // children: [
+    //   {
+    //     key: "product",
+    //     label: "List Porduct",
+    //     children: null,
+    //     icon: <UnorderedListOutlined />
+    //   },
+    //   {
+    //     key: "category",
+    //     label: "Category",
+    //     children: null,
+    //     icon: <SortDescendingOutlined />
+    //   },
+    // ],
+    key: "product",
+    children: null,
+    // icon: <UnorderedListOutlined />
     icon: <AppstoreOutlined />
   },
   {
-    label: "Purchase",
-    children: [
-      {
-        key: "supplier",
-        label: "Supplier",
-        children: null,
-        icon: <UserSwitchOutlined />
-      }
-    ],
-    icon: <ShoppingOutlined />
+    key: "category",
+    label: "Category",
+    children: null,
+    icon: <AppstoreAddOutlined />
+  },
+  {
+    key: "supplier",
+    label: "Supplier",
+    children: null,
+    icon: <UserSwitchOutlined />
+    // icon: <ShoppingOutlined />
   },
   {
     label: "Expanse",
@@ -197,7 +199,7 @@ const MainLayout = () => {
     if (permission?.all) {
       // Admin: show all menu items
       new_item_menu = [...items_menu];
-    } else if (permission?.pos, permission?.order,permission?.customer) {
+    } else if (permission?.pos, permission?.order, permission?.customer) {
       // POS: show POS, Dashboard, Order, Customer and permission any route
       new_item_menu = items_menu.filter(item => ["", "pos", "order", "customer"].includes(item.key));
     } else if (Array.isArray(permission)) {
@@ -316,7 +318,7 @@ const MainLayout = () => {
               <div className="txt-brand-name">V-Friends POS</div>
               {/* <div className="txt-brand-name">Count : {count}</div> */}
 
-              <div style={{fontWeight: 'bold',color: 'green'}}>Coffee Shop</div>
+              <div style={{ fontWeight: 'bold', color: 'green' }}>Coffee Shop</div>
             </div>
             {/* <div>
               <Input.Search

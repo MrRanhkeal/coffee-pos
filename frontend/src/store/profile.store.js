@@ -35,7 +35,8 @@ export const getPermission = () => {
     if (profile && profile.role_name) {
       if (profile.role_name === 'Admin') {
         return { all: true };
-      } else {
+      } 
+      else {
         return { pos: true, order: true, customer: true };
       }
     }

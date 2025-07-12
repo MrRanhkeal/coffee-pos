@@ -125,7 +125,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
             </div>
             <div className="col-6 text-end">
               <p className="mb-0">Cashier: {cashier || 'Unknown'}</p>
-              <p>Terminal: POS-001</p>
+              <p>Terminal: V-Friends</p>
             </div>
           </div>
 

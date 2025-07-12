@@ -25,14 +25,15 @@ import PrintInvoice from "../../component/pos/PrintInvoice";
 function OrderPage() {
     const [list, setList] = useState([]);
     const [orderDetail, setOrderDetails] = useState([]);
-
+    const user = JSON.parse(localStorage.getItem("profile")); //print by user.role_name on profile
+    const cashierName = (user && (user.name || user.username)) || 'System';
     const [summary, setSummary] = useState(null);
     const [loading, setLoading] = useState(false);
     const [state, setState] = useState({
         visibleModal: false,
         txtSearch: "",
     });
-    const user = JSON.parse(localStorage.getItem("user")); //check it for get user 
+    //const user = JSON.parse(localStorage.getItem("user")); //check it for get user 
     const [filter, setFiler] = useState({
         from_date: dayjs(), // current
         to_date: dayjs(), // current
@@ -61,7 +62,12 @@ function OrderPage() {
         const res = await request("order_detail/" + data.id, "get");
         setLoading(false);
         if (res) {
-            setOrderDetails(res.list); // The backend sends data in the 'list' property
+            // Ensure sugar_level is always defined
+            const patchedList = (res.list || []).map(item => ({
+                ...item,
+                sugar_level: item.sugar_level ?? item.sugarLevel ?? 0
+            }));
+            setOrderDetails(patchedList);
             setState({
                 ...state,
                 visibleModal: true,
@@ -109,6 +115,37 @@ function OrderPage() {
             visibleModal: false,
         });
     };
+    // Calculate printSummary before returning JSX
+    const printSummary = (() => {
+        const order = list.find(o => o.id === orderDetail[0]?.order_id) || {};
+        let sub_total = 0, save_discount = 0, total = 0;
+        let change = 0; // Initialize change
+        if (orderDetail && orderDetail.length > 0) {
+            orderDetail.forEach(item => {
+                const qty = Number(item.qty) || 0;
+                const price = Number(item.price) || 0;
+                const discount = Number(item.discount) || 0;
+                const lineTotal = qty * price;
+                sub_total += lineTotal;
+                save_discount += (lineTotal * discount) / 100;
+                total += lineTotal - (lineTotal * discount) / 100;
+                change = (order.total_paid ?? total) - total; // calculate change
+            });
+        }
+        return {
+            ...order,
+            order_no: order.order_no,
+            order_date: order.order_date,
+            customer_id: order.customer_name,
+            payment_method: order.payment_method,
+            sub_total: order.sub_total ?? sub_total,
+            save_discount: order.save_discount ?? save_discount,
+            total: order.total ?? total,
+            total_paid: order.total_paid ?? total, // fallback: assume fully paid
+            change: (order.total_paid ?? total) - total, // calculate change
+        };
+    })();
+
     return (
         <MainPage loading={loading}>
             <div className="pageHeader">
@@ -190,10 +227,10 @@ function OrderPage() {
                             ),
                         },
                         {
-                            // key: "sugar_level",
-                            // title: "Sugar",
-                            // dataIndex: "sugar_level",
-                            // render: (value) => <Tag color="blue">{value}%</Tag>,
+                            key: "sugar_level",
+                            title: "Sugar ",
+                            dataIndex: "sugar_level",
+                            render: (value) => <Tag color="blue">{value}%</Tag>,
                         },
                         {
                             key: "qty",
@@ -246,7 +283,6 @@ function OrderPage() {
                     </Button>
                 </div>
             </Modal>
-            {/* Hidden print component for current order */}
             {state.visibleModal && (
                 <div style={{ display: 'none' }}>
                     <PrintInvoice
@@ -258,18 +294,8 @@ function OrderPage() {
                             discount: item.discount,
                             sugarLevel: item.sugar_level || 0
                         }))}
-                        objSummary={{
-                            ...list.find(o => o.id === orderDetail[0]?.order_id),
-                            order_no: list.find(o => o.id === orderDetail[0]?.order_id)?.order_no,
-                            order_date: list.find(o => o.id === orderDetail[0]?.order_id)?.order_date,
-                            customer_id: list.find(o => o.id === orderDetail[0]?.order_id)?.customer_name,
-                            payment_method: list.find(o => o.id === orderDetail[0]?.order_id)?.payment_method,
-                            sub_total: list.find(o => o.id === orderDetail[0]?.order_id)?.sub_total,
-                            save_discount: list.find(o => o.id === orderDetail[0]?.order_id)?.save_discount,
-                            total: list.find(o => o.id === orderDetail[0]?.order_id)?.total,
-                            total_paid: list.find(o => o.id === orderDetail[0]?.order_id)?.total_paid
-                        }}
-                        cashier={user?.name}
+                        objSummary={printSummary}
+                        cashier={cashierName || ''}
                     />
                 </div>
             )}
@@ -308,7 +334,7 @@ function OrderPage() {
                     },
                     {
                         key: "Due",
-                        title: "Due",
+                        title: "Change",
                         render: (value, data) => (
                             <Tag color="red">
                                 {(Number(data.total_amount) - Number(data.paid_amount)).toFixed(

@@ -11,12 +11,9 @@ import RecentOrders from '../../component/home/recentorder/RecentOrders';
 import Calendar from '../../component/home/calendar/Calendar';
 
 function Dashboard() {
-
-
-
     return (
         <Space size={20} direction='vertical'>
-            <Typography.Title level={4}>Dashboard Overview</Typography.Title>
+            <Typography.Title level={4} style={{fontWeight: 'bold',fontSize: '30px',color:'#2A7B9B'}}>Dashboard Overview</Typography.Title>
             <Space direction='horizontal'> 
                 <DashboarProduct/>
                 <DashboardCategory/>

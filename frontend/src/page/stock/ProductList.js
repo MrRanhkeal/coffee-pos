@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { request } from '../../util/helper';
 
-export default function useProductList() {
+export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 

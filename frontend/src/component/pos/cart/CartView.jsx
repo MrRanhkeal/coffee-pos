@@ -50,8 +50,7 @@ function CartView({
                         Clear Cart
                     </div>
                 )}
-            </div>
-
+            </div> 
             <div className={styles.cartList}>
                 {state.cart_list.length === 0 ? (
                     <Empty
@@ -73,8 +72,7 @@ function CartView({
                         />
                     ))
                 )}
-            </div>
-
+            </div> 
             <div className={styles.cartSummary}>
                 <div className={styles.summaryRow}>
                     <span>Subtotal</span>
@@ -92,8 +90,7 @@ function CartView({
                     <span>Total</span>
                     <span>${objSummary.total.toFixed(2)}</span>
                 </div>
-            </div>
-
+            </div> 
             <div className={styles.cartCheckout}>
                 <div style={{ marginBottom: '1rem' }}>
                     <div className={styles.inputLabel}>
@@ -105,8 +102,7 @@ function CartView({
                         onChange={(value) => setObjSummary(prev => ({ ...prev, customer_id: value }))}
                         options={customers}
                     />
-                </div>
-
+                </div> 
                 <div style={{ marginBottom: '1rem' }}>
                     <div className={styles.inputLabel}>
                         <label>Payment Method</label>
@@ -120,8 +116,7 @@ function CartView({
                             { value: 'QR', label: 'QR Code' },
                         ]}
                     />
-                </div>
-
+                </div> 
                 {objSummary.payment_method === 'QR' && (
                     <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
                         <div className={styles.inputLabel}>
@@ -164,8 +159,7 @@ function CartView({
 
                         </div>
                     </div>
-                )}
-
+                )} 
                 <div style={{ marginBottom: '1rem' }}>
                     <div className={styles.inputLabel}>
                         <label>Remark</label>
@@ -176,8 +170,7 @@ function CartView({
                         placeholder="Add any special instructions"
                         autoSize={{ minRows: 1, maxRows: 2 }}
                     />
-                </div>
-
+                </div> 
                 <div style={{ marginBottom: '1rem' }}>
                     <div className={styles.inputLabel}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -198,8 +191,7 @@ function CartView({
                         min={0}
                         step={0.5}
                     />
-                </div>
-
+                </div> 
                 <Button
                     onClick={handleClickOut}
                     type="primary"
@@ -211,8 +203,7 @@ function CartView({
             </div>
         </div>
     )
-}
-
+} 
 CartView.propTypes = {
     state: PropTypes.shape({
         cart_list: PropTypes.arrayOf(PropTypes.object).isRequired,
