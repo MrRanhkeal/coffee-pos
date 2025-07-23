@@ -1,102 +1,160 @@
-
 const { db, logErr, isArray, isEmpty } = require("../util/helper");
 
-
-exports.report_sale_summary = async (req, res) => {
+exports.getSalereport = async (req, res) => {
     try {
-        let { from_date, to_date, category_id, brand_id } = req.query;
-        let sql =
-            " select " +
-            "  DATE_FORMAT(o.create_at,'%d/%m/%Y') title, " +
-            "  sum(od.total_qty) total_qty, " +
-            "    sum(od.total_amount)  total_amount " +
-            " from orders o " +
-            " inner join  " +
-            " ( " +
-            "   select  " +
-            "      od1.order_id, " +
-            "      sum(od1.qty) total_qty, " +
-            "      sum(od1.total) total_amount " +
-            "    from order_detail od1 " +
-            "    inner join products p on od1.product_id = p.id " +
-            "    where (:category_id IS NULL OR p.category_id = :category_id )  " +
-            "    and (:brand_id IS NULL OR p.brand = :brand_id) " +
-            "    group by od1.order_id " +
-            " ) od on o.id = od.order_id " +
-            " where  " +
-            " DATE_FORMAT(o.create_at,'%Y-%m-%d') BETWEEN :from_date  and :to_date  " +
-            " group by DATE_FORMAT(o.create_at,'%d/%m/%Y') ";
-        const [list] = await db.query(sql, {
-            from_date,
-            to_date,
-            category_id,
-            brand_id,
-        });
+        const from_date = req.query.from_date;
+        const to_date = req.query.to_date;
+        let sqlgetSale =
+            "SELECT " +
+            " o.order_no, " +
+            " o.create_at AS order_date, " +
+            " o.total_amount, " +
+            " o.paid_amount," +
+            " o.payment_method, " +
+            " c.name AS customer_name, " +
+            " u.name AS user_name, " +
+            " p.name AS product_name, " +
+            " od.qty, " +
+            " od.price AS product_price_at_order, " +
+            " od.discount AS order_detail_discount, " +
+            " od.total AS order_detail_total, " +
+            " p.brand AS product_brand " +
+            " FROM orders o " +
+            " JOIN order_detail od ON o.id = od.order_id " +
+            " JOIN products p ON od.product_id = p.id " +
+            " LEFT JOIN customers c ON o.customer_id = c.id " +
+            " LEFT JOIN users u ON o.user_id = u.id WHERE 1=1 ";
+
+        let sqlParam = {};
+        if (!isEmpty(from_date) && !isEmpty(to_date)) {
+            sqlgetSale += " AND DATE_FORMAT(o.create_at,'%Y-%m-%d') BETWEEN :from_date AND :to_date ";
+            sqlParam.from_date = from_date;
+            sqlParam.to_date = to_date;
+        }
+        let sqlOrderBy = " ORDER BY o.create_at DESC ";
+        if (req.query.order_by === "desc") {
+            sqlOrderBy = " ORDER BY o.create_at DESC ";
+        } else if (req.query.order_by === "asc") {
+            sqlOrderBy = " ORDER BY o.create_at ASC ";
+        } 
+        // const [list] = await db.query(sqlgetSale, [from_date, to_date]);
+        const [list] = await db.query(sqlgetSale + sqlOrderBy, sqlParam); 
+        // Group by product_brand, order_no, product_name and sum qty
+        const grouped = [];
+        const keyMap = {};
+        for (const item of list) {
+            const key = `${item.product_brand}__${item.order_no}__${item.product_name}`;
+            if (!keyMap[key]) {
+                keyMap[key] = { ...item };
+                keyMap[key].qty = Number(item.qty) || 0;
+                grouped.push(keyMap[key]);
+            } else {
+                keyMap[key].qty += Number(item.qty) || 0;
+            }
+        }
+        // After grouping, set order_detail_total as qty * product_price_at_order
+        for (const g of grouped) {
+            g.order_detail_total = g.qty * (Number(g.product_price_at_order) || 0);
+        }
+
         res.json({
-            data: list,
-            message: "success",
-            error: false
-        })
+            list: grouped,
+            message: "success"
+        });
     }
-    catch (error) {
-        logErr(error, "report.report_sale_summary", error, res);
-        // res.status(500).json({
-        //     error: true,
-        //     message: "Internal server error"
-        // });
+    catch (err) {
+        logErr("report.getSalereport", err, res);
     }
-}
-// exports.report_expense_summary = async (req, res) => {
-//     try {
-//         let { from_date, to_date, expense_type_id } = req.query;
-//         let sql =
-//             "select " +
-//             "  DATE_FORMAT(e.expense_date,'%d/%m/%Y') title, " +
-//             "    sum(e.amount) total_amount " +
-//             "  from expenses e  " +
-//             "  where DATE_FORMAT(e.expense_date,'%Y-%m-%d') between :from_date and :to_date " +
-//             "  and (:expense_type_id is null or e.expense_type_id = :expense_type_id)  " +
-//             "  group by e.expense_date ";
-//         const [list] = await db.query(sql, {
-//             from_date,
-//             to_date,
-//             expense_type_id,
-//         });
-//         res.json({
-//             list,
-//         });
-//     } catch (error) {
-//         logError("report.report_sale_summary", error, res);
-//     }
-// };
-// exports.report_top_sale = async (req, res) => {
-//     try {
-//         let { from_date, to_date } = req.query;
-//         let sql =
-//             "SELECT p.name, SUM(od.qty) as total_qty, SUM(od.total) as total_amount " +
-//             "FROM order_detail od " +
-//             "INNER JOIN products p ON od.product_id = p.id " +
-//             "INNER JOIN orders o ON od.order_id = o.id " +
-//             "WHERE DATE_FORMAT(o.create_at,'%Y-%m-%d') BETWEEN :from_date AND :to_date " +
-//             "GROUP BY p.id, p.name " +
-//             "ORDER BY total_qty DESC " +
-//             "LIMIT 10";
-
-//         const [list] = await db.query(sql, {
-//             from_date,
-//             to_date
-//         });
-
-//         res.json({
-//             data: list,
-//             message: "success",
-//             error: false
-//         });
-//     } catch (error) {
-//         logErr(error, "report.controller.js", "report_top_sale");
-//         res.status(500).json({
-//             error: true,
-//             message: "Internal server error"
-//         });
-//     }
-// }
+};
+exports.get_sale_summary = async (req, res) => {
+    try {
+        const [sale] = await db.query(
+            "SELECT " +
+            " CONCAT(CONVERT(SUM(o.total_amount),CHAR),'$')  total " +
+            " ,count(o.id) total_order  " +
+            " FROM orders o  " +
+            " WHERE " +
+            " MONTH(o.create_at) = MONTH(CURRENT_DATE)" +
+            " AND YEAR(o.create_at) = YEAR(CURRENT_DATE)"
+        );
+        const [sale_summary_by_month_raw] = await db.query(
+            " SELECT " +
+            "   YEAR(o.create_at) as year, " +
+            "   MONTH(o.create_at) as month, " +
+            "   SUM(o.total_amount) as total " +
+            " FROM orders o " +
+            " WHERE YEAR(o.create_at) = YEAR(CURRENT_DATE) " +
+            " GROUP BY YEAR(o.create_at), MONTH(o.create_at) "
+        );
+        const [summary_per_year] = await db.query(
+            "SELECT " +
+            " YEAR(o.create_at) AS year, " +
+            " SUM(o.total_amount) AS total_per_year " +
+            " from orders o " +
+            " where YEAR(o.create_at) = YEAR(CURRENT_DATE) " +
+            " GROUP by YEAR(o.create_at) "
+        );
+        const [summary_per_day] = await db.query(
+                `SELECT
+                    DATE(o.create_at) AS date,
+                    SUM(o.total_amount) AS total_per_day
+                from orders o
+                WHERE YEAR(o.create_at) = YEAR(CURRENT_DATE)
+                GROUP BY DATE(o.create_at)
+                ORDER BY date desc;` 
+        );
+        const summary_per_week = await db.query(
+                `SELECT 
+                DATE_FORMAT(MIN(o.create_at), '%Y-%m-%d') AS week_start_date,
+                    YEAR(o.create_at) AS year,
+                    WEEK(o.create_at, 1) AS week_number, 
+                    SUM(o.total_amount) AS total_per_week
+                FROM orders o
+                WHERE YEAR(o.create_at) = YEAR(CURRENT_DATE)
+                GROUP BY YEAR(o.create_at), WEEK(o.create_at, 1)
+                ORDER BY YEAR(o.create_at) DESC, WEEK(o.create_at, 1) DESC;`
+        );
+        const [income] = await db.query(
+            " SELECT "+
+            " SUM(o.total_amount) AS total_income FROM orders o "
+        );
+        // Build an object for the current year with each month's total (0 if missing)
+        const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+        let year = new Date().getFullYear(); 
+        let summaryRow = { year,currency: 'USD' };
+        months.forEach((m) => summaryRow[m] = '0.00$');
+        sale_summary_by_month_raw.forEach(row => {
+            const idx = row.month - 1;
+            if (idx >= 0 && idx < 12) {
+                summaryRow[months[idx]] = `${Number(row.total).toFixed(2)}$`;
+            }
+        });
+        // Optionally, add a 'Month' column for display
+        summaryRow['month'] = year;
+        const sale_summary_by_month = [summaryRow]; 
+        const summary_month = [
+            {
+                title: "Sale",
+                summary: {
+                    Sale: "This Month",
+                    Total: sale[0].total,
+                    Total_Order: sale[0].total_order,
+                    currency: 'USD', 
+                },
+            }
+        ];
+        res.json({
+            sale: sale, 
+            summary_per_day: summary_per_day,
+            summary_per_week: summary_per_week[0],
+            summary_month: summary_month,
+            sale_summary_by_month: sale_summary_by_month,  
+            summary_per_year: summary_per_year,
+            income: income[0].income,
+            message: "success"
+        });
+    }
+    catch (err) {
+        logErr("report.get_sale_summary", err, res);
+    }
+};

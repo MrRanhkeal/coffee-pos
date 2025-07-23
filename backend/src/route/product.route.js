@@ -1,4 +1,4 @@
-const { getlist,create,update,remove,newBarcode } = require("../controller/product.controller");
+const { getlist,create,update,remove } = require("../controller/product.controller");
 const { logErr } = require("../util/logErr");
 const { uploadFile } = require("../util/helper")
 const { validate_token } = require("../middleware/jwt_token");
@@ -15,7 +15,7 @@ try {
             // { name: "upload_image_optional", maxCount: 4 }
         ]), update);
         app.delete("/api/product",validate_token(), remove);
-        app.post("/api/new_barcode",validate_token(),newBarcode);
+        // app.post("/api/new_barcode",validate_token(),newBarcode);
         // app.get("/api/product_image/:prodcut_id",validate_token(),productImage);
 
         //permission

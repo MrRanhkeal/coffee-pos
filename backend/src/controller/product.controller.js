@@ -18,7 +18,7 @@ exports.getlist = async (req, res) => {
         var sqlWhere = " WHERE true ";
 
         if (txt_search) {
-            sqlWhere += " AND (p.name LIKE :txt_search OR p.barcode = :barcode) ";
+            sqlWhere += " AND (p.name LIKE :txt_search) ";
         }
         if (category_id) {
             sqlWhere += " AND p.category_id = :category_id";
@@ -35,7 +35,7 @@ exports.getlist = async (req, res) => {
         var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
         var sqlparam = {
             txt_search: "%" + txt_search + "%",
-            barcode: txt_search,
+            // barcode: txt_search,
             category_id,
             brand,
         };
@@ -61,8 +61,8 @@ exports.getlist = async (req, res) => {
 exports.create = async (req, res) => {
     try{
         var sql =
-        " INSERT INTO products (category_id, barcode,name,brand,description,price,discount,status,image,create_by ) " +
-        " VALUES (:category_id, :barcode, :name, :brand, :description,  :price, :discount, :status, :image, :create_by ) ";
+        " INSERT INTO products (category_id, name,brand,description,price,discount,status,image,create_by ) " +
+        " VALUES (:category_id, :name, :brand, :description,  :price, :discount, :status, :image, :create_by ) ";
 
         var [data] = await db.query(sql, {
             ...req.body,
@@ -90,14 +90,12 @@ exports.create = async (req, res) => {
         logErr("category.create", error, res);
     }
 };
-exports.update = async (req, res) => {
-    const connection = await db.getConnection();
-    try {
-        await connection.beginTransaction();
+exports.update = async (req, res) => { 
+    try { 
         var sql =
             " UPDATE products set " +
             " category_id = :category_id, " +
-            " barcode = :barcode, " +
+            // " barcode = :barcode, " +
             " name = :name, " +
             " brand = :brand, " +
             " description = :description, " +
@@ -169,12 +167,9 @@ exports.update = async (req, res) => {
             error: false
         })
     }
-    catch (error) {
-        await connection.rollback();
+    catch (error) { 
         logErr("product.update", error, res);
-    } finally {
-        connection.release();
-    }
+    }  
 };
 
 exports.remove = async (req, res) => {
@@ -187,7 +182,7 @@ exports.remove = async (req, res) => {
         }
         res.json({
             data: data,
-            message: "success",
+            message: "deleted successfully",
             error: false
         })
     }
@@ -195,23 +190,23 @@ exports.remove = async (req, res) => {
         logErr("remove.create", error, res);
     }
 };
-exports.newBarcode = async (req, res) => {
-    try {
-        var sql =
-            "SELECT " +
-            "CONCAT('P',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM products), 3, '0')) " +
-            "as barcode";
-        var [data] = await db.query(sql);
-        res.json({
-            barcode: data[0].barcode,
-            message: "success",
-            error: false
-        })
-    }
-    catch (error) {
-        logErr("remove.create", error, res);
-    }
-};
+// exports.newBarcode = async (req, res) => {
+//     try {
+//         var sql =
+//             "SELECT " +
+//             "CONCAT('P',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM products), 3, '0')) " +
+//             "as barcode";
+//         var [data] = await db.query(sql);
+//         res.json({
+//             barcode: data[0].barcode,
+//             message: "success",
+//             error: false
+//         })
+//     }
+//     catch (error) {
+//         logErr("remove.create", error, res);
+//     }
+// };
 // exports.productImage = async (req, res) => {
 //     try {
 //         var sql = "SELECT *  FROM product_image WHERE product_id=:product_id";
@@ -227,17 +222,17 @@ exports.newBarcode = async (req, res) => {
 //         logErr("remove.create", err, res);
 //     }
 // };
-isExistBarcode = async (barcode) => {
-    try {
-        var sql = "SELECT COUNT(id) as Total FROM products WHERE barcode=:barcode";
-        var [data] = await db.query(sql, {
-            barcode: barcode,
-        });
-        if (data.length > 0 && data[0].Total > 0) {
-            return true; // ស្ទួន
-        }
-        return false; // អត់ស្ទួនទេ
-    } catch (error) {
-        logError("remove.create", error, res);
-    }
-};
+// isExistBarcode = async (barcode) => {
+//     try {
+//         var sql = "SELECT COUNT(id) as Total FROM products WHERE barcode=:barcode";
+//         var [data] = await db.query(sql, {
+//             barcode: barcode,
+//         });
+//         if (data.length > 0 && data[0].Total > 0) {
+//             return true; // ស្ទួន
+//         }
+//         return false; // អត់ស្ទួនទេ
+//     } catch (error) {
+//         logError("remove.create", error, res);
+//     }
+// };

@@ -1,0 +1,1 @@
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`mydb`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)) + 2025-07-20 05:16:48 

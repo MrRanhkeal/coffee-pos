@@ -5,7 +5,7 @@ exports.getList = async (req, res) => {
         var txtSearch = req.query.txtSearch;
         var sql = "SELECT * FROM expenses ";
         if (!isEmpty(txtSearch)) {
-            sql += " WHERE ref_no LIKE :txtSearch";
+            sql += " WHERE expense_date LIKE :txtSearch";
         }
         const [list] = await db.query(sql, {
             txtSearch: "%" + txtSearch + "%",
@@ -20,7 +20,7 @@ exports.getList = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         var sql =
-            "INSERT INTO expenses (product_id,ref_no,name,amount,remarks,expense_date,expanse_type,create_by) VALUES (?) ";
+            "INSERT INTO expenses (expense_type,amount,description,create_by) values (:expense_type, :amount, :description, :create_by)";
         var [data] = await db.query(sql, {
             ...req.body,
             create_by: req.auth?.name,
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         var sql =
-            "UPDATE  customer set name=:name, code=:code, tel=:tel, email=:email, address=:address, website=:website, note=:note WHERE id=:id ";
+            "UPDATE  expenses SET expense_type = :expense_type, amount = :amount, description = :description WHERE id = :id";
         var [data] = await db.query(sql, {
             ...req.body,
         });

@@ -10,7 +10,7 @@ exports.getlist = async (req, res) => {
         let params = [];
         
         if (txtSearch) {
-            query += " AND (name LIKE ? OR code LIKE ? OR phone LIKE ? OR email LIKE ?)";
+            query += " AND (name LIKE ? OR phone LIKE ? OR email LIKE ?)";
             params.push(`%${txtSearch}%`, `%${txtSearch}%`, `%${txtSearch}%`, `%${txtSearch}%`);
         }
         
@@ -31,17 +31,16 @@ exports.getlist = async (req, res) => {
 }
 exports.create = async (req, res) => {
     try {
-        var sql = "insert into supplier(name,product_type,code,phone,email,address,description) values(?,?,?,?,?,?,?)";
-        var [check] = await db.query("SELECT * FROM supplier WHERE code = ?", req.body.code);
+        var sql = "insert into supplier(name,product_type,phone,email,address,description) values(?,?,?,?,?,?,?)";
+        var [check] = await db.query("SELECT * FROM supplier WHERE name = ?", req.body.name);
         if (check.length > 0) {
             return res.status(400).json({
-                message: "Code already exists"
+                message: "name already exists"
             });
         }
         var [data] = await db.query(sql, [
             req.body.name,
-            req.body.product_type,
-            req.body.code,
+            req.body.product_type, 
             req.body.phone,
             req.body.email,
             req.body.address,
@@ -58,11 +57,10 @@ exports.create = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
-        var sql = "UPDATE supplier SET name=?, product_type=?, code=?, phone=?, email=?, address=?, description=? WHERE id=?";
+        var sql = "UPDATE supplier SET name=?, product_type=?, phone=?, email=?, address=?, description=? WHERE id=?";
         var [data] = await db.query(sql, [
             req.body.name,
-            req.body.product_type,
-            req.body.code,
+            req.body.product_type, 
             req.body.phone,
             req.body.email,
             req.body.address,

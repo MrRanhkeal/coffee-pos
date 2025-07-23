@@ -1,0 +1,2 @@
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'YEAR(o.create_at) = YEAR(CURRENT_DATE) GROUP BY DATE(o.create_at) ORDER BY date ' at line 1 + 2025-07-19 21:02:16 
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(CURRENT_DATE),  SUM(o.total_amount) AS total_per_day  from orders o WHERE YEAR(' at line 1 + 2025-07-19 21:06:34 

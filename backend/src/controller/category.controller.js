@@ -5,7 +5,7 @@ const { db, logErr, isEmpty, isArray } = require("../util/helper");
 exports.getlist = async (req, res) => {
     try {
         //please select and sort data
-        var [list] = await db.query("SELECT * FROM category ORDER BY id");
+        var [list] = await db.query("SELECT * FROM category");
         res.json({
 
             list: list,
@@ -24,6 +24,7 @@ exports.create = async (req, res) => {
             name: req.body.name, //null
             description: req.body.description, //null
             status: req.body.status, //null
+            create_by: req.auth?.name, //null
             parent_id: req.body.parent_id, //null
         });
         res.json({

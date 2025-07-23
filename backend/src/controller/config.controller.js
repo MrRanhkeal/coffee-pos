@@ -1,19 +1,24 @@
 const { db, logErr, isArray, isEmpty } = require("../util/helper");
 exports.getlist = async (req, res) => {
     try {
-        const [category] = await db.query("select id as value, name as label,description from category");
-        const [role] = await db.query("select id, name, permissions from roles");
-        const [supplier] = await db.query("select id, name ,code from supplier");
+        const [category] = await db.query("select id as value, name as label,description from category"); 
+        const [role] = await db.query("select id, name from roles");
+        const [supplier] = await db.query("select id, name from supplier");
         //and more
 
-        const brand = [
-            { label: "arabia", value: "arabia", country: "th", icon: "https://cdn-icons-png.flaticon.com/512/1040/1040204.png" },
-            { label: "mondolkiri", value: "mondolkiri", country: "kh" },
-            { label: "green-tea", value: "green-tea", country: "kh" },
-            { label: "passion-fruit", value: "passion-fruit", country: "kh" },
-            { label: "soda", value: "soda", country: "kh" },
-            { label: "snack", value: "snack", country: "kh" },
-            { label: "fresh-fruit", value: "fresh-fruit", country: "kh" },
+        const brand = [ 
+            { label: "Mondolkiri Coffee", value: "Mondolkiri Coffee", country: "kh" },
+            { label: "Arabia Coffee", value: "Arabia Coffee", country: "vn" },
+            { label: "Amazon Coffee", value: "Amazon Coffee", country: "th" },
+            { label: "Bodia Tea", value: "Bodia Tea", country: "kh" },
+            { label: "ChaTraMue Tea", value: "ChaTraMue Tea", country: "th" },
+            { label: "Soda", value: "Soda", country: "kh" }, 
+            { label: "Milk", value: "Milk", country: "kh" },  
+            { label: "Coconut", value: "Coconut", country: "kh" },  
+            // { label: "arabia", value: "arabia", country: "th", icon: "https://cdn-icons-png.flaticon.com/512/1040/1040204.png" },
+            // { label: "mondolkiri", value: "mondolkiri", country: "kh" },
+            // { label: "green-tea", value: "green-tea", country: "kh" },
+            // { label: "passion-fruit", value: "passion-fruit", country: "kh" }, 
         ];
         //product_type
         const product_type = {
@@ -33,79 +38,7 @@ exports.getlist = async (req, res) => {
                 { label: "Coffee Coconut", value: "Coffee Coconut" },
                 { label: "Coffee Latte Matcha", value: "Coffee Latte Matcha" },
                 { label: "Coffee Chocolate Coconut", value: "Coffee Chocolate Coconut" }
-            ],
-            // SodaTea: [
-            //     { label: "Green Tea Lemon", value: "Green Tea Lemon" },
-            //     { label: "Black Tea Lemon", value: "Black Tea Lemon" },
-            //     { label: "Blue Tea Lemon Soda", value: "Blue Tea Lemon Soda" },
-            //     { label: "Passion Honey Lemon Soda", value: "Passion Honey Lemon Soda" },
-            //     { label: "Strawberry Soda", value: "Strawberry Soda" },
-            //     { label: "Blueberry Soda", value: "Blueberry Soda" },
-            //     { label: "Apple Soda", value: "Apple Soda" },
-            //     { label: "Kiwi Soda", value: "Kiwi Soda" },
-            //     { label: "Blue Hawaii Soda", value: "Blue Hawaii Soda" },
-            //     { label: "Passion Strawberry Soda", value: "Passion Strawberry Soda" }
-            // ],
-            // Iced_Tea: [
-            //     { label: "Laluna Green Tea Milk", value: "Laluna Green Tea Milk" },
-            //     { label: "Thai Tea Milk", value: "Thai Tea Milk" },
-            //     { label: "Milo Milk", value: "Milo Milk" },
-            //     { label: "Ovaltine Milk", value: "Ovaltine Milk" },
-            //     { label: "Taro Milk", value: "Taro Milk" },
-            //     { label: "Chocolate Milk", value: "Chocolate Milk" },
-            //     { label: "Oreo Milk", value: "Oreo Milk" },
-            //     { label: "Strawberry Milk", value: "Strawberry Milk" },
-            //     { label: "Blueberry Milk", value: "Blueberry Milk" },
-            //     { label: "Soda Milk", value: "Soda Milk" },
-            //     { label: "Passion Milk", value: "Passion Milk" },
-            //     { label: "Ginger Milk", value: "Ginger Milk" },
-            //     { label: "Matcha Latte", value: "Matcha Latte" }
-            // ],
-            // Smoothie: [
-            //     { label: "Green Tea Coconut", value: "Green Tea Coconut" },
-            //     { label: "Avocado Coconut", value: "Avocado Coconut" },
-            //     { label: "Avocado", value: "Avocado" },
-            //     { label: "Avocado Green Tea", value: "Avocado Green Tea" },
-            //     { label: "Avocado Chocolate", value: "Avocado Chocolate" },
-            //     { label: "Mango", value: "Mango" },
-            //     { label: "Dragon Fruit", value: "Dragon Fruit" },
-            //     { label: "Banana", value: "Banana" },
-            //     { label: "Papaya", value: "Papaya" },
-            //     { label: "Passion", value: "Passion" }
-            // ],
-            // Coconut: [
-            //     { label: "Avocado Coconut", value: "Avocado Coconut" },
-            //     { label: "Chocolate Coconut", value: "Chocolate Coconut" },
-            //     { label: "Thai Tea Coconut", value: "Thai Tea Coconut" },
-            //     { label: "Orange Coconut Milk", value: "Orange Coconut Milk" },
-            //     { label: "Avocado Mango Coconut", value: "Avocado Mango Coconut" },
-            //     { label: "Dragon Fruit Coconut", value: "Dragon Fruit Coconut" }
-            // ],
-            // Cream_Jelly: [
-            //     { label: "Green Tea Cream Cheese", value: "Green Tea Cream Cheese" },
-            //     { label: "Black Tea Cream Cheese", value: "Black Tea Cream Cheese" },
-            //     { label: "Passion Cream Cheese", value: "Passion Cream Cheese" },
-            //     { label: "Brown Sugar Milk Tea Bubble", value: "Brown Sugar Milk Tea Bubble" },
-            //     { label: "Milk Tea Jelly", value: "Milk Tea Jelly" },
-            //     { label: "Green Tea Jelly", value: "Green Tea Jelly" },
-            //     { label: "Red Tea Jelly", value: "Red Tea Jelly" },
-            //     { label: "Chocolate Jelly", value: "Chocolate Jelly" },
-            //     { label: "Green Tea Oreo Shake", value: "Green Tea Oreo Shake" },
-            //     { label: "Blueberry Oreo Shake", value: "Blueberry Oreo Shake" },
-            //     { label: "Vanilla Jelly, Chocolate Jelly", value: "Vanilla Jelly, Chocolate Jelly" }
-            // ],
-            // Snack: [
-            //     { label: "Chip", value: "Chip" },
-            //     { label: "Original Cheese Chilli", value: "Original Cheese Chilli" },
-            //     { label: "Nugget & Chips", value: "Nugget & Chips" },
-            //     { label: "Hotdog Cheese", value: "Hotdog Cheese" },
-            //     { label: "Double Sandwich Ham", value: "Double Sandwich Ham" },
-            //     { label: "Cheese Pizza", value: "Cheese Pizza" },
-            //     { label: "Pizza Cheese & Corn", value: "Pizza Cheese & Corn" },
-            //     { label: "Double Sweet Chocolate Ovaltine", value: "Double Sweet Chocolate Ovaltine" },
-            //     { label: "Crabs Pizza", value: "Crabs Pizza" },
-            //     { label: "Hotdog Pizza", value: "Hotdog Pizza" }
-            // ],
+            ], 
         };
 
         const product_name =  {
@@ -138,8 +71,11 @@ exports.getlist = async (req, res) => {
             ],
         };
         const expsanse_type = [
-            { label: "maintenance", value: "maintenance", stauts: 1 },
-            { label: "management", value: "management", stauts: 1 },
+            { label: "Staff Salary", value: "Staff Salary" },
+            { label: "Product Origin", value: "Product Origin" },
+            { label: "Machine Maintenance", value: "Machine Maintenance" },
+            { label: "Power Consumption", value: "Power Consumption" },
+            { label: "Other", value: "Other" },
         ];
 
         const [customer] = await db.query(
@@ -151,8 +87,7 @@ exports.getlist = async (req, res) => {
             supplier,
             brand,
             customer,
-            expsanse_type,
-            // sugar,
+            expsanse_type, 
             product_type,
             product_name,
             cup_product,
