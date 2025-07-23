@@ -13,7 +13,7 @@ function ProductItem({
   brand,
   price,
   discount,
-  barcode,
+  // barcode,
   handleAdd,
   qty,
 }) 
@@ -30,7 +30,7 @@ function ProductItem({
       brand,
       price,
       discount,
-      barcode,
+      // barcode,
       qty,
       sugarLevel: sugarLevel
     });
@@ -96,7 +96,7 @@ ProductItem.propTypes = {
   brand: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   discount: PropTypes.number,
-  barcode: PropTypes.string.isRequired,
+  // barcode: PropTypes.string.isRequired,
   handleAdd: PropTypes.func.isRequired,
   qty: PropTypes.number.isRequired,
 };

@@ -8,7 +8,7 @@ function DashboardReven() {
 
     // Calculate total revenue from orders
     useEffect(() => {
-        const fetchRevenue = async () => {
+        const getRevenue = async () => {
             try {
                 const res = await request("order", "get", {});
                 if (res && res.list && Array.isArray(res.list)) {
@@ -22,11 +22,11 @@ function DashboardReven() {
                     setRevenue(0);
                 }
             } catch (error) {
-                console.error("Error fetching revenue:", error);
+                console.error("Error get revenue:", error);
                 setRevenue(0);
             }
         };
-        fetchRevenue();
+        getRevenue();
     }, []);
     function DashboardReven({ title, value, icon }) {
         return (

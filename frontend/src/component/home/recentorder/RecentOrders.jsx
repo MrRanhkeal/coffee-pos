@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { request,formatDateClient } from '../../../util/helper'; // Added import for request helper and formatDateClient 
-import { Space, Table, Typography } from 'antd';
+import { Space, Table } from 'antd';
 
 function RecentOrders() {
     const [dataSource, setDataSource] = React.useState([]);
@@ -36,25 +36,33 @@ function RecentOrders() {
             <Space style={{ width: '100%' ,display:"block",overflowX:"auto"}}>
                 <Table style={{ width: 1450, minWidth: 1200, maxWidth: "100%", display: "block", overflowX: "auto" }}
                     columns={[
+                        // {
+                        //     key: "order_no",
+                        //     title: "Order No",
+                        //     dataIndex: "order_no",
+                        //     width: '10%',
+                        //     align: 'left'
+                        // },
                         {
-                            key: "order_no",
-                            title: "Order No",
-                            dataIndex: "order_no",
-                            width: '10%',
-                            align: 'left'
+                            key: "NO",
+                            title: "NO",
+                            dataIndex: "NO",
+                            width: '5%',
+                            align: 'left',
+                            render: (text, record, index) => index + 1
                         },
                         {
                             key: "customer_name",
                             title: "Customer",
                             dataIndex: "customer_name",
-                            width: '18%',
+                            width: '20%',
                             align: 'left'
                         },
                         {
                             key: "total_amount",
                             title: "Total",
                             dataIndex: "total_amount",
-                            width: '18%',
+                            width: '20%',
                             align: 'left',
                             render: (value) => {
                                 const numValue = parseFloat(value);
@@ -65,7 +73,7 @@ function RecentOrders() {
                             key: "paid_amount",
                             title: "Paid Amount",
                             dataIndex: "paid_amount",
-                            width: '18%',
+                            width: '20%',
                             align: 'left',
                             render: (value) => {
                                 const numValue = parseFloat(value);
@@ -76,14 +84,14 @@ function RecentOrders() {
                             key: "payment_method",
                             title: "Payment Method",
                             dataIndex: "payment_method",
-                            width: '18%',
+                            width: '20%',
                             align: 'left'
                         },
                         {
                             key: "create_at",
                             title: "Date",
                             dataIndex: "create_at",
-                            width: '18%',
+                            width: '20%',
                             align: 'left',
                             render: (value) => value ? formatDateClient(value, "DD/MM/YYYY") : "N/A"
                         }

@@ -103,8 +103,6 @@ function SupplierPage() {
             isReadOnly: true
         }));
     };
-
-
     const onClickBtnDelete = (items) => {
         Modal.confirm({
             title: "Delete Supplier",

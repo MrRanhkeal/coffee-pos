@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
-import { Button, Form, Input, message, Modal, Space, Table, Tag } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table, Tag, Select } from "antd";
 import { DeleteOutlined, EditOutlined, FileAddFilled } from "@ant-design/icons";
 import {  } from "react-icons/md";
 
 function RolePage() {
+    // Define available routes for permission selection
+    const availableRoutes = [
+        { value: 'order', label: 'Order' },
+        { value: 'product', label: 'Product' },
+        { value: 'report', label: 'Report' },
+        // Add more routes as needed
+    ];
     const [state, setState] = useState({
         list: [],
         loading: true,
@@ -28,7 +35,7 @@ function RolePage() {
                 }));
             }
         } catch {
-            message.error("Failed to fetch roles");
+            message.error("Failed to get roles");
         } finally {
             setState(pre => ({ ...pre, loading: false }));
         }
@@ -36,23 +43,23 @@ function RolePage() {
 
     // Handle edit button click
     const handleEdit = (record) => {
-        let permissions = record.permissions;
-        try {
-            if (typeof permissions === 'string') {
-                permissions = JSON.parse(permissions);
-            }
-            if (Array.isArray(permissions)) {
-                permissions = permissions.join(', ');
-            }
-        } catch {
-            permissions = '';
-        }
+let permission = record.permission;
+try {
+    if (typeof permission === 'string') {
+        permission = JSON.parse(permission);
+    }
+    if (!Array.isArray(permission)) {
+        permission = [];
+    }
+} catch {
+    permission = [];
+}
 
-        form.setFieldsValue({
-            id: record.id,
-            name: record.name,
-            permissions: permissions
-        });
+form.setFieldsValue({
+    id: record.id,
+    name: record.name,
+    permission: permission
+});
         setState(pre => ({ ...pre, visible: true }));
     };
 
@@ -82,14 +89,12 @@ function RolePage() {
     const onFinish = async (values) => {
         const method = form.getFieldValue("id") ? "put" : "post";
         try {
-            // Convert comma-separated permissions to array
-            const permissions = values.permissions
-                ? values.permissions.split(',').map(p => p.trim()).filter(Boolean)
-                : [];
+            // Use permission array directly
+            const permission = Array.isArray(values.permission) ? values.permission : [];
 
             const data = {
                 name: values.name,
-                permissions: JSON.stringify(permissions)
+                permission: JSON.stringify(permission)
             };
 
             // Add id for update operation
@@ -128,15 +133,15 @@ function RolePage() {
             key: "name"
         },
         {
-            title: "Permissions",
-            dataIndex: "permissions",
-            key: "permissions",
-            render: (permissions) => {
-                if (!permissions) return '-';
+            title: "Permission",
+            dataIndex: "permission",
+            key: "permission",
+            render: (permission) => {
+                if (!permission) return '-';
                 try {
-                    const permArray = typeof permissions === 'string'
-                        ? JSON.parse(permissions)
-                        : permissions;
+                    const permArray = typeof permission === 'string'
+                        ? JSON.parse(permission)
+                        : permission;
 
                     if (Array.isArray(permArray) && permArray.length > 0) {
                         return permArray.map((perm, idx) => (
@@ -144,7 +149,7 @@ function RolePage() {
                         ));
                     }
                 } catch {
-                    console.error('Invalid permissions format:', permissions);
+                    console.error('Invalid permission format:', permission);
                 }
                 return '-';
             }
@@ -210,30 +215,28 @@ function RolePage() {
                     <Form.Item
                         name="name"
                         label="Role Name"
-                        rules={[{ required: true, message: "Please enter role name" }]}
+                        rules={[{ required: true, message: "Please input role name" }]}
                     >
-                        <Input placeholder="Enter role name" />
+                        <Input />
                     </Form.Item>
 
                     <Form.Item
-                        name="permissions"
-                        label="Permissions"
-                        rules={[{ required: true, message: "Please enter permissions" }]}
-                        help="Enter permissions separated by commas (e.g. order, product, report)"
+                        name="permission"
+                        label="Permission"
+                        rules={[{ required: true, message: "Please select at least one permission" }]}
+                        help="Select allowed routes for this role"
                     >
-                        <Input.TextArea 
-                            placeholder="e.g. order, product, report"
-                            rows={2}
+                        <Select
+                            mode="multiple"
+                            options={availableRoutes}
+                            placeholder="Select permissions"
                         />
                     </Form.Item>
 
-                    <Form.Item className="text-right">
-                        <Space>
-                            <Button onClick={handleCancel}>Cancel</Button>
-                            <Button type="primary" htmlType="submit">
-                                {form.getFieldValue("id") ? "Update" : "Create"}
-                            </Button>
-                        </Space>
+                    <Form.Item style={{ textAlign: "right" }}>
+                        <Button type="primary" htmlType="submit" >
+                            Submit
+                        </Button>
                     </Form.Item>
                 </Form>
             </Modal>

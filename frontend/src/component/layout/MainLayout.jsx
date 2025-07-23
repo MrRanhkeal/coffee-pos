@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  AccountBookOutlined,
+import { 
   AlignCenterOutlined,
   AppstoreOutlined,
   DollarOutlined,
   HomeOutlined,
-  LogoutOutlined,
-  ProfileOutlined,
+  LogoutOutlined, 
   SettingOutlined,
   ShopOutlined,
   ShoppingCartOutlined, 
@@ -25,7 +23,7 @@ import Logo from "../../assets/v-friends.jpg";
 import ImgUser from "../../assets/admin.jpg";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
-import { GrLanguage } from "react-icons/gr";
+  
 import {
   getPermission,
   getProfile,
@@ -49,18 +47,6 @@ const items_menu = [
     label: "POS",
     children: null,
     icon: <ShopOutlined />
-  },
-  {
-    key: "customer",
-    label: "Customer",
-    children: null,
-    icon: <UsergroupAddOutlined />
-  },
-  {
-    key: "order",
-    label: "Order",
-    children: null,
-    icon: <ShoppingCartOutlined />
   },
   {
     label: "Product",
@@ -88,6 +74,18 @@ const items_menu = [
     label: "Category",
     children: null,
     icon: <AppstoreAddOutlined />
+  },
+  {
+    key: "customer",
+    label: "Customer",
+    children: null,
+    icon: <UsergroupAddOutlined />
+  },
+  {
+    key: "order",
+    label: "Order",
+    children: null,
+    icon: <ShoppingCartOutlined />
   },
   {
     key: "supplier",
@@ -124,17 +122,29 @@ const items_menu = [
   {
     label: "Report",
     children: [
+      // {
+      //   key: "report_sale_summary",
+      //   label: "Sale summary",
+      //   children: null,
+      //   icon: <AlignCenterOutlined />
+      // },
+      // {
+      //   key: "report_expense_summary",
+      //   label: "Expense Summary",
+      //   children: null,
+      //   icon: <AccountBookOutlined />
+      // },
       {
-        key: "report_sale_summary",
-        label: "Sale summary",
+        key: "sale_report",
+        label: "Sale report",
         children: null,
         icon: <AlignCenterOutlined />
       },
       {
-        key: "report_expense_summary",
-        label: "Expense Summary",
+        key: "get_sale_summary",
+        label: "Sale Summary",
         children: null,
-        icon: <AccountBookOutlined />
+        icon: <AlignCenterOutlined />
       }
     ],
     icon: <SnippetsOutlined />
@@ -199,7 +209,7 @@ const MainLayout = () => {
     if (permission?.all) {
       // Admin: show all menu items
       new_item_menu = [...items_menu];
-    } else if (permission?.pos, permission?.order, permission?.customer) {
+    } else if (permission?.pos || permission?.order || permission?.customer) {
       // POS: show POS, Dashboard, Order, Customer and permission any route
       new_item_menu = items_menu.filter(item => ["", "pos", "order", "customer"].includes(item.key));
     } else if (Array.isArray(permission)) {
@@ -232,7 +242,6 @@ const MainLayout = () => {
     setItems(new_item_menu);
   };
 
-
   const getConfig = async () => {
     const res = await request("config", "get");
     if (res) {
@@ -254,15 +263,15 @@ const MainLayout = () => {
   }
 
   const itemsDropdown = [
-    {
-      key: "1",
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="/" style={{ color: "green-yellow", fontSize: 15 }}>
-          Profile
-        </a>
-      ),
-      icon: <ProfileOutlined />
-    },
+    // {
+    //   key: "1",
+    //   label: (
+    //     <a target="_blank" rel="noopener noreferrer" href="/" style={{ color: "green-yellow", fontSize: 15 }}>
+    //       Profile
+    //     </a>
+    //   ),
+    //   icon: <ProfileOutlined />
+    // },
     // {
     //   key: "2",
     //   label: (
@@ -330,7 +339,7 @@ const MainLayout = () => {
           </div>
 
           <div className="admin-header-g2">
-            <div>
+            {/* <div>
               <Dropdown
                 menu={{
                   items: [
@@ -360,7 +369,7 @@ const MainLayout = () => {
                 </div>
               </Dropdown>
             </div>
-            <div>&nbsp;&nbsp;&nbsp;</div>
+            <div>&nbsp;&nbsp;&nbsp;</div> */}
             <IoIosNotifications className="icon-notify" style={{ width: 30, height: 30 }} />
             <MdOutlineMarkEmailUnread className="icon-email" style={{ width: 30, height: 30 }} />
             <div>

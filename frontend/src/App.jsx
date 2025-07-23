@@ -21,6 +21,8 @@ import ProtectedRoute from "./component/protects/ProtectedRoute";
 // import Stock_CupPage from "./page/stock/Stock_CupPage";
 // import Stock_CoffeePage from "./page/stock/Stock_CoffeePage";
 import StockPage from "./page/stock/StockPage";
+import ReportSalePage from "./page/report/ReportSalePage";
+import SaleSummaryPage from "./page/report/SaleSummaryPage";
 
 function App() {
   return (
@@ -30,7 +32,8 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/pos" element={<PosPage />} />
           <Route path="/customer" element={<CustomerPage />} />
-          <Route path="/order" element={<OrderPage />} />
+          <Route path="/order" element={<OrderPage />} /> 
+
           {/* blocked routes */}
           <Route path="/product" element={<ProtectedRoute permissionKey="product" element={<ProductPage />} />} />
           <Route path="/category" element={<ProtectedRoute permissionKey="category" element={<CategoryPage />} />} />
@@ -54,7 +57,14 @@ function App() {
             path="/report_expense_summary"
             element={<ProtectedRoute permissionKey="report_expense_summary" element={<ReportExpenseSummaryPage />} />}
           />
-
+          <Route
+            path="/sale_report"
+            element={<ProtectedRoute permissionKey="sale_report" element={<ReportSalePage />} />}
+          />
+          <Route
+            path="/get_sale_summary"
+            element={<ProtectedRoute permissionKey="sale_month_report" element={<SaleSummaryPage />} />}
+          />
           <Route path="*" element={<h1>404-Route Not Found!</h1>} />
         </Route>
 
@@ -68,4 +78,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

@@ -31,30 +31,35 @@ function OrderPage() {
     const [loading, setLoading] = useState(false);
     const [state, setState] = useState({
         visibleModal: false,
-        txtSearch: "",
+        // txtSearch: "",
     });
     //const user = JSON.parse(localStorage.getItem("user")); //check it for get user 
     const [filter, setFiler] = useState({
-        from_date: dayjs(), // current
-        to_date: dayjs(), // current
+        from_date: dayjs().subtract(5, "d"), // current
+        to_date: dayjs().add(1, "d"), // current
     });
 
     useEffect(() => {
         getList();
     }, []);
 
-    const getList = async () => {
-        var param = {
-            txtSearch: state.txtSearch,
-            from_date: formatDateServer(filter.from_date), // 2024-11-20
-            to_date: formatDateServer(filter.to_date), // 2024-11-22
-        };
-        setLoading(true);
-        const res = await request("order", "get", param);
-        setLoading(false);
-        if (res) {
-            setList(res.list);
-            setSummary(res.summary);
+    const getList = async (res) => {
+        try {
+            var param = {
+                // txtSearch: state.txtSearch,
+                from_date: formatDateServer(filter.from_date), // 2024-11-20
+                to_date: formatDateServer(filter.to_date), // 2024-11-22
+            };
+            setLoading(true);
+            const res = await request("order", "get", param);
+            setLoading(false);
+            if (res) {
+                setList(res.list);
+                setSummary(res.summary);
+            }
+        }
+        catch(err){
+            res.send("data not get",err)
         }
     };
     const getOrderDetail = async (data) => {
@@ -151,35 +156,37 @@ function OrderPage() {
             <div className="pageHeader">
                 <Space>
                     <div>
-                        <div style={{ fontWeight: "bold" }}>Order</div>
-                        <div>
-                            Total : {summary?.total_order || 0} Order |{" "}
-                            {summary?.total_amount || 0}$
+                        <div style={{ fontWeight: "bold",color: "#124636ff", fontSize: "20px",paddingBottom: "10px" }}>Orders</div>
+                        <div style={{ fontSize: "16px" ,fontWeight: "bold"}}>
+                            Order &nbsp;: {summary?.total_order || 0}&nbsp; Order <br/> Total&nbsp;&nbsp;&nbsp;:{" "}&nbsp;
+                            ${summary?.total_amount || 0}
                         </div>
                     </div>
-                    <Input.Search
+                    {/* <Input.Search
                         onChange={(value) =>
                             setState((p) => ({ ...p, txtSearch: value.target.value }))
                         }
                         allowClear
                         onSearch={getList}
                         placeholder="Search"
-                    />
-                    <DatePicker.RangePicker
-                        defaultValue={[
-                            dayjs(filter.from_date, "DD/MM/YYYY"),
-                            dayjs(filter.to_date, "DD/MM/YYYY"),
-                        ]}
+                    /> */}
+                    <DatePicker.RangePicker style={{ margin : "40px 0px 0px 20px" ,width: "400px"}} 
+                        value={filter.from_date && filter.to_date ? [dayjs(filter.from_date, "DD/MM/YYYY"), dayjs(filter.to_date, "DD/MM/YYYY")] : []}
+                        allowClear={true}
                         format={"DD/MM/YYYY"}
                         onChange={(value) => {
                             setFiler((p) => ({
                                 ...p,
-                                from_date: value[0],
-                                to_date: value[1],
+                                from_date: value && value[0] ? value[0] : null,
+                                to_date: value && value[1] ? value[1] : null
+                                // from_date: value[0],
+                                // to_date: value[1],
                             }));
                         }}
+                        getList={getList}
                     />
-                    <Button type="primary" onClick={getList}>
+                    <Button style={{ margin: "40px 0px 0px 20px" }}
+                        type="primary" onClick={getList}>
                         <FaSearch />Filter
                     </Button>
                 </Space>
@@ -323,20 +330,21 @@ function OrderPage() {
                         key: "total_amount",
                         title: "Total",
                         dataIndex: "total_amount",
+                        render: (value) => ' $' + parseFloat(value).toFixed(2)
                     },
                     {
                         key: "paid_amount",
                         title: "Paid",
                         dataIndex: "paid_amount",
                         render: (value) => (
-                            <div style={{ fontWeight: "bold", color: "green" }}>{value}</div>
+                            <div style={{ fontWeight: "bold", color: "green" }}>${value}</div>
                         ),
                     },
                     {
                         key: "Due",
                         title: "Change",
                         render: (value, data) => (
-                            <Tag color="red">
+                            <Tag color="red">$
                                 {(Number(data.total_amount) - Number(data.paid_amount)).toFixed(
                                     2
                                 )}
@@ -362,7 +370,8 @@ function OrderPage() {
                         key: "create_at",
                         title: "Order Date",
                         dataIndex: "create_at",
-                        render: (value) => formatDateClient(value, "DD/MM/YYYY h:mm A"),
+                        //render: (value) => formatDateClient(value, "DD/MM/YYYY h:mm A"),
+                        render: (date) => new Date(date).toLocaleDateString("en-GB", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
                     },
                     {
                         key: "Action",
@@ -387,6 +396,7 @@ function OrderPage() {
                         ),
                     },
                 ]}
+                pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '50', '100'] }}
             />
         </MainPage>
     );

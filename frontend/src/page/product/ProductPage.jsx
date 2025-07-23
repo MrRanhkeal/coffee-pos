@@ -37,6 +37,17 @@ function ProductPage() {
   const { config } = configStore();
   const [formRef] = Form.useForm();
   const [state, setState] = useState({
+    id: null,
+    name: "",
+    category_id: "",
+    brand: "",
+    description: "",
+    qty: 0,
+    price: 0,
+    discount: 0,
+    status: 1,
+    isReadOnly: false,
+    image: "",
     list: [],
     total: 0,
     loading: false,
@@ -118,7 +129,7 @@ function ProductPage() {
     // id	category_id	barcode	name	brand	description	qty	price	discount	status	image
     params.append("name", items.name);
     params.append("category_id", items.category_id);
-    params.append("barcode", items.barcode); //
+    // params.append("barcode", items.barcode); //
     params.append("brand", items.brand);
     params.append("description", items.description);
     // params.append("qty", items.qty);
@@ -170,19 +181,30 @@ function ProductPage() {
       onCloseModal();
       getList();
     } else {
-      res.error?.barcode && message.error(res.error?.barcode);
+      res.error("error");
+      // res.error?.barcode && message.error(res.error?.barcode);
     }
   };
   const onBtnNew = async () => {
-    const res = await request("new_barcode", "post");
-    if (res && !res.error) {
-      formRef.setFieldValue("barcode", res.barcode);
-      setState((p) => ({
-        ...p,
-        visibleModal: true,
-      }));
-    }
+    setState((p) => ({
+      ...p,
+      visibleModal: true,
+      isReadOnly: false
+    }));
+    getList();
+    formRef.resetFields();
+    setImageDefault([]); 
   };
+  // const onBtnNew = async () => {
+  //   const res = await request("new_barcode", "post");
+  //   if (res && !res.error) {
+  //     formRef.setFieldValue("barcode", res.barcode);
+  //     setState((p) => ({
+  //       ...p,
+  //       visibleModal: true,
+  //     }));
+  //   }
+  // };
 
   //please check this
   const handlePreview = async (file) => {
@@ -263,7 +285,7 @@ function ProductPage() {
     id: item.id,
     name: item.name,
     category_id: item.category_id,
-    barcode: item.barcode,
+    // barcode: item.barcode,
     brand: item.brand,
     description: item.description,
     price: item.price,
@@ -398,17 +420,18 @@ function ProductPage() {
                   }))}
                 />
               </Form.Item>
-              <Form.Item name={"barcode"} label="Barcode">
+              {/* barcode */}
+              {/* <Form.Item name={"barcode"} label="Barcode">
                 <Input
                   disabled
                   placeholder="Barcode"
                   style={{ width: "100%" }}
                 />
-              </Form.Item>
+              </Form.Item> */}
               {/* <Form.Item name={"qty"} label="Quantity">
                 <InputNumber placeholder="Quantity" style={{ width: "100%" }} />
               </Form.Item> */}
-              <Form.Item name={"discount"} label="Discount">
+              <Form.Item name={"discount"} label="Discount" style={{width: "100%"}}>
                 <InputNumber placeholder="Discount" style={{ width: "100%" }} />
               </Form.Item>
             </Col>
@@ -429,19 +452,7 @@ function ProductPage() {
                   onChange={(id) => {
                     setFilter((pre) => ({ ...pre, category_id: id }));
                   }}
-                  />
-                  {/* <Select
-                  placeholder="Select category"
-                  // options={config.category}
-                  // onChange={(id) => {
-                  //   setFilter((pre) => ({ ...pre, category_id: id }));
-                  // }}
-                
-                options={config.category?.map((item) => ({
-                  label: item.name,
-                  value: item.id,
-                }))}
-                /> */}
+                />
               </Form.Item>
 
               <Form.Item name={"price"} label="Price">
@@ -462,11 +473,11 @@ function ProductPage() {
                   ]}
                 />
               </Form.Item>
-              <Form.Item name={"description"} label="description">
-                <Input.TextArea placeholder="description" />
-              </Form.Item>
             </Col>
           </Row>
+          <Form.Item name={"description"} label="Description" style={{ width: "100%" }}>
+            <Input.TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 6 }} />
+          </Form.Item>
 
           <Form.Item name={"image_default"} label="Image" className="product_image">
             <Upload
@@ -572,11 +583,11 @@ function ProductPage() {
               </div>
             ),
           },
-          {
-            key: "Barcode",
-            title: "barcode",
-            dataIndex: "barcode",
-          },
+          // {
+          //   key: "Barcode",
+          //   title: "barcode",
+          //   dataIndex: "barcode",
+          // },
           {
             key: "Description",
             title: "description",

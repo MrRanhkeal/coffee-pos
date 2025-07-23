@@ -7,10 +7,10 @@ function RevenueChart() {
     const [revenueData, setRevenueData] = useState([]);
 
     useEffect(() => {
-        fetchRevenueData();
+        getRevenueData();
     }, []);
 
-    const fetchRevenueData = async () => {
+    const getRevenueData = async () => {
         try {
             // Get data for the last 7 days
             const endDate = dayjs();
@@ -52,7 +52,7 @@ function RevenueChart() {
                 setRevenueData(chartData);
             }
         } catch (error) {
-            console.error('Error fetching revenue data:', error);
+            console.error('Error get revenue data:', error);
         }
     };
 

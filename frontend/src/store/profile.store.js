@@ -19,7 +19,7 @@ export const getProfile = () => {
     }
     return null;
   } catch (err) {
-    //console.log("not found profile", err);
+    console.log("not found profile", err);
     return null;
   }
 };
@@ -32,8 +32,8 @@ export const getPermission = () => {
   try {
     //allow permission on any profile
     const profile = getProfile();
-    if (profile && profile.role_name) {
-      if (profile.role_name === 'Admin') {
+    if (profile && (profile.role_name || profile.permission)) {
+      if (profile.role_name === 'Admin' || profile.permission === 'all') {
         return { all: true };
       } 
       else {
@@ -47,7 +47,7 @@ export const getPermission = () => {
     }
     return null;
   } catch (err) {
-    //console.log("not found permission", err);
+    console.log("not found permission", err);
     return null;
   }
 };
