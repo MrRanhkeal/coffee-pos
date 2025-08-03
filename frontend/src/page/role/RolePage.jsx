@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
 import { Button, Form, Input, message, Modal, Space, Table, Tag, Select } from "antd";
 import { DeleteOutlined, EditOutlined, FileAddFilled } from "@ant-design/icons";
-import {  } from "react-icons/md";
+import { } from "react-icons/md";
 
 function RolePage() {
     // Define available routes for permission selection
-    const availableRoutes = [
-        { value: 'order', label: 'Order' },
-        { value: 'product', label: 'Product' },
-        { value: 'report', label: 'Report' },
-        // Add more routes as needed
-    ];
+    // const availableRoutes = [
+    //     { value: 'order', label: 'Order' },
+    //     { value: 'product', label: 'Product' },
+    //     { value: 'report', label: 'Report' },
+    //     // Add more routes as needed
+    // ];
     const [state, setState] = useState({
         list: [],
         loading: true,
@@ -43,23 +43,23 @@ function RolePage() {
 
     // Handle edit button click
     const handleEdit = (record) => {
-let permission = record.permission;
-try {
-    if (typeof permission === 'string') {
-        permission = JSON.parse(permission);
-    }
-    if (!Array.isArray(permission)) {
-        permission = [];
-    }
-} catch {
-    permission = [];
-}
+        // let permission = record.permission;
+        // try {
+        //     if (typeof permission === 'string') {
+        //         permission = JSON.parse(permission);
+        //     }
+        //     if (!Array.isArray(permission)) {
+        //         permission = [];
+        //     }
+        // } catch {
+        //     permission = [];
+        // }
 
-form.setFieldsValue({
-    id: record.id,
-    name: record.name,
-    permission: permission
-});
+        form.setFieldsValue({
+            id: record.id,
+            name: record.name,
+           // permission: permission
+        });
         setState(pre => ({ ...pre, visible: true }));
     };
 
@@ -130,30 +130,35 @@ form.setFieldsValue({
         {
             title: "Name",
             dataIndex: "name",
-            key: "name"
-        },
-        {
-            title: "Permission",
-            dataIndex: "permission",
-            key: "permission",
-            render: (permission) => {
-                if (!permission) return '-';
-                try {
-                    const permArray = typeof permission === 'string'
-                        ? JSON.parse(permission)
-                        : permission;
-
-                    if (Array.isArray(permArray) && permArray.length > 0) {
-                        return permArray.map((perm, idx) => (
-                            <Tag color="blue" key={`${perm}-${idx}`}>{perm}</Tag>
-                        ));
-                    }
-                } catch {
-                    console.error('Invalid permission format:', permission);
-                }
-                return '-';
+            key: "name",
+            style: {
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis"
             }
         },
+        // {
+        //     title: "Permission",
+        //     dataIndex: "permission",
+        //     key: "permission",
+        //     render: (permission) => {
+        //         if (!permission) return '-';
+        //         try {
+        //             const permArray = typeof permission === 'string'
+        //                 ? JSON.parse(permission)
+        //                 : permission;
+
+        //             if (Array.isArray(permArray) && permArray.length > 0) {
+        //                 return permArray.map((perm, idx) => (
+        //                     <Tag color="blue" key={`${perm}-${idx}`}>{perm}</Tag>
+        //                 ));
+        //             }
+        //         } catch {
+        //             console.error('Invalid permission format:', permission);
+        //         }
+        //         return '-';
+        //     }
+        // },
         {
             title: "Action",
             key: "action",
@@ -173,9 +178,9 @@ form.setFieldsValue({
 
     return (
         <div className="page-content" >
-            <div className="page-header" style={{display:"flex"}}>
+            <div className="page-header" style={{ display: "flex" }}>
                 <h3>Role Management</h3>
-                <Button type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}
+                <Button type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}
                 // icon={<FileAddTwoTone />}
                 // style={{
                 //     marginLeft: "auto",
@@ -183,7 +188,7 @@ form.setFieldsValue({
                 //     color: "green",
                 // }}
                 >
-                    <FileAddFilled/>
+                    <FileAddFilled />
                     New
                 </Button>
             </div>
@@ -206,7 +211,7 @@ form.setFieldsValue({
                 <Form
                     form={form}
                     layout="vertical"
-                    onFinish={onFinish}
+                    onFinish={onFinish} 
                 >
                     <Form.Item name="id" hidden>
                         <Input />
@@ -220,7 +225,7 @@ form.setFieldsValue({
                         <Input />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                         name="permission"
                         label="Permission"
                         rules={[{ required: true, message: "Please select at least one permission" }]}
@@ -231,7 +236,7 @@ form.setFieldsValue({
                             options={availableRoutes}
                             placeholder="Select permissions"
                         />
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item style={{ textAlign: "right" }}>
                         <Button type="primary" htmlType="submit" >

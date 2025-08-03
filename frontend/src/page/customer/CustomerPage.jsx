@@ -5,7 +5,9 @@ import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 // import PropTypes from "prop-types";
+import { Flex } from 'antd';
 import { IoMdEye } from "react-icons/io";
+import { FaSearch } from "react-icons/fa";
 function CustomerPage() {
   const [form] = Form.useForm();
   const [list, setList] = useState([]);
@@ -133,22 +135,27 @@ function CustomerPage() {
     <MainPage loading={loading}>
       <div className="pageHeader">
         <Space>
+          {/* <Flex vertical gap={12}>
+            <Input placeholder="Outlined" />
+          </Flex> */}
           <div>Customer List </div>
-          <Input.Search
-            onChange={(value) =>
-              setState((p) => ({ ...p, txtSearch: value.target.value }))
-            }
-            allowClear
-            onSearch={getList}
-            placeholder="Search"
-          />
+          <Flex>
+            <Input
+              onChange={(value) =>
+                setState((p) => ({ ...p, txtSearch: value.target.value }))
+              }
+              allowClear
+              onSearch={getList}
+              placeholder="Search" 
+            />
+          </Flex>
           <Button type="primary" onClick={getList}>
-            Search
+            <FaSearch /> Search
           </Button>
         </Space>
-        <Button type="primary" style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}} onClick={onClickAddBtn} >
-          <FileAddFilled/> New
-        </Button> 
+        <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }} onClick={onClickAddBtn} >
+          <FileAddFilled /> New
+        </Button>
       </div>
       <Modal
         open={state.visibleModal}
@@ -157,24 +164,24 @@ function CustomerPage() {
         onCancel={onCloseModal}
       >
         <Form layout="vertical" onFinish={onFinish} form={form} initialValues={{
-            status: 1
-          }}>
-          <Form.Item 
-            name="name" 
+          status: 1
+        }}>
+          <Form.Item
+            name="name"
             label="Customer name"
             rules={[{ required: true, message: 'Please input customer name!' }]}
           >
             <Input placeholder="Input Customer name" disabled={state.isReadOnly} />
           </Form.Item>
-          <Form.Item 
-            name="phone" 
+          <Form.Item
+            name="phone"
             label="Customer phone"
             rules={[{ required: true, message: 'Please input customer phone!' }]}
           >
             <Input placeholder="Input Customer phone" disabled={state.isReadOnly} />
           </Form.Item>
-          <Form.Item 
-            name="email" 
+          <Form.Item
+            name="email"
             label="Customer email"
             rules={[{ required: true, message: 'Please input customer email!' }, { type: 'email', message: 'Please enter a valid email!' }]}
           >
@@ -186,8 +193,8 @@ function CustomerPage() {
           <Form.Item name={"description"} label="description">
             <Input.TextArea placeholder="description" disabled={state.isReadOnly} />
           </Form.Item>
-          <Form.Item 
-            name="status" 
+          <Form.Item
+            name="status"
             label="Status"
             rules={[{ required: true, message: 'Please select a status!' }]}
           >
@@ -207,8 +214,8 @@ function CustomerPage() {
             />
           </Form.Item>
           <Form.Item style={{ textAlign: "right" }}>
-              <Space>
-              <Button type="default"  onClick={onCloseModal} >Close</Button>
+            <Space>
+              <Button type="default" onClick={onCloseModal} >Close</Button>
               {!state.isReadOnly && (
                 <Button type="primary" htmlType="submit">
                   {form.getFieldValue("id") ? "Update" : "Save"}
@@ -216,7 +223,7 @@ function CustomerPage() {
               )}
             </Space>
           </Form.Item>
-          
+
         </Form>
       </Modal>
       <Table
@@ -229,27 +236,27 @@ function CustomerPage() {
           },
           {
             key: "name",
-            title: "name",
+            title: "Name",
             dataIndex: "name",
           },
           {
             key: "phone",
-            title: "phone",
+            title: "Phone",
             dataIndex: "phone",
           },
           {
             key: "email",
-            title: "email",
+            title: "Email",
             dataIndex: "email",
           },
           {
             key: "address",
-            title: "address",
+            title: "Address",
             dataIndex: "address",
           },
           {
             key: "status",
-            title: "status",
+            title: "Status",
             dataIndex: "status",
             render: (status) =>
               status == 1 ? (
@@ -280,7 +287,7 @@ function CustomerPage() {
                 <EyeOutlined
                   style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
                   onClick={() => clickReadOnly(data)}
-                  icon={<IoMdEye/>}
+                  icon={<IoMdEye />}
                 />
               </Space>
             ),

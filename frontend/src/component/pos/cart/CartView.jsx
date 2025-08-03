@@ -1,7 +1,8 @@
-import { Button, Input, InputNumber, Select, Empty } from 'antd';
+import React from 'react';
+import { Button, Input, InputNumber, Select, Empty, Space } from 'antd';
 import PropTypes from 'prop-types';
 // import styled, { keyframes } from 'styled-components'; 
-import BillItem from '../BillItem'; 
+import BillItem from '../BillItem';
 import MyQRCode from '../../../assets/myqr.jpg';
 
 // Define the keyframes
@@ -40,13 +41,26 @@ function CartView({
     const itemHeight = 56;
     const maxHeight = Math.max(baseHeight, 260 + state.cart_list.length * itemHeight);
 
+    // Auto-insert total into Amount Paid when payment method is set to QR or Cash
+    React.useEffect(() => {
+        if ((objSummary.payment_method === 'QR' || objSummary.payment_method === 'Cash') && objSummary.total_paid !== objSummary.total) {
+            setObjSummary(prev => ({
+                ...prev,
+                total_paid: prev.total,
+            }));
+        } else if (objSummary.payment_method !== 'QR' && objSummary.payment_method !== 'Cash') {
+            setObjSummary(prev => ({ ...prev, total_paid: 0 }));
+        }
+        // Only set if not already set to avoid infinite loop
+    }, [objSummary.payment_method, objSummary.total]);
+
     return (
-        <div style={{width: '100%',height: '100%',margin: '0', padding: '0', backgroundColor: '#fff', borderRadius: '8px'}}>
+        <div style={{ width: '100%', height: '100%', margin: '0', padding: '0', backgroundColor: '#fff', borderRadius: '8px' }}>
             <RedPulseKeyframes />
             <div style={{
-                background: '#fff', 
+                background: '#fff',
                 borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)', 
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                 padding: '2px',
                 maxWidth: '100%',
                 width: '100%',
@@ -143,7 +157,7 @@ function CartView({
                             placeholder="Payment Method"
                             onChange={(value) => setObjSummary(prev => ({ ...prev, payment_method: value }))}
                             options={[
-                                { value: 'cash', label: 'Cash' },
+                                { value: 'Cash', label: 'Cash' },
                                 { value: 'QR', label: 'QR Code' },
                             ]}
                         />
@@ -159,9 +173,9 @@ function CartView({
                                 display: 'inline-block'
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <img src={MyQRCode} alt="QR Code" style={{ width: '25%', height: 'auto'}} />
+                                    <img src={MyQRCode} alt="QR Code" style={{ width: '25%', height: 'auto' }} />
                                     <div style={{ textAlign: 'left' }}>
-                                        <div style={{ ...redPulse, fontSize: '16px', fontWeight: 'bold',margin: '10% 10% 0 10%' }}>
+                                        <div style={{ ...redPulse, fontSize: '16px', fontWeight: 'bold', margin: '10% 10% 0 10%' }}>
                                             Pay to this QR Code
                                             <br />
                                             Amount: ${objSummary.total.toFixed(2)}
@@ -188,18 +202,30 @@ function CartView({
                             <label style={{ fontWeight: 'bold' }}>Amount Paid</label>
                             {objSummary.total_paid < objSummary.total && (
                                 <span style={{ color: '#ff4d4f', fontSize: '12px' }}>
-                                    Paid amount (${(objSummary.total - objSummary.total_paid).toFixed(2)} more needed)
+                                    Paid amount (${objSummary.total - objSummary.total_paid.toFixed(2)} more needed)
                                 </span>
                             )}
                         </div>
                         <InputNumber
                             style={{ width: '100%' }}
                             value={objSummary.total_paid}
-                            onChange={(value) => setObjSummary(prev => ({ ...prev, total_paid: value }))}
                             formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                             parser={value => value.replace(/\$\s?|(,*)/g, '')}
                             min={0}
                             step={0.5}
+                            disabled={objSummary.payment_method === 'QR'}
+                            onChange={val => setObjSummary(prev => ({ ...prev, total_paid: Number(val).toFixed(2) }))}
+                        />
+                        <div><br /></div>
+                        <Input
+                            style={{ width: '100%' }}
+                            value={(() => {
+                                if (objSummary.currency === 'KHR') {
+                                    return `៛ ${(Number(objSummary.total_paid) * 4100).toLocaleString()}`;
+                                } else {
+                                    return `$ ${(Number(objSummary.total_paid) / 4100).toFixed(2)}`;
+                                }
+                            })()} 
                         />
                     </div>
                     <Button

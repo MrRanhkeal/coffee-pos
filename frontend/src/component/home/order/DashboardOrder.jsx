@@ -20,7 +20,7 @@ function DashboardOrder() {
                     setOrders(0); // Default to 0 if unexpected format
                 }
             } catch (error) {
-                console.error("Error fetching orders:", error);
+                console.error("Error getting orders:", error);
                 setOrders(0); // Set to 0 on error
             }
         };

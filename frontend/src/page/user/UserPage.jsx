@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { request } from "../../util/helper";
-import {Button,Form,Input,message,Modal,Select,Space,Table,Tag, } from "antd";
+import { Button, Form, Input, message, Modal, Select, Space, Table, Tag, } from "antd";
 // import { resetWarned } from "antd/es/_util/warning";
 // import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
-import {DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
 
 
@@ -15,7 +15,7 @@ function UserPage() {
     const [roles, setRoles] = useState([]);
     const [state, setState] = useState({
         list: [],
-        role_id: null, 
+        role_id: null,
         loading: true,
         isEdit: false,
         editingUser: null,
@@ -37,12 +37,12 @@ function UserPage() {
                 }));
             }
         } catch (error) {
-            console.error("Failed to fetch list:", error);
-            message.error("Failed to fetch user list");
+            // console.error("Failed to get list:", error);
+            message.error("Failed to get user list", error);
         } finally {
             setState((prev) => ({ ...prev, loading: false }));
         }
-    }; 
+    };
 
     const gethRoles = async () => {
         try {
@@ -51,16 +51,16 @@ function UserPage() {
                 setRoles(res.data);
             }
         } catch (error) {
-            console.error("Failed to fetch roles:", error);
-            message.error("Failed to fetch roles");
+            // console.error("Failed to get roles:", error);
+            message.error("Failed to get roles", error);
         }
     };
-
     const clickBtnEdit = (record) => {
         form.setFieldsValue({
             id: record.id,
             name: record.name,
-            username: record.username,
+            username: record.username, 
+            // role_id: record.role_id,
             role_id: record.role_id,
             is_active: record.is_active
         });
@@ -106,9 +106,9 @@ function UserPage() {
             })
         }
         catch (error) {
-            console.error("Delete error:", error);
-            message.error("Failed to delete user");
-        } 
+            // console.error("Delete error:", error);
+            message.error("Failed to delete user",error);
+        }
     };
 
     const handleCloseModal = () => {
@@ -128,7 +128,7 @@ function UserPage() {
             ...pre,
             visible: true,
         }));
-    }; 
+    };
 
     const onFinish = async (item) => {
         if (!state.isEdit && item.password !== item.confirm_password) {
@@ -186,13 +186,13 @@ function UserPage() {
                     <div>User</div>
                     <Input.Search style={{ marginLeft: 10 }} placeholder="Search" />
                 </div>
-                <Button type="primary" style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}} onClick={handleOpenModal} >
+                <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }} onClick={handleOpenModal} >
                     <FileAddFilled />New
                 </Button>
             </div>
             <Modal
                 open={state.visible}
-                title={state.isReadOnly ? "View User" : (state.isEdit ? "Edit User" : "New User")}  
+                title={state.isReadOnly ? "View User" : (state.isEdit ? "Edit User" : "New User")}
                 onCancel={handleCloseModal}
                 footer={null}
             >
@@ -221,7 +221,16 @@ function UserPage() {
                     >
                         <Input placeholder="Input email" disabled={state.isReadOnly} />
                     </Form.Item>
+
                     <Form.Item
+                        name="password"
+                        label="Password"
+                        rules={[{ required: true, message: 'Please input the password!' }]}
+                    >
+                        <Input.Password placeholder="Input password" disabled={state.isReadOnly} visibilityToggle />
+                    </Form.Item>
+
+                    {/* <Form.Item
                         name={"password"}
                         label="password"
                         rules={[
@@ -232,7 +241,7 @@ function UserPage() {
                         ]}
                     >
                         <Input.Password placeholder="Input password" disabled={state.isReadOnly} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item
                         name={"confirm_password"}
                         label="Confirm Password"
@@ -305,7 +314,7 @@ function UserPage() {
             <Table
                 // dataSource={state.list}
                 dataSource={list}
-                loading={state.loading }
+                loading={state.loading}
                 columns={[
                     {
                         key: "no",
@@ -349,22 +358,22 @@ function UserPage() {
                         align: "center",
                         render: (value, data) => (
                             <Space>
-                            <EditOutlined 
-                                    icon={<MdEdit/>}
-                                    style={{ color: "green" , fontSize: 20}}
-                                    onClick={() => clickBtnEdit(data)} 
+                                <EditOutlined
+                                    icon={<MdEdit />}
+                                    style={{ color: "green", fontSize: 20 }}
+                                    onClick={() => clickBtnEdit(data)}
                                     type="primary">
                                 </EditOutlined>
                                 <DeleteOutlined
                                     onClick={() => clickBtnDelete(data)}
                                     danger
-                                    style={{  color: "red", fontSize: 20 }}
+                                    style={{ color: "red", fontSize: 20 }}
                                     type="primary"
-                                    icon={<MdDelete/>}
+                                    icon={<MdDelete />}
                                 >
                                 </DeleteOutlined>
                                 <EyeOutlined
-                                    icon={<IoMdEye/>}
+                                    icon={<IoMdEye />}
                                     style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
                                     onClick={() => clickReadOnly(data)}
                                 >

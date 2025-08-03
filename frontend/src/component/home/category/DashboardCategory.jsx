@@ -8,7 +8,7 @@ import Statistic from 'antd/es/statistic/Statistic';
 function DashboardCategory() {
     const [category, setCategory] = useState(0);
 
-// Fetch category count
+// get category count
 useEffect(() => {
     const getCategories = async () => {
         try {
@@ -20,7 +20,7 @@ useEffect(() => {
                 setCategory(0);
             }
         } catch (error) {
-            console.error("Error fetching categories:", error);
+            console.error("Error getting categories:", error);
             setCategory(0);
         }
     };

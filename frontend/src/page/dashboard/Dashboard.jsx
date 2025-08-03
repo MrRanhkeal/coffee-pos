@@ -8,8 +8,7 @@ import DashboardOrder from '../../component/home/order/DashboardOrder';
 import DashboardReven from '../../component/home/revenue/DashboardReven';
 import RevenueChart from '../../component/home/revenue/RevenueChart';
 import RecentOrders from '../../component/home/recentorder/RecentOrders';
-import Calendar from '../../component/home/calendar/Calendar';
-
+import Calendar from '../../component/home/calendar/Calendar'; 
 function Dashboard() {
     return (
         <Space size={20} direction='vertical'>
@@ -19,7 +18,7 @@ function Dashboard() {
                 <DashboardCategory/>
                 <DashboardCustomer/>
                 <DashboardOrder/>
-                <DashboardReven/>
+                <DashboardReven/> 
             </Space>
             <Space style={{width: "100%",height: "100%",display:"content",overflow:"hidden"}}> 
                 <RecentOrders /> 

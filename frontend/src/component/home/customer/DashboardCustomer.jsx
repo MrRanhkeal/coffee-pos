@@ -21,7 +21,7 @@ function DashboardCustomer() {
                     setCustomers(0); // Default to 0 if unexpected format
                 }
             } catch (error) {
-                console.error("Error fetching customers:", error);
+                console.error("Error getting customers:", error);
                 setCustomers(0); // Set to 0 on error
             }
         };

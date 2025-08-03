@@ -49,7 +49,7 @@ function LoginPage() {
             rules={[{ required: true, message: "Please input your username" }]}
           >
             <Input 
-              prefix={<UserOutlined style={{ color: '#240730' }} />} 
+              prefix={<UserOutlined style={{ color: '#c0b3b8ff' }} />} 
               placeholder="ranh@gmail.com"
               size="large" 
             />
@@ -60,7 +60,7 @@ function LoginPage() {
             rules={[{ required: true, message: "Please input your password" }]}
           >
             <Input.Password 
-              prefix={<LockOutlined style={{ color: '#3d1d0f' }} />} 
+              prefix={<LockOutlined style={{ color: '#c0b3b8ff' }} />} 
               placeholder="Password" 
               size="large" 
               type="password" 

@@ -16,7 +16,7 @@ import {
   Upload,
 } from "antd";
 import { request } from "../../util/helper";
-import {MdDelete, MdEdit, MdImage } from "react-icons/md";
+import { MdDelete, MdEdit, MdImage } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
@@ -105,25 +105,6 @@ function ProductPage() {
     formRef.resetFields();
   };
   const onFinish = async (items) => {
-  //   // aaaa
-  //   // console.log("imageProductOptional", imageOptional_Old);
-      //console.log(items);
-  //   // var imageOptional = [];
-  //   if (imageOptional_Old.length > 0 && items.image_optional) {
-  //     imageOptional_Old.map((item1) => {
-  //       var isFound = false;
-  //       if (items.image_optional) {
-  //         items.image_optional.fileList?.map((item2) => {
-  //           if (item1.name === item2.name) {
-  //             isFound = true;
-  //           }
-  //         });
-  //       }
-  //       if (isFound == false) {
-  //         imageOptional.push(item1.name);
-  //       }
-  //     });
-  //   }
 
     var params = new FormData();
     // id	category_id	barcode	name	brand	description	qty	price	discount	status	image
@@ -138,52 +119,58 @@ function ProductPage() {
     params.append("status", items.status);
 
     // when update this two more key
-    params.append("image", formRef.getFieldValue("image")); // just name image
-
-    // if (imageOptional && imageOptional.length > 0) {
-    //   // image for remove
-    //   imageOptional.map((item) => {
-    //     params.append("image_optional", item); // just name image
-    //   });
-    // }
+    params.append("image", formRef.getFieldValue("image")); // just name image 
 
     params.append("id", formRef.getFieldValue("id"));
 
-    if (items.image_default) {
-      if (items.image_default.file.status === "removed") {
+    if (items.image_default && items.image_default.file) {
+      const file = items.image_default.file;
+
+      if (file.status === "removed") {
         params.append("image_remove", "1");
-      } else {
-        params.append(
-          "upload_image",
-          items.image_default.file.originFileObj,
-          items.image_default.file.name
-        );
+      } else if (file.originFileObj) {
+        // Force uploaded file to have .png extension (for backend handling)
+        const pngFileName = file.name.replace(/\.[^/.]+$/, "") + ".png";
+        params.append("upload_image", file.originFileObj, pngFileName);
       }
     }
 
-    // if (items.image_optional) {
-    //   items.image_optional.fileList?.map((item) => {
-    //     // multiple image
-    //     if (item?.originFileObj) {
-    //       params.append("upload_image_optional", item.originFileObj, item.name);
-    //     }
-    //   });
-    // }
+    const method = formRef.getFieldValue("id") ? "put" : "post";
 
-    var method = "post";
-    if (formRef.getFieldValue("id")) {
-      method = "put";
-    }
     const res = await request("product", method, params);
+
     if (res && !res.error) {
-      // message.success(res.message);
       message.success(`Product ${method === "put" ? "updated" : "created"} successfully`);
       onCloseModal();
       getList();
     } else {
-      res.error("error");
-      // res.error?.barcode && message.error(res.error?.barcode);
+      message.error("Upload failed");
     }
+    // if (items.image_default) {
+    //   if (items.image_default.file.status === "removed") {
+    //     params.append("image_remove", "1");
+    //   } else {
+    //     params.append(
+    //       "upload_image",
+    //       items.image_default.file.originFileObj,
+    //       items.image_default.file.name
+    //     );
+    //   }
+    // }  
+    // var method = "post";
+    // if (formRef.getFieldValue("id")) {
+    //   method = "put";
+    // }
+    // const res = await request("product", method, params);
+    // if (res && !res.error) {
+    //   // message.success(res.message);
+    //   message.success(`Product ${method === "put" ? "updated" : "created"} successfully`);
+    //   onCloseModal();
+    //   getList();
+    // } else {
+    //   res.error("error");
+    //   // res.error?.barcode && message.error(res.error?.barcode);
+    // }
   };
   const onBtnNew = async () => {
     setState((p) => ({
@@ -193,7 +180,7 @@ function ProductPage() {
     }));
     getList();
     formRef.resetFields();
-    setImageDefault([]); 
+    setImageDefault([]);
   };
   // const onBtnNew = async () => {
   //   const res = await request("new_barcode", "post");
@@ -221,7 +208,7 @@ function ProductPage() {
   //   setImageOptional(newFileList);
 
   const onFilter = () => {
-    getList(); 
+    getList();
   };
 
   const onClickEdit = async (item) => {
@@ -240,7 +227,7 @@ function ProductPage() {
       ];
       setImageDefault(imageProduct);
     }
-    
+
     //
     // product_image
     // const res_image = await request("product_image/" + item.id, "get");
@@ -260,40 +247,40 @@ function ProductPage() {
     //   }
     // }
   };
-  const clickReadOnly = (item) => { 
+  const clickReadOnly = (item) => {
     setState((p) => ({
-    ...p,
-    visibleModal: true,
-    isReadOnly: true
-  }))  
+      ...p,
+      visibleModal: true,
+      isReadOnly: true
+    }))
 
-  // Handle image display for view mode
-  if (item.image) {
-    setImageDefault([
-      {
-        uid: '-1',
-        name: item.image,
-        status: 'done',
-        url: `http://localhost/coffee/${item.image}`,
-      }
-    ]);
-  } else {
-    setImageDefault([]);
-  }
+    // Handle image display for view mode
+    if (item.image) {
+      setImageDefault([
+        {
+          uid: '-1',
+          name: item.image,
+          status: 'done',
+          url: `http://localhost/coffee/${item.image}`,
+        }
+      ]);
+    } else {
+      setImageDefault([]);
+    }
 
-  formRef.setFieldsValue({
-    id: item.id,
-    name: item.name,
-    category_id: item.category_id,
-    // barcode: item.barcode,
-    brand: item.brand,
-    description: item.description,
-    price: item.price,
-    discount: item.discount,
-    status: item.status,
-    image: item.image,
-  });
-};
+    formRef.setFieldsValue({
+      id: item.id,
+      name: item.name,
+      category_id: item.category_id,
+      // barcode: item.barcode,
+      brand: item.brand,
+      description: item.description,
+      price: item.price,
+      discount: item.discount,
+      status: item.status,
+      image: item.image,
+    });
+  };
   const onClickDelete = (item) => {
     Modal.confirm({
       title: "Delete Product",
@@ -326,6 +313,8 @@ function ProductPage() {
               setFilter((p) => ({ ...p, txt_search: event.target.value }))
             }
             allowClear
+            onSearch={onFilter}
+            // onSearch={getList}
             placeholder="Search"
           />
           <Select
@@ -351,8 +340,8 @@ function ProductPage() {
             <FaSearch />Filter
           </Button>
         </Space>
-        <Button type="primary" onClick={onBtnNew} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
-          <FileAddFilled/> New
+        <Button type="primary" onClick={onBtnNew} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}>
+          <FileAddFilled /> New
         </Button>
       </div>
       <Modal
@@ -379,7 +368,7 @@ function ProductPage() {
           )
         }
         onCancel={onCloseModal}
-        
+
       >
         <Form
           form={formRef}
@@ -388,116 +377,116 @@ function ProductPage() {
           disabled={state.isReadOnly}
         >
           <div style={{ marginBottom: '20px' }}>
-          <Row gutter={8}>
-            <Col span={12}>
-              <Form.Item
-                name={"name"}
-                label="Product name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please fill in product name",
-                  },
-                ]}
-              >
-                <Input placeholder="Product name" />
-              </Form.Item>
-              <Form.Item
-                name={"brand"}
-                label="Brand"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please fill in product name",
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select brand"
-                  options={config.brand?.map((item) => ({
-                    label: item.label + " (" + item.country + ")",
-                    value: item.value,
-                  }))}
-                />
-              </Form.Item>
-              {/* barcode */}
-              {/* <Form.Item name={"barcode"} label="Barcode">
+            <Row gutter={8}>
+              <Col span={12}>
+                <Form.Item
+                  name={"name"}
+                  label="Product name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please fill in product name",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Product name" />
+                </Form.Item>
+                <Form.Item
+                  name={"brand"}
+                  label="Brand"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please fill in product name",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="Select brand"
+                    options={config.brand?.map((item) => ({
+                      label: item.label + " (" + item.country + ")",
+                      value: item.value,
+                    }))}
+                  />
+                </Form.Item>
+                {/* barcode */}
+                {/* <Form.Item name={"barcode"} label="Barcode">
                 <Input
                   disabled
                   placeholder="Barcode"
                   style={{ width: "100%" }}
                 />
               </Form.Item> */}
-              {/* <Form.Item name={"qty"} label="Quantity">
+                {/* <Form.Item name={"qty"} label="Quantity">
                 <InputNumber placeholder="Quantity" style={{ width: "100%" }} />
               </Form.Item> */}
-              <Form.Item name={"discount"} label="Discount" style={{width: "100%"}}>
-                <InputNumber placeholder="Discount" style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={"category_id"}
-                label="Category"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please fill in product name",
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select category"
-                  options={config.category}
-                  onChange={(id) => {
-                    setFilter((pre) => ({ ...pre, category_id: id }));
-                  }}
-                />
-              </Form.Item>
-
-              <Form.Item name={"price"} label="Price">
-                <InputNumber placeholder="Price" style={{ width: "100%" }} />
-              </Form.Item>
-              <Form.Item name={"status"} label="status">
-                <Select
-                  placeholder="Select status"
-                  options={[
+                <Form.Item name={"discount"} label="Discount" style={{ width: "100%" }}>
+                  <InputNumber placeholder="Discount" style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name={"category_id"}
+                  label="Category"
+                  rules={[
                     {
-                      label: "Active",
-                      value: 1,
-                    },
-                    {
-                      label: "InActive",
-                      value: 0,
+                      required: true,
+                      message: "Please fill in product name",
                     },
                   ]}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item name={"description"} label="Description" style={{ width: "100%" }}>
-            <Input.TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 6 }} />
-          </Form.Item>
+                >
+                  <Select
+                    placeholder="Select category"
+                    options={config.category}
+                    onChange={(id) => {
+                      setFilter((pre) => ({ ...pre, category_id: id }));
+                    }}
+                  />
+                </Form.Item>
 
-          <Form.Item name={"image_default"} label="Image" className="product_image">
-            <Upload
-              customRequest={(options) => {
-                options.onSuccess();
-                // options.onProgress({ percent: 0 });
-                // options.onProgress({ percent: 100 });
-              }}
-              // accept=""
-              maxCount={1}
-              listType="picture-card"
-              fileList={imageDefault}
-              onPreview={handlePreview} //please chech this
-              onChange={handleChangeImageDefault}
-            >
-              <MdImage style={{ fontSize: "30px" }}/>Picture
-            </Upload>
-          </Form.Item>
+                <Form.Item name={"price"} label="Price">
+                  <InputNumber placeholder="Price" style={{ width: "100%" }} />
+                </Form.Item>
+                <Form.Item name={"status"} label="status">
+                  <Select
+                    placeholder="Select status"
+                    options={[
+                      {
+                        label: "Active",
+                        value: 1,
+                      },
+                      {
+                        label: "InActive",
+                        value: 0,
+                      },
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Form.Item name={"description"} label="Description" style={{ width: "100%" }}>
+              <Input.TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 6 }} />
+            </Form.Item>
 
-          {/* <Form.Item name={"image_optional"} label="Image (Optional)">
+            <Form.Item name={"image_default"} label="Image" className="product_image">
+              <Upload
+                customRequest={(options) => {
+                  options.onSuccess();
+                  // options.onProgress({ percent: 0 });
+                  // options.onProgress({ percent: 100 });
+                }}
+                // accept=""
+                maxCount={1}
+                listType="picture-card"
+                fileList={imageDefault}
+                onPreview={handlePreview} //please chech this
+                onChange={handleChangeImageDefault}
+              >
+                <MdImage style={{ fontSize: "30px" }} />Picture
+              </Upload>
+            </Form.Item>
+
+            {/* <Form.Item name={"image_optional"} label="Image (Optional)">
             <Upload
               customRequest={(options) => {
                 options.onSuccess();
@@ -513,26 +502,26 @@ function ProductPage() {
             </Upload>
           </Form.Item> */}
 
-          {previewImage && (
-            <Image  
-              wrapperStyle={{
-                display: "none",
-              }}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-                afterOpenChange: (visible) => !visible && setPreviewImage(""),
-              }}
-              src={previewImage}
-              // style={{ width: 50, height: 50 ,borderRadius:2}}
-              style={{
-                width: 30,
-                height: 30, 
-                borderRadius: 2,
-              }}
-            />
-          )}
-          {/* <Form.Item style={{ textAlign: "right" }}>
+            {previewImage && (
+              <Image
+                wrapperStyle={{
+                  display: "none",
+                }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(""),
+                }}
+                src={previewImage}
+                // style={{ width: 50, height: 50 ,borderRadius:2}}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 2,
+                }}
+              />
+            )}
+            {/* <Form.Item style={{ textAlign: "right" }}>
             <Space>
               <Button onClick={onCloseModal}>{state.isReadOnly ? "Close" : "Cancel"}</Button>
               {!state.isReadOnly && (
@@ -548,16 +537,16 @@ function ProductPage() {
       <Table
         dataSource={state.list}
         loading={state.loading}
-          rowKey="id"
-          // pagination={{
-          //   defaultPageSize: 10,
-          //     showSizeChanger: true,
-          //     showTotal: (total) => `Total ${total} items`,
-          //     onChange: (page) => {
-          //       refPage.current = page;
-          //       getList();
-          //     }
-          // }}
+        rowKey="id"
+        // pagination={{
+        //   defaultPageSize: 10,
+        //     showSizeChanger: true,
+        //     showTotal: (total) => `Total ${total} items`,
+        //     onChange: (page) => {
+        //       refPage.current = page;
+        //       getList();
+        //     }
+        // }}
         pagination={{
           pageSize: 10,
           total: state.total,
@@ -638,12 +627,12 @@ function ProductPage() {
           {
             key: "image",
             title: "Image",
-            dataIndex: "image", 
+            dataIndex: "image",
             render: (value) =>
               value ? (
-                <Image 
+                <Image
                   src={"http://localhost/coffee/" + value}
-                  style={{ width: 50, height: 50 ,borderRadius:3}}
+                  style={{ width: 50, height: 50, borderRadius: 3 }}
                 />
               ) : (
                 <div
@@ -673,7 +662,7 @@ function ProductPage() {
                 <EyeOutlined
                   style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
                   onClick={() => clickReadOnly(data)}
-                  icon={<IoMdEye/>}
+                  icon={<IoMdEye />}
                 />
               </Space>
             ),

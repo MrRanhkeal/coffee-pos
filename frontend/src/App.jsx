@@ -23,6 +23,7 @@ import ProtectedRoute from "./component/protects/ProtectedRoute";
 import StockPage from "./page/stock/StockPage";
 import ReportSalePage from "./page/report/ReportSalePage";
 import SaleSummaryPage from "./page/report/SaleSummaryPage";
+import ProductStock from "./page/stock/ProductStock";
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
           <Route path="/role" element={<ProtectedRoute permissionKey="role" element={<RolePage />} />} />
           <Route path="/expanse" element={<ProtectedRoute permissionKey="expanse" element={<ExpansePage />} />} />
           <Route path="/stock" element={<ProtectedRoute permissionKey="stock" element={<StockPage />} />} />
-
+          <Route path="/product_stock" element={<ProtectedRoute permissionKey="product_stock" element={<ProductStock />} />}/>
           {/* Stock related routes */}
           {/* <Route path="/stock-cup" element={<Stock_CupPage />} />
           <Route path="/stock-coffee" element={<Stock_CoffeePage />} /> */}

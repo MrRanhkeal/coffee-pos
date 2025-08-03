@@ -1,32 +1,37 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Table, Modal, Form, Input, message, Select, Tag, Space, InputNumber } from 'antd';
 import { request } from '../../util/helper';
-import { DeleteOutlined, EditOutlined, FileAddFilled } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from '@ant-design/icons';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import { configStore } from '../../store/configStore';
-
-
+import { configStore } from '../../store/configStore'; 
+import { IoMdEye } from 'react-icons/io';
 
 function Stock_CoffeePage() {
     const [state, setState] = useState({
         loading: false,
         data: [],
+        visibleModal: false,
+        id: null, 
+        product_name: null, 
+        categories: null, qty: null, 
+        cost: null, 
+        supplier_id: null, 
+        status: null 
     });
     const { config } = configStore();
     const [suppliers, setSuppliers] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
-    const [editingId, setEditingId] = useState({ id: null, status: null });
+    const [editingId, setEditingId] = useState({ 
+        
+    });
 
     const [filter, setFilter] = useState({
         product_name: "",
+        categories: "",
         txtSearch: "",
     });
-    // var param = {
-    //     txtSearch: state.txtSearch,
-    //     product_name: filter.product_name,
-    // };
-    // Fetch suppliers list
+    // get suppliers list
     const getSuppliers = useCallback(async () => {
         try {
             const res = await request('supplier', 'get', {});
@@ -34,11 +39,11 @@ function Stock_CoffeePage() {
                 setSuppliers(res.list);
             }
         } catch (error) {
-            console.error('Failed to fetch suppliers:', error);
+            console.error('Failed to get suppliers:', error);
         }
     }, [setState, filter.product_name]);
 
-    // Fetch stock list
+    // get stock list
     const getList = useCallback(async () => {
         try {
             setState((p) => ({
@@ -55,7 +60,7 @@ function Stock_CoffeePage() {
             }
         }
         catch (error) {
-            message.error(`Failed to fetch stock list: ${error.message}`);
+            message.error(`Failed to get stock list: ${error.message}`);
             setState((p) => ({
                 ...p,
                 loading: false
@@ -90,7 +95,9 @@ function Stock_CoffeePage() {
             const payload = {
                 // name: values.name,
                 product_name: values.product_name,
+                categories: values.categories,
                 qty: updatedQty,
+                cost: values.cost,
                 supplier_id: values.supplier_id,
                 description: values.description,
                 status: values.status
@@ -119,26 +126,15 @@ function Stock_CoffeePage() {
                 loading: false
             }));
         }
-    };
-    //check product is exist or not then continue
-    // const openModal = () => {
-    //     form.setFieldsValue({
-    //         name: '',
-    //         qty: 0,
-    //         newQty: 0,
-    //         supplier_id: undefined,
-    //         description: '',
-    //         status: 1
-    //     });
-    //     setEditingId(null);
-    //     setIsModalVisible(true);
-    // };
+    }; 
     const openModal = () => {
         form.setFieldsValue({
             // name: '',
             product_name: '',
+            categories: '',
             qty: 0,
             newQty: 0,
+            cost: 0,
             supplier_id: undefined,
             description: '',
             status: 1
@@ -146,7 +142,7 @@ function Stock_CoffeePage() {
         setEditingId(null);
         setIsModalVisible(true);
     };
-    const handleDelete = async (record) => {
+    const onClickDelete = async (record) => {
         try {
             Modal.confirm({
                 title: 'Delete Stock',
@@ -166,13 +162,34 @@ function Stock_CoffeePage() {
             message.error(`Delete failed: ${error.message}`);
         }
     };
-    //upadte stock current qty + new qty
-    const handleEdit = (record) => {
+    const clickReadOnly = (record) => {
+        setState({
+            ...state,
+            visibleModal: true,
+            isReadOnly: true, 
+            id: record.id
+        }); 
         form.setFieldsValue({
+            id: record.id,
+            product_name: record.product_name,
+            categories: record.categories,
+            qty: record.qty,
+            cost: record.cost,
+            supplier_id: record.supplier_id,
+            description: record.description,
+            status: record.status,
+        });
+    }
+    //upadte stock current qty + new qty
+    const onClickEdit = (record) => {
+        form.setFieldsValue({
+            //...record, 
             // name: record.name,
             product_name: record.product_name,
+            categories: record.categories,
             qty: record.qty,
             newQty: 0,  // Initialize additional quantity to 0
+            cost: record.cost,
             supplier_id: record.supplier_id,
             description: record.description,
             status: record.status
@@ -180,94 +197,37 @@ function Stock_CoffeePage() {
         setEditingId(record.id);
         setIsModalVisible(true);
     };
-
-    const columns = [
-        {
-            key: "No",
-            title: "No",
-            render: (item, data, index) => index + 1,
-        },
-        {
-            title: 'Product Name',
-            dataIndex: 'product_name',
-            key: 'product_name',
-        },
-        {
-            title: 'Quantity',
-            dataIndex: 'qty',
-            key: 'qty',
-        },
-        {
-            title: 'Supplier',
-            dataIndex: 'supplier_id',
-            key: 'supplier_id',
-            render: (supplierId) => getSupplierName(supplierId),
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (state) => (state == 1 ? (
-                <Tag color="green">Active</Tag>
-            ) : (
-                <Tag color="red">InActive</Tag>
-            )),
-        },
-        {
-            title: 'Actions',
-            key: 'actions',
-            render: (_, record) => (
-                <Space >
-                    <EditOutlined
-                        type='primary'
-                        onClick={() => handleEdit(record)}
-                        icon={<MdEdit />}
-                        style={{ color: "green", fontSize: 20 }}
-                    />
-                    <DeleteOutlined
-                        type='primary'
-                        danger
-                        onClick={() => handleDelete(record)}
-                        icon={<MdDelete />}
-                        style={{ color: "red", fontSize: 20 }}
-                    />
-                </Space>
-            ),
-        },
-    ];
     return (
         <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} >Stock Coffee
-            <div style={{ marginBottom: 16, textAlign: "right" }}>
+            <div style={{ marginBottom: 2, textAlign: "right" }}>
                 <Button
                     Button type="primary"
                     onClick={openModal}
-                    style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}
+                    style={{ padding: "10px", marginBottom: "0px", marginLeft: "auto" }}
                 >
                     <FileAddFilled />New
                 </Button>
-            </div>
-
-            <Table
-                columns={columns}
-                dataSource={state.data}
-                rowKey="id"
-                loading={state.loading}
-            />
-
+            </div>  
             <Modal
-                title={editingId ? 'Edit Stock' : 'Add New Stock'}
-                open={isModalVisible}
+                title={state.isReadOnly ? "View Stock" : (editingId && editingId.id ? "Edit Stock" : "New Stock")}
+                open={state.visibleModal || isModalVisible}
                 onCancel={() => {
                     setIsModalVisible(false);
+                    setState(p => ({ ...p, visibleModal: false, isReadOnly: false }));
                     form.resetFields();
                     setEditingId(null);
                 }}
-                footer={null}
+                footer={state.isReadOnly ? [
+                    <Button key="close" type="primary" onClick={() => {
+                        setIsModalVisible(false);
+                        setState(p => ({ ...p, visibleModal: false, isReadOnly: false }));
+                        form.resetFields();
+                        setEditingId(null);
+                    }}>
+                        Close
+                    </Button>
+                ] : null}
+                width={800}
             >
                 <Form
                     form={form}
@@ -305,7 +265,29 @@ function Stock_CoffeePage() {
                         />
 
                     </Form.Item>
-
+                    <Form.Item
+                        name="categories"
+                        label="Categories"
+                        rules={[{ required: true, message: 'Please select a categories!' }]}
+                    >
+                        <Select
+                            placeholder="Select categories"
+                            showSearch
+                            allowClear
+                            options={(config.categories || []).map(item => ({
+                                label: item.label,
+                                value: item.value
+                            }))}
+                            onChange={(value) => {
+                                setFilter(prev => ({
+                                    ...prev,
+                                    categories: value
+                                }));
+                                getList();
+                            }}
+                            disabled={state.isReadOnly}
+                        />
+                    </Form.Item>
                     <Form.Item
                         name="qty"
                         label="Current Quantity"
@@ -318,9 +300,14 @@ function Stock_CoffeePage() {
                         label="Quantity to Add"
                         rules={[{ required: true, message: 'Please input quantity to add!' }]}
                     >
-                        <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter additional quantity" />
+                        <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter additional quantity" disabled={state.isReadOnly} />
                     </Form.Item>
-
+                    <Form.Item
+                        name="cost"
+                        label="Cost"
+                    >
+                        <InputNumber min={0} style={{ width: '100%' }} disabled={state.isReadOnly} />
+                    </Form.Item>
                     <Form.Item
                         name="supplier_id"
                         label="Supplier"
@@ -333,6 +320,7 @@ function Stock_CoffeePage() {
                             filterOption={(input, option) =>
                                 (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
                             }
+                            disabled={state.isReadOnly}
                         >
                             {suppliers.map(supplier => (
                                 <Select.Option key={supplier.id} value={supplier.id}>
@@ -350,6 +338,7 @@ function Stock_CoffeePage() {
                         <Input.TextArea
                             rows={3}
                             placeholder="Enter description"
+                            disabled={state.isReadOnly}
                         />
                     </Form.Item>
 
@@ -358,28 +347,107 @@ function Stock_CoffeePage() {
                         label="Status"
                         initialValue={1}
                     >
-                        <Select placeholder="Select status">
+                        <Select placeholder="Select status" disabled={state.isReadOnly}>
                             <Select.Option value={1}>Active</Select.Option>
                             <Select.Option value={0}>Inactive</Select.Option>
                         </Select>
                     </Form.Item>
 
-                    <Form.Item
-                        style={{ textAlign: "right" }}>
-                        <Button type="primary" htmlType="submit" style={{ marginRight: 8 }} loading={state.loading}>
-                            {editingId ? 'Update' : 'Create'}
-                        </Button>
-
-                        <Button onClick={() => {
-                            setIsModalVisible(false);
-                            form.resetFields();
-                            setEditingId(null);
-                        }}>
-                            Cancel
-                        </Button>
-                    </Form.Item>
+                    {!state.isReadOnly && (
+                        <Form.Item style={{ textAlign: "right" }}>
+                            <Button type="primary" htmlType="submit" style={{ marginRight: 8 }} loading={state.loading}>
+                                {editingId && editingId.id ? 'Update' : 'Save'}
+                            </Button>
+                            <Button onClick={() => {
+                                setIsModalVisible(false);
+                                form.resetFields();
+                                setEditingId(null);
+                            }}>
+                                Cancel
+                            </Button>
+                        </Form.Item>
+                    )}
                 </Form>
             </Modal>
+            <Table 
+                dataSource={state.data} 
+                columns={[
+                    {
+                        key: "id",
+                        title: "ID",
+                        dataIndex: "id",
+                    },
+                    {
+                        key: "product_name",
+                        title: "Product Name",
+                        dataIndex: "product_name",
+                    },
+                    {
+                        key: "categories",
+                        title: "Categories",
+                        dataIndex: "categories",
+                    },
+                    {
+                        key: "qty",
+                        title: "Current Quantity",
+                        dataIndex: "qty",
+                    },
+                    {
+                        key: "cost",
+                        title: "Cost",
+                        dataIndex: "cost",
+                    },
+                    {
+                        key: "supplier_id",
+                        title: "Supplier",
+                        dataIndex: "supplier_id",
+                        render: (supplierId) => getSupplierName(supplierId),
+                    },
+                    {
+                        key: "description",
+                        title: "Description",
+                        dataIndex: "description",
+                    },
+                    {
+                        key: "status",
+                        title: "Status",
+                        dataIndex: "status",
+                        render: (status) =>
+                            status == 1 ? (
+                                <Tag color="green">Active</Tag>
+                            ) : (
+                                <Tag color="red">InActive</Tag>
+                            ),
+                    },
+                    {
+                        key: "Action",
+                        title: "Action",
+                        align: "center",
+                        render: (item, data, index) => (
+                            <Space>
+                                <EditOutlined
+                                    type="primary"
+                                    style={{ color: "green", fontSize: 20 }}
+                                    icon={<MdEdit />}
+                                    onClick={() => onClickEdit(data, index)}
+                                />
+                                <DeleteOutlined
+                                    type="primary"
+                                    danger
+                                    style={{ color: "red", fontSize: 20 }}
+                                    icon={<MdDelete />}
+                                    onClick={() => onClickDelete(data, index)}
+                                />
+                                <EyeOutlined
+                                    style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                                    onClick={() => clickReadOnly(data)}
+                                    icon={<IoMdEye />}
+                                />
+                            </Space>
+                        ),
+                    },
+                ]}
+            />
         </div>
     );
 }

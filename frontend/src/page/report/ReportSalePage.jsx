@@ -41,6 +41,12 @@ function ReportSalePage() {
     };
 
     const columns = [
+        { 
+            key: 'No',
+            title: 'No',
+            dataIndex: 'No',
+            render: (value, record, index) => index + 1, 
+        },
         {
             title: 'Order No',
             dataIndex: 'order_no',

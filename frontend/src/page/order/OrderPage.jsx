@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import {
     Button,
     DatePicker,
-    Image,
-    Input,
+    Image, 
     message,
     Modal,
     Space,
     Table,
     Tag,
 } from "antd";
-import { formatDateClient, formatDateServer, request } from "../../util/helper";
+import { formatDateServer, request } from "../../util/helper";
 import { MdDelete } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { IoMdEye } from "react-icons/io";
@@ -309,6 +308,12 @@ function OrderPage() {
             <Table
                 dataSource={list}
                 columns={[
+                    {
+                        key: "No",
+                        title: "No",
+                        dataIndex: "No",
+                        render: (value, data, index) => index + 1,
+                    },
                     {
                         key: "order_no",
                         title: "Order No",

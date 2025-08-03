@@ -1,25 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-    Col,
-    message,
-    notification,
-    Row,
-    Space,
-    Card,
-    Typography,
-    Input,
-    Empty
-} from "antd";
+import { Col, message, notification, Row, Space, Card, Typography, Input, Empty, Button, Flex } from "antd";
 import MainPage from "../../component/layout/MainPage";
-
 import ProductItem from "../../component/pos/ProductItem";
 import CartView from "../../component/pos/cart/CartView";
-
 import { useReactToPrint } from "react-to-print";
 import PrintInvoice from "../../component/pos/PrintInvoice";
 import { request } from "../../util/helper";
 import { getProfile } from "../../store/profile.store";
-
+import { FaSearch } from "react-icons/fa";
 
 function PosPage() {
     const { Text } = Typography;
@@ -34,7 +22,7 @@ function PosPage() {
         loading: false,
         visibleModal: false,
         cart_list: [],
-        customers: []  
+        customers: []
     });
 
     const [objSummary, setObjSummary] = useState({
@@ -101,8 +89,8 @@ function PosPage() {
         setState(prevState => {
             const cart_tmp = [...prevState.cart_list];
             const findIndex = cart_tmp.findIndex((row) =>
-                row.sugarLevel === sugarLevel
-                // row.barcode === item.barcode && row.sugarLevel === sugarLevel
+                // row.sugarLevel === sugarLevel
+                row.id === item.id && row.sugarLevel === sugarLevel
             );
 
             if (findIndex === -1) {
@@ -148,7 +136,7 @@ function PosPage() {
                 }));
             }
         } catch (error) {
-            console.error('Error fetching products:', error);
+            console.error('Error getting products:', error);
             setState(pre => ({ ...pre, loading: false }));
         }
     }, [filter, handleAdd]);
@@ -160,7 +148,7 @@ function PosPage() {
                 ...prev,
                 customers: res.list.map(customer => ({
                     value: customer.id || 'walk-in',
-                    label: customer.name || 'Customer 1', 
+                    label: customer.name || 'Customer 1',
                 }))
             }));
         }
@@ -173,9 +161,9 @@ function PosPage() {
                 // Create category icons mapping
                 const categoryIcons = {
                     'Coffee': '☕',
-                    'Tea': '🍵',   
+                    'Tea': '🍵',
                     'Coconut': '🥥',
-                    'Soda': '🥤',   
+                    'Soda': '🥤',
                     'Milk': '🥛',
                 };
 
@@ -191,8 +179,8 @@ function PosPage() {
                 ]);
             }
         } catch (error) {
-            console.error('Error fetching categories:', error);
-            // Keep default "All" category if fetch fails
+            console.error('Error getting categories:', error);
+            // Keep default "All" category if get fails
             setCategories([
                 { id: "", name: "All", icon: "🛒" }
             ]);
@@ -391,22 +379,27 @@ function PosPage() {
                 />
             </div>
             {/* <Row gutter={24} style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}></Row> */}
-            <Row gutter={24} style={{height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+            <Row gutter={24} style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
                 <Col span={16} style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
                     <div style={{ marginBottom: '1rem' }}>
-                        <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                        <Space >
                             {/* <Typography.Title level={3} style={{ margin: 0 }}>Products</Typography.Title> */}
-                            <Input.Search
-                                placeholder="Search products..."
-                                style={{ width: 250 }}
-                                onChange={(event) =>
-                                    setFilter((prev) => ({
-                                        ...prev,
-                                        txt_search: event.target.value,
-                                    }))
-                                }
-                                onSearch={onFilter}
-                            />
+                            <Flex>
+                                <Input
+                                    placeholder="Search products..."
+                                    style={{ width: 250 }}
+                                    onChange={(event) =>
+                                        setFilter((prev) => ({
+                                            ...prev,
+                                            txt_search: event.target.value,
+                                        }))
+                                    }
+                                    onSearch={onFilter}
+                                />
+                            </Flex>
+                            <Button type="primary" onClick={onFilter}> 
+                                <FaSearch /> Search
+                            </Button>
                         </Space>
 
                         <div style={{ marginBottom: '1rem' }}>

@@ -58,7 +58,7 @@ function SaleSummaryPage() {
             key: 'year',
         }, 
         {
-            title: 'Jan',
+            title: 'មករា',
             dataIndex: 'jan',
             key: 'jan', 
         },
@@ -189,7 +189,7 @@ function SaleSummaryPage() {
                             </div>
                         </div>
 
-                        {/* <div style={{ marginBottom: 24 }}>
+                        <div style={{ marginBottom: 24 }}>
                             <div style={{ padding: 16, backgroundColor: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                                 <h3 style={{ marginBottom: 16, color: '#333' }}>Sales Distribution</h3>
                                 <div style={{ height: 400 }}>
@@ -199,7 +199,7 @@ function SaleSummaryPage() {
                                         chartType="PieChart"
                                         loader={<div>Loading Chart...</div>}
                                         data={[
-                                            ['Month', 'Sales ($)'],
+                                            ['Month', 'Sales'],
                                             ...months
                                                 .filter(month => month.dataIndex && month.dataIndex !== 'year' && month.dataIndex !== 'currency')
                                                 .map(month => {
@@ -263,7 +263,7 @@ function SaleSummaryPage() {
                                     />
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
                     </div>
                 ) : (
                     <div style={{ 

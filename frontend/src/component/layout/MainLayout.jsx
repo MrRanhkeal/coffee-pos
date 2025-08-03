@@ -116,6 +116,13 @@ const items_menu = [
         icon: "💹"
         // icon: <StockOutlined/>
       },
+      {
+        key: 'product_stock',
+        label: "Product Stock",
+        children: null,
+        icon: "💹"
+        // icon: <StockOutlined/>
+      }
     ],
     icon: <SlidersOutlined />
   },

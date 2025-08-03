@@ -1,79 +1,90 @@
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Select,
-  Space,
-  Table
-} from "antd";
+import { useCallback, useEffect, useState } from "react";
+import { Button, Form, Input, InputNumber, message, Modal, Select, Space, Table } from "antd";
 import { request } from "../../util/helper";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
 import { configStore } from "../../store/configStore";
+import Link from "antd/es/typography/Link";
+
 function ExpansePage() {
   const [formRef] = Form.useForm();
   const [list, setList] = useState([]);
-  const {config ,setConfig}= configStore();
+  const { config } = configStore();
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     visibleModal: false,
     isReadOnly: false,
-    id: null, 
+    id: null,
+    expense_type: null,
+    expense_date: "",
     amount: "",
     descriptoin: "",
     status: "",
     txtSearch: "",
   });
-
-  //const { config, setConfig } = configStore();
-
-  useEffect(() => {
-    // Always fetch config on mount
-    request("config", "get").then((res) => {
-      if (res) {
-        let newConfig = { ...res };
-        if (res.expsanse_type) {
-          newConfig.expense_type = res.expsanse_type;
-        }
-        setConfig(newConfig);
-      }
-    });
-    getList();
-  }, []);
-  const [filter, setFilter] = useState({
-    txtSearch: "",
-    expense_type: "", 
-  })
-  const getList = async () => {
+  const getList = useCallback(async () => {
     setLoading(true);
     var param = {
-      txtSearch: state.txtSearch, 
-      expense_type: filter.expense_type, 
+      txtSearch: state.txtSearch,
+      expense_type: filter.expense_type,
     };
     const res = await request("expense", "get", param);
     setLoading(false);
     if (res) {
       setList(res.list);
     }
-  };
-
+  });
+  // const getList = async () => {
+  //   setLoading(true);
+  //   var param = {
+  //     txtSearch: state.txtSearch,
+  //     expense_type: filter.expense_type,
+  //   };
+  //   const res = await request("expense", "get", param);
+  //   setLoading(false);
+  //   if (res) {
+  //     setList(res.list);
+  //   }
+  // };
+  useEffect(() => {
+    getList();
+  }, []);
+  const [filter, setFilter] = useState({
+    txtSearch: "",
+    expense_type: "",
+  })
   const onClickView = (data) => {
-    formRef.setFieldsValue({
-      ...data,
-      id: data.id,
-    });
-    setState({
-      ...state,
-      visibleModal: true,
-      isReadOnly: true,
-    });
+    if (!state.visibleModal) {
+      setState({
+        ...state,
+        visibleModal: true,
+        isReadOnly: true,
+        id: data.id,
+      });
+      formRef.setFieldsValue({
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        status: data.status,
+      });
+    }
   };
+  // const onClickView = (data) => {
+  //   setState({
+  //     ...state,
+  //     visibleModal: true,
+  //     isReadOnly: true,
+  //     id: data.id,
+  //   });
+  //   formRef.setFieldsValue({
+  //     id: data.id,
+  //     name: data.name,
+  //     description: data.description,
+  //     status: data.status,
+  //   });
+  // };
 
   const openModal = () => {
     setState({
@@ -86,42 +97,49 @@ function ExpansePage() {
     setState({
       ...state,
       visibleModal: false,
+      id: null,
       isReadOnly: false,
     });
     formRef.resetFields();
   };
 
   const onFinish = async (items) => {
+    var data = {
+      id: formRef.getFieldValue("id"),
+      name: items.name,
+      description: items.description,
+      status: items.status,
+    };
     var method = "post";
     if (formRef.getFieldValue("id")) {
+      // case update
       method = "put";
     }
-    setState({ ...state, visibleModal: false });
-    const res = await request("expense", method, {
-      ...items,
-      id: formRef.getFieldValue("id"),
-    });
+    const res = await request("expense", method, data);
     if (res && !res.error) {
-      message.success(`Expense ${method === "put" ? "updated" : "created"} successfully`);
+      message.success(res.message);
       getList();
       onCloseModal();
     }
   };
   const onClickEdit = (data) => {
-    formRef.setFieldsValue({
-      ...data,
-      id: data.id
-    });
     setState({
       ...state,
       visibleModal: true,
-      isReadOnly: false,
+      id: data.id,
+    });
+    formRef.setFieldsValue({
+      id: data.id,
+      expense_type: data.expense_type,
+      amount: data.amount,
+      description: data.description,
+      expense_date: data.expense_date,
     });
   };
   const onClickDelete = async (data) => {
     Modal.confirm({
       title: "Delete Expense",
-      content: `Are you sure you want to delete this expense ${data.expense_type} ?`, 
+      content: `Are you sure you want to delete this expense ${data.expense_type} ?`,
       onText: "Delete",
       cancelText: "Cancel",
       okType: "danger",
@@ -153,57 +171,69 @@ function ExpansePage() {
             Filter
           </Button>
         </Space>
-        <Button type="primary" onClick={openModal} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}>
+        <Button
+          type="primary"
+          onClick={openModal}
+          style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}
+        >
           NEW
         </Button>
       </div>
       <Modal
         open={state.visibleModal}
-        title={formRef.isReadOnly ? "View Expense" : (formRef.getFieldValue("id") ? "Update Expense" : "Add Expense")}
-        onCancel={onCloseModal}
+        title={state.isReadOnly ? "View Expense" : (state.id ? "Edit Expense" : "New Expense")}
         footer={null}
+        onCancel={onCloseModal}
       >
-        <Form layout="vertical" onFinish={onFinish} form={formRef}>
-          <Form.Item name={"expense_type"} label="Expense Type" rules={[{ required: true, message: 'Please input expense type!' }]}>
-            {/* <Input placeholder="Expense Type" /> */}
+        <Form
+          form={formRef}
+          layout="vertical"
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name={"expense_type"}
+            label="Expense Type"
+            rules={[
+              {
+                required: true,
+                message: 'Please input expense type!'
+              }
+            ]}
+          >
             <Select
               placeholder="Select expense type"
               showSearch
               allowClear
-              optionFilterProp="children"
-              options={config.expense_type}
-              loading={!config.expense_type}
-              disabled={!config.expense_type}
-              // options={Object.entries(config.expense_type || {}).flatMap(([expense_type, items])=>
-              //   items.map(item => ({
-              //     label: `${expense_type} - ${item.label}`,
-              //     value: item.value,
-              //   }))
-              // )}
-              onChange={(value) => {
-                setFilter ((pre) => ({ 
-                  ...pre, 
-                  expense_type: value 
+              options={(config.expense_type || []).map(item => ({
+                label: item.label,
+                value: item.value
+              }))}
+              onChange={(value)=>{
+                setFilter(prev => ({
+                  ...prev,
+                  expense_type: value
                 }));
                 getList();
               }}
-              value={filter.expense_type}
+              disabled={state.isReadOnly}
             />
           </Form.Item>
           <Form.Item name={"amount"} label="Amount" rules={[{ required: true, message: 'Please input amount!' }]}>
-            <InputNumber type="number" placeholder="Amount" style={{ width: "100%" }} />
+            <InputNumber type="number" placeholder="Amount" style={{ width: "100%" }} disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item name={"description"} label="Description" rules={[{ required: true, message: 'Please input description!' }]}>
-            <Input.TextArea placeholder="Description" />
+            <Input.TextArea placeholder="Description" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item name={"expense_date"} label="Expense Date" rules={[{ required: true, message: 'Please input expense date!' }]}>
-            <Input type="date" placeholder="Expense Date" />
+            <Input type="date" placeholder="Expense Date" disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item style={{ textAlign: "right" }}>
-            <Button onClick={onCloseModal} >Cancel</Button> &nbsp;
-            <Button type="primary" htmlType="submit" >
-              {formRef.getFieldValue("id") ? "Update" : "Save"}
-            </Button>
+            <Button onClick={onCloseModal} >Close</Button> &nbsp;
+            {!state.isReadOnly && (
+              <Button type="primary" htmlType="submit" >
+                {formRef.getFieldValue("id") ? "Update" : "Save"}
+              </Button>
+            )}
           </Form.Item>
         </Form>
       </Modal>
@@ -216,19 +246,36 @@ function ExpansePage() {
             render: (item, data, index) => index + 1,
           },
           {
+            title: "Expense ID",
+            dataIndex: "id",
+            key: "id",
+            render: (id) => <Link to={`/expanse/${id}`} style={{ color: 'rgba(206, 19, 13, 1)', fontSize: "14px" }}>{'EXP' + '-' + ''.padStart(2, '0')}{id}</Link>
+          },
+          {
             key: "expense_type",
             title: "Expense Type",
             dataIndex: "expense_type",
-          }, 
+          },
           {
-            key: "description",
-            title: "Description",
-            dataIndex: "description",
+            key: "vendor/customer",
+            title: "Vendor/Customer",
+            dataIndex: "vendor_customer",
           },
           {
             key: "amount",
             title: "Amount",
             dataIndex: "amount",
+            render: (amount) => '$' + amount
+          },
+          {
+            key: "payment_method",
+            title: "Payment Method",
+            dataIndex: "payment_method",
+          },
+          {
+            key: "description",
+            title: "Description",
+            dataIndex: "description",
           },
           {
             key: "expense_date",

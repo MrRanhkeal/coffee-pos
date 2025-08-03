@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import {Button, Form,Input,message,Modal,Select,Space,Table,Tag} from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { Button, Flex, Form, Input, message, Modal, Select, Space, Table, Tag } from "antd";
 import { request } from "../../util/helper";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
+import { FaSearch } from "react-icons/fa";
+// import { use } from "react";
 // import { configStore } from "../../store/configStore";
 function CategoryPage() {
   // const { config } = configStore();
@@ -25,18 +27,21 @@ function CategoryPage() {
     isReadOnly: false,
   });
 
-  useEffect(() => {
-    getList();
-  }, []);
-
-  const getList = async () => {
+  const getList = useCallback(async () => {
     setLoading(true);
-    const res = await request("category", "get");
+    var param = {
+      txtSearch: state.txtSearch,
+    };
+    const res = await request("category", "get", param);
     setLoading(false);
     if (res) {
       setList(res.list);
     }
-  };
+  }, [state, setLoading, setList]);
+  useEffect(() => {
+    getList();
+  }, [state, setLoading, setList]);
+
   const onClickEdit = (data) => {
     setState({
       ...state,
@@ -65,7 +70,7 @@ function CategoryPage() {
       status: data.status,
     });
   };
-  const onClickDelete = async (data, ) => {
+  const onClickDelete = async (data,) => {
     Modal.confirm({
       title: "Delete Category",
       content: `Are you sure! you want to remove category ${data.name}?`,
@@ -104,16 +109,16 @@ function CategoryPage() {
     // Get the current user's name from the profile
     const profileData = localStorage.getItem('profile');
     console.log('Profile data from localStorage:', profileData);
-    
+
     const currentUser = profileData ? JSON.parse(profileData) : {};
     console.log('Parsed user data:', currentUser);
-    
+
     // Try to get user name from different possible properties
     const userName = currentUser?.user?.name || currentUser?.name || currentUser?.username || 'system';
     console.log('Selected username:', userName);
 
     const isEdit = formRef.getFieldValue("id") != null;
-    
+
     var data = {
       ...items,
       id: formRef.getFieldValue("id"),
@@ -143,17 +148,22 @@ function CategoryPage() {
       <div className="pageHeader">
         <Space>
           <div>Category</div>
-          <Input.Search
-            onChange={(value) =>
-              setState((p) => ({ ...p, txtSearch: value.target.value }))
-            }
-            allowClear
-            onSearch={getList}
-            placeholder="Search"
-          />
+          <Flex>
+            <Input
+              onChange={(value) =>
+                setState((p) => ({ ...p, txtSearch: value.target.value }))
+              }
+              allowClear
+              onSearch={getList}
+              placeholder="Search"
+            />
+          </Flex>
+          <Button type="primary" onClick={getList}>
+            <FaSearch /> Search
+          </Button>
         </Space>
-        <Button type="primary" onClick={onClickAddBtn} style={{padding:"10px",marginBottom:"10px",marginLeft: "auto"}}>
-          <FileAddFilled/>New
+        <Button type="primary" onClick={onClickAddBtn} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}>
+          <FileAddFilled />New
         </Button>
       </div>
       <Modal
@@ -161,7 +171,7 @@ function CategoryPage() {
         // title={formRef.getFieldValue("id") ? "Edit Category" : "New Category"}
         title={state.isReadOnly ? "View Category" : (formRef.getFieldValue("id") ? "Edit Category" : "New Category")}
         footer={null}
-        onCancel={onCloseModal} 
+        onCancel={onCloseModal}
       >
         <Form layout="vertical" onFinish={onFinish} form={formRef}>
           <Form.Item name={"name"} label="Category name">
@@ -186,7 +196,7 @@ function CategoryPage() {
               ]}
             />
           </Form.Item>
-          <Form.Item style={{textAlign: "right"}}>
+          <Form.Item style={{ textAlign: "right" }}>
             <Space>
               <Button onClick={onCloseModal}>{state.isReadOnly ? "Close" : "Cancel"}</Button>
               {!state.isReadOnly && (
@@ -195,9 +205,9 @@ function CategoryPage() {
                 </Button>
               )}
             </Space>
-        </Form.Item>
+          </Form.Item>
         </Form>
-        
+
       </Modal>
       <Table
         dataSource={list}
@@ -255,9 +265,9 @@ function CategoryPage() {
                 <EyeOutlined
                   style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
                   onClick={() => clickReadOnly(data)}
-                  icon={<IoMdEye/>}
+                  icon={<IoMdEye />}
                 />
-                
+
               </Space>
             ),
           },

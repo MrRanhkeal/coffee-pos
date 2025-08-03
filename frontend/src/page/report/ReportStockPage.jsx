@@ -19,7 +19,7 @@ function ReportStockPage() {
                 message.info('No stock data found.');
             }
         } catch (err) {
-            message.error('Failed to fetch stock report.', err);
+            message.error('Failed to get stock report.', err);
         }
         setLoading(false);
     };

@@ -19,7 +19,7 @@ function DashboarProduct() {
                     setProducts(0);
                 }
             } catch (error) {
-                console.error("Error fetching products:", error);
+                console.error("Error getting products:", error);
                 setProducts(0);
             }
         };

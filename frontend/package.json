@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
+    "@mescius/spread-sheets": "^18.1.4",
+    "@mescius/spread-sheets-charts": "^18.1.4",
+    "@mescius/spread-sheets-io": "^18.1.4",
+    "@mescius/spread-sheets-react": "^18.1.4",
+    "@mescius/spread-sheets-shapes": "^18.1.4",
     "@react-pdf/renderer": "^4.1.5",
     "antd": "^5.20.3",
     "axios": "^1.7.5",
