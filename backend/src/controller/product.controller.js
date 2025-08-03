@@ -35,7 +35,6 @@ exports.getlist = async (req, res) => {
         var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
         var sqlparam = {
             txt_search: "%" + txt_search + "%",
-            // barcode: txt_search,
             category_id,
             brand,
         };
@@ -59,39 +58,40 @@ exports.getlist = async (req, res) => {
     }
 };
 exports.create = async (req, res) => {
-    try{
+    try {
         var sql =
-        " INSERT INTO products (category_id, name,brand,description,price,discount,status,image,create_by ) " +
-        " VALUES (:category_id, :name, :brand, :description,  :price, :discount, :status, :image, :create_by ) ";
+            " INSERT INTO products (category_id, name,brand,description,price,discount,status,image,create_by ) " +
+            " VALUES (:category_id, :name, :brand, :description,  :price, :discount, :status, :image, :create_by ) ";
+        const image = req.files?.upload_image?.[0]?.filename || null;
 
-        var [data] = await db.query(sql, {
+        const [data] = await db.query(sql, {
             ...req.body,
-            image: req.files?.upload_image[0]?.filename,
-            create_by: req.auth?.name,
+            image: image,
+            create_by: req.auth?.name
         });
-        // if (req.files && req.files?.upload_image_optional) {
-        //     var paramImagePorduct = [];
-        //     req.files?.upload_image_optional.map((item, index) => {
-        //         paramImagePorduct.push([data?.insertId, item.filename]);
-        //     });
-        //     var sqlImageProduct =
-        //         "INSERT INTO product_image (product_id,image) VALUES :data";
-        //     var [dataImage] = await db.query(sqlImageProduct, {
-        //         data: paramImagePorduct,
-        //     });
-        // }
+
         res.json({
-            data: data,
-            message: "success",
+            data,
+            message: "Product created successfully",
             error: false
-        })
+        });
+        // var [data] = await db.query(sql, {
+        //     ...req.body,
+        //     image: req.files?.upload_image[0]?.filename,
+        //     create_by: req.auth?.name,
+        // });
+        // res.json({
+        //     data: data,
+        //     message: "success",
+        //     error: false
+        // })
     }
     catch (error) {
         logErr("category.create", error, res);
     }
 };
-exports.update = async (req, res) => { 
-    try { 
+exports.update = async (req, res) => {
+    try {
         var sql =
             " UPDATE products set " +
             " category_id = :category_id, " +
@@ -167,9 +167,9 @@ exports.update = async (req, res) => {
             error: false
         })
     }
-    catch (error) { 
+    catch (error) {
         logErr("product.update", error, res);
-    }  
+    }
 };
 
 exports.remove = async (req, res) => {
@@ -215,7 +215,7 @@ exports.remove = async (req, res) => {
 //         });
 //         res.json({
 //             list,
-//             message: "success", 
+//             message: "success",
 //         });
 //     }
 //     catch (err) {

@@ -1,98 +1,11 @@
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 17:21:43 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 17:21:47 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 17:21:48 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 17:21:51 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 17:22:56 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 17:23:30 
-SyntaxError: Cannot use import statement outside a module + 2025-07-18 17:34:22 
-ReferenceError: newBarcode is not defined + 2025-07-18 18:42:38 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 18:42:45 
-Error: Route.post() requires a callback function but got a [object Undefined] + 2025-07-18 19:42:54 
-SyntaxError: Identifier 'category' has already been declared + 2025-07-19 00:18:20 
-SyntaxError: Unexpected token 'const' + 2025-07-19 03:33:56 
-SyntaxError: Missing initializer in destructuring declaration + 2025-07-19 03:34:01 
-SyntaxError: Unexpected token 'const' + 2025-07-19 03:34:12 
-SyntaxError: missing ) after argument list + 2025-07-19 03:34:46 
-SyntaxError: missing ) after argument list + 2025-07-19 03:34:51 
-SyntaxError: missing ) after argument list + 2025-07-19 03:34:54 
-SyntaxError: missing ) after argument list + 2025-07-19 03:34:56 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:00 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:01 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:06 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:07 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:10 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:11 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:16 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:20 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:23 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:24 
-SyntaxError: missing ) after argument list + 2025-07-19 03:35:42 
-SyntaxError: Unexpected identifier 'sale_summary_by_month' + 2025-07-19 03:41:48 
-SyntaxError: Unexpected token 'const' + 2025-07-19 03:46:31 
-SyntaxError: Missing initializer in destructuring declaration + 2025-07-19 03:46:47 
-SyntaxError: Missing initializer in destructuring declaration + 2025-07-19 03:46:49 
-SyntaxError: Missing initializer in destructuring declaration + 2025-07-19 03:46:51 
-SyntaxError: Unexpected token 'const' + 2025-07-19 03:46:52 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:10 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:17 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:25 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:28 
-SyntaxError: Invalid or unexpected token + 2025-07-19 03:48:29 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:32 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:33 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:37 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:38 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:42 
-SyntaxError: missing ) after argument list + 2025-07-19 03:48:54 
-SyntaxError: missing ) after argument list + 2025-07-19 03:49:00 
-SyntaxError: missing ) after argument list + 2025-07-19 03:49:02 
-SyntaxError: missing ) after argument list + 2025-07-19 03:49:08 
-SyntaxError: missing ) after argument list + 2025-07-19 03:49:09 
-SyntaxError: missing ) after argument list + 2025-07-19 03:49:13 
-SyntaxError: missing ) after argument list + 2025-07-19 03:49:14 
-SyntaxError: Unexpected identifier 'summary_month' + 2025-07-19 03:59:38 
-SyntaxError: Unexpected identifier 'summary_month' + 2025-07-19 03:59:40 
-SyntaxError: Unexpected identifier 'summary_month' + 2025-07-19 03:59:42 
-ReferenceError: getsalepermonth is not defined + 2025-07-19 04:21:09 
-ReferenceError: getsalepermonth is not defined + 2025-07-19 04:21:20 
-SyntaxError: Invalid or unexpected token + 2025-07-19 04:27:35 
-SyntaxError: missing ) after argument list + 2025-07-19 04:27:39 
-SyntaxError: missing ) after argument list + 2025-07-19 04:27:42 
-SyntaxError: missing ) after argument list + 2025-07-19 04:27:46 
-SyntaxError: missing ) after argument list + 2025-07-19 21:00:34 
-SyntaxError: missing ) after argument list + 2025-07-19 21:00:38 
-SyntaxError: missing ) after argument list + 2025-07-19 21:00:44 
-SyntaxError: missing ) after argument list + 2025-07-19 21:00:48 
-SyntaxError: missing ) after argument list + 2025-07-19 21:00:53 
-SyntaxError: missing ) after argument list + 2025-07-19 21:00:58 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:02 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:04 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:11 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:18 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:22 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:26 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:35 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:38 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:40 
-SyntaxError: missing ) after argument list + 2025-07-19 21:01:47 
-SyntaxError: let is disallowed as a lexically bound name + 2025-07-19 21:13:19 
-SyntaxError: Unexpected token 'const' + 2025-07-19 21:21:15 
-SyntaxError: Missing initializer in const declaration + 2025-07-19 21:21:21 
-SyntaxError: Missing initializer in const declaration + 2025-07-19 21:21:22 
-SyntaxError: Missing initializer in const declaration + 2025-07-19 21:21:24 
-SyntaxError: Unexpected token 'const' + 2025-07-19 21:21:26 
-SyntaxError: Unexpected token 'const' + 2025-07-19 21:21:28 
-SyntaxError: Unexpected token 'const' + 2025-07-19 21:21:32 
-SyntaxError: missing ) after argument list + 2025-07-19 21:21:34 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:20 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:23 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:33 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:35 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:38 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:40 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:43 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:45 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:47 
-SyntaxError: missing ) after argument list + 2025-07-19 21:25:52 
-SyntaxError: missing ) after argument list + 2025-07-20 02:49:40 
-SyntaxError: missing ) after argument list + 2025-07-20 02:49:41 
+SyntaxError: Unexpected token 'var' + 2025-08-02 10:20:25 
+SyntaxError: Missing initializer in destructuring declaration + 2025-08-02 10:20:28 
+SyntaxError: Missing catch or finally after try + 2025-08-02 10:20:35 
+SyntaxError: Unexpected token 'var' + 2025-08-02 10:21:46 
+SyntaxError: Unexpected token 'var' + 2025-08-02 10:21:49 
+SyntaxError: Unexpected token 'var' + 2025-08-02 10:21:54 
+SyntaxError: Unexpected token '}' + 2025-08-02 10:22:54 
+SyntaxError: Unexpected token '}' + 2025-08-02 10:22:55 
+SyntaxError: Unexpected token ':' + 2025-08-02 11:07:46 
+SyntaxError: Unexpected token ':' + 2025-08-02 11:07:47 
+SyntaxError: Identifier 'categories' has already been declared + 2025-08-02 11:09:08 

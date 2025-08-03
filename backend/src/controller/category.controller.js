@@ -1,13 +1,17 @@
 
 const { db, logErr, isEmpty, isArray } = require("../util/helper");
 
-
 exports.getlist = async (req, res) => {
     try {
         //please select and sort data
-        var [list] = await db.query("SELECT * FROM category");
-        res.json({
-
+        var txtSearch = req.query.txtSearch; 
+        var sql = "select * from category";
+        if (!isEmpty(txtSearch)) {
+            sql += " where name like :txtSearch or description like :txtSearch";
+        } 
+        const [list] = await db.query(sql,{
+            txtSearch: "%" + txtSearch + "%",});
+        res.json({ 
             list: list,
             message: "success"
         })

@@ -21,13 +21,15 @@ exports.create = async (req, res) => {
             return res.status(400).json({ status: 'error', message: 'Invalid input' });
         }
         
-        const sqlInsert = "INSERT INTO stock_coffee (product_name, supplier_id, qty,description,status) values(?,?,?,?,?)"; 
+        const sqlInsert = "INSERT INTO stock_coffee (product_name, categories, supplier_id, qty,cost,description,status) values(?,?,?,?,?,?,?)"; 
         //values ($1, $2, $3, $4, $5) RETURNING *
         //RETURNING * for return values from rows affected by insert updata or deleted 
         const data = await db.query(sqlInsert, [
             req.body.product_name,
+            req.body.categories,
             req.body.supplier_id,
             req.body.qty,
+            req.body.cost,
             req.body.description || null, // Optional field
             req.body.status || null, // Optional field
         ]); 
@@ -44,16 +46,18 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const { id, product_name, qty, supplier_id, description, status } = req.body;
+        const { id, product_name, categories, qty, cost, supplier_id, description, status } = req.body;
         if (isEmpty(id) || isEmpty(product_name) || isEmpty(qty)) {
             return res.status(400).json({ status: 'error', message: 'Invalid input' });
         }
         
-        const sqlUpdate = "UPDATE stock_coffee SET product_name = ?, supplier_id = ?, qty = ?, description = ?, status = ? WHERE id = ?";
+        const sqlUpdate = "UPDATE stock_coffee SET product_name = ?, categories = ?, supplier_id = ?, qty = ?, cost = ?, description = ?, status = ? WHERE id = ?";
         const [result] = await db.query(sqlUpdate, [
             product_name,
+            categories,
             supplier_id || null,
             qty,
+            cost,
             description || null,
             status || null,
             id
@@ -65,7 +69,7 @@ exports.update = async (req, res) => {
         
         res.json({
             status: 'success',
-            data: { id, product_name, qty, supplier_id, description, status },
+            data: { id, product_name, qty, supplier_id, cost, description, status },
             message: 'Coffee stock updated successfully'
         });
     } catch (err) {

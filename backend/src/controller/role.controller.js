@@ -14,7 +14,7 @@ exports.getlist = async (req, res) => {
 };
 exports.create = async (req, res) => {
     try {
-        var sql = "insert into roles(name,permission) values(:name,:permission)";
+        var sql = "insert into roles(name) values(:name)";
         var [list] = await db.query(sql,req.body);
         res.json({
             data:list,
@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
-        var sql = "update roles set name=:name,permission=:permission where id=:id";
+        var sql = "update roles set name=:name where id=:id";
         var [list] = await db.query(sql,req.body);
         res.json({
             data:list,

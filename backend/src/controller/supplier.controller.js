@@ -3,8 +3,7 @@ const configController = require('./config.controller');
 
 exports.getlist = async (req, res) => {
     try {
-        const txtSearch = req.query.txtSearch || '';
-        const product_type = req.query.product_type || '';
+        const txtSearch = req.query.txtSearch || ''; 
         
         let query = "SELECT * FROM supplier WHERE 1=1";
         let params = [];
@@ -12,12 +11,7 @@ exports.getlist = async (req, res) => {
         if (txtSearch) {
             query += " AND (name LIKE ? OR phone LIKE ? OR email LIKE ?)";
             params.push(`%${txtSearch}%`, `%${txtSearch}%`, `%${txtSearch}%`, `%${txtSearch}%`);
-        }
-        
-        if (product_type) {
-            query += " AND product_type = ?";
-            params.push(product_type);
-        }
+        } 
         
         var [list] = await db.query(query, params);
         res.json({
@@ -31,7 +25,8 @@ exports.getlist = async (req, res) => {
 }
 exports.create = async (req, res) => {
     try {
-        var sql = "insert into supplier(name,product_type,phone,email,address,description) values(?,?,?,?,?,?,?)";
+        //var sql = "insert into supplier(name,product_type,phone,email,address,description) values(?,?,?,?,?,?,?)";
+        var sql = "insert into supplier(name,phone,email,address,description) values(?,?,?,?,?)";
         var [check] = await db.query("SELECT * FROM supplier WHERE name = ?", req.body.name);
         if (check.length > 0) {
             return res.status(400).json({
@@ -39,8 +34,7 @@ exports.create = async (req, res) => {
             });
         }
         var [data] = await db.query(sql, [
-            req.body.name,
-            req.body.product_type, 
+            req.body.name, 
             req.body.phone,
             req.body.email,
             req.body.address,
@@ -57,10 +51,10 @@ exports.create = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
-        var sql = "UPDATE supplier SET name=?, product_type=?, phone=?, email=?, address=?, description=? WHERE id=?";
+        // var sql = "UPDATE supplier SET name=?, product_type=?, phone=?, email=?, address=?, description=? WHERE id=?";
+        var sql = "UPDATE supplier SET name=?, phone=?, email=?, address=?, description=? WHERE id=?";
         var [data] = await db.query(sql, [
-            req.body.name,
-            req.body.product_type, 
+            req.body.name, 
             req.body.phone,
             req.body.email,
             req.body.address,
@@ -78,11 +72,11 @@ exports.update = async (req, res) => {
 };
 exports.remove = async (req, res) => {
     try {
-        var sql = "DELETE FROM supplier WHERE id=?";
-        var [list] = await db.query(sql, req.params.id);
+        var sql = "delete from supplier where id=?";
+        var [list] = await db.query(sql, [req.body.id]);
         res.json({
             data: list,
-            message: "success"
+            message: "deleted successfully"
         })
     }
     catch (error) {
