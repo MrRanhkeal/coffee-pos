@@ -24,3 +24,9 @@ docker logs my-phpmyadmin
 docker run --name my-phpmyadmin -d --link docker-mysql:db -p 8081:80 phpmyadmin/phpmyadmin
 
 
+//news docker
+
+
+//apache
+docker build -t my/apache:8080 .
+docker run --name "MyWebsite" -p 8080:8080 -v ~/dir:/mnt/dir -d -t my/apache:8080

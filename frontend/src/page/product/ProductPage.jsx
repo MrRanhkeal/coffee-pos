@@ -1,20 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Form,
-  Image,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Upload,
-} from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import {Button,Col,Form,Image,Input,InputNumber,message,Modal,Row,Select,Space,Table,Tag,Upload,} from "antd";
 import { request } from "../../util/helper";
 import { MdDelete, MdEdit, MdImage } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
@@ -71,12 +56,11 @@ function ProductPage() {
   useEffect(() => {
     getList();
   }, []);
-
-  const getList = async () => {
+  const getList = useCallback(async () => {
     var param = {
-      ...filter,
+      //...filter,
       page: refPage.current, // get value
-      // txt_search: filter.txt_search,
+      txt_search: filter.txt_search,
       // category_id: filter.category_id,
       // brand: filter.brand,
       // page: filter.page,
@@ -91,7 +75,27 @@ function ProductPage() {
         loading: false,
       }));
     }
-  };
+  })
+  // const getList = async () => {
+  //   var param = {
+  //     ...filter,
+  //     page: refPage.current, // get value
+  //     // txt_search: filter.txt_search,
+  //     // category_id: filter.category_id,
+  //     // brand: filter.brand,
+  //     // page: filter.page,
+  //   };
+  //   setState((pre) => ({ ...pre, loading: true }));
+  //   const res = await request("product", "get", param);
+  //   if (res && !res.error) {
+  //     setState((pre) => ({
+  //       ...pre,
+  //       list: res.list,
+  //       total: refPage.current == 1 ? res.total : pre.total,
+  //       loading: false,
+  //     }));
+  //   }
+  // };
 
   const onCloseModal = () => {
     setState((p) => ({
@@ -209,11 +213,10 @@ function ProductPage() {
 
   const onFilter = () => {
     getList();
-  };
-
+  }; 
   const onClickEdit = async (item) => {
     formRef.setFieldsValue({
-      ...item,
+      ...item, 
     });
     setState((pre) => ({ ...pre, visibleModal: true }));
     if (item.image != "" && item.image != null) {
@@ -226,26 +229,11 @@ function ProductPage() {
         },
       ];
       setImageDefault(imageProduct);
+      getList();
+    } else {
+      setImageDefault([]);
     }
-
-    //
-    // product_image
-    // const res_image = await request("product_image/" + item.id, "get");
-    // if (res_image && !res_image.error) {
-    //   if (res_image.list) {
-    //     var imageProductOptional = [];
-    //     res_image.list.map((item, index) => {
-    //       imageProductOptional.push({
-    //         uid: index,
-    //         name: item.image,
-    //         status: "done",
-    //         url: "http://localhost:81/fullstack/image_pos/" + item.image,
-    //       });
-    //     });
-    //     // setImageOptional(imageProductOptional);
-    //     // setImageOptional_Old(imageProductOptional);
-    //   }
-    // }
+    getList(); 
   };
   const clickReadOnly = (item) => {
     setState((p) => ({
@@ -308,13 +296,12 @@ function ProductPage() {
       <div className="pageHeader">
         <Space>
           <div>Product {state.total}</div>
-          <Input.Search
-            onChange={(event) =>
-              setFilter((p) => ({ ...p, txt_search: event.target.value }))
+          <Input
+            onChange={(value) =>
+              setFilter((p) => ({ ...p, txt_search: value.target.value }))
             }
-            allowClear
+            allowClear 
             onSearch={onFilter}
-            // onSearch={getList}
             placeholder="Search"
           />
           <Select
@@ -468,7 +455,7 @@ function ProductPage() {
               <Input.TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 6 }} />
             </Form.Item>
 
-            <Form.Item name={"image_default"} label="Image" className="product_image">
+            <Form.Item name={"image_default"} label="Image" className="product_image" style={{width: "100%", borderRadius: "20px"}}>
               <Upload
                 customRequest={(options) => {
                   options.onSuccess();
@@ -505,20 +492,20 @@ function ProductPage() {
             {previewImage && (
               <Image
                 wrapperStyle={{
-                  display: "none",
-                }}
+                  display: "none",  
+                }} 
                 preview={{
                   visible: previewOpen,
-                  onVisibleChange: (visible) => setPreviewOpen(visible),
-                  afterOpenChange: (visible) => !visible && setPreviewImage(""),
+                  onVisibleChange: (visible) => setPreviewOpen(visible,),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(""), 
                 }}
                 src={previewImage}
                 // style={{ width: 50, height: 50 ,borderRadius:2}}
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 2,
-                }}
+                // style={{
+                //   width: 30,
+                //   height: 30,
+                //   borderRadius: 2,
+                // }}
               />
             )}
             {/* <Form.Item style={{ textAlign: "right" }}>

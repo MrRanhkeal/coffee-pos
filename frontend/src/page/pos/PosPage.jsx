@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Col, message, notification, Row, Space, Card, Typography, Input, Empty, Button, Flex } from "antd";
+import PropTypes from "prop-types";
 import MainPage from "../../component/layout/MainPage";
 import ProductItem from "../../component/pos/ProductItem";
 import CartView from "../../component/pos/cart/CartView";
@@ -45,7 +46,7 @@ function PosPage() {
     const [filter, setFilter] = useState({
         txt_search: "",
         category_id: "",
-        category_name: "",
+        //category_name: "",
         brand: "",
 
     });
@@ -60,27 +61,30 @@ function PosPage() {
                 sub_total = 0,
                 save_discount = 0;
 
-            currentState.cart_list.forEach((item) => {
-                total_qty += item.cart_qty; //check that(-=1 from product_stock.qty)
-                const original_total = Number(item.cart_qty) * Number(item.price);
-                let final_price = original_total;
+            try {
+                currentState.cart_list.forEach((item) => {
+                    total_qty += item.cart_qty; //check that(-=1 from product_stock.qty)
+                    const original_total = Number(item.cart_qty) * Number(item.price);
+                    let final_price = original_total;
 
-                if (item.discount != null && item.discount != 0) {
-                    final_price = original_total - (original_total * Number(item.discount)) / 100;
-                    save_discount += (original_total * Number(item.discount)) / 100;
-                }
-                sub_total += final_price;
-            });
+                    if (item.discount != null && item.discount != 0) {
+                        final_price = original_total - (original_total * Number(item.discount)) / 100;
+                        save_discount += (original_total * Number(item.discount)) / 100;
+                    }
+                    sub_total += final_price;
+                });
 
-            setObjSummary(p => ({
-                ...p,
-                sub_total: Number(sub_total.toFixed(2)),
-                total_qty: total_qty,
-                save_discount: Number(save_discount.toFixed(2)),
-                total: Number(sub_total.toFixed(2)),
-                total_paid: p.total_paid || 0,
-            }));
-
+                setObjSummary(p => ({
+                    ...p,
+                    sub_total: Number(sub_total.toFixed(2)),
+                    total_qty: total_qty,
+                    save_discount: Number(save_discount.toFixed(2)),
+                    total: Number(sub_total.toFixed(2)),
+                    total_paid: p.total_paid || 0,
+                }));
+            } catch (e) {
+                console.log(e);
+            }
             return currentState;
         });
     }, []);
@@ -113,16 +117,8 @@ function PosPage() {
             };
             const res = await request("product", "get", param);
             if (res && !res.error) {
-                if (res.list?.length === 1) {
-                    const processedItem = {
-                        ...res.list[0],
-                        price: Number(res.list[0].price),
-                        discount: Number(res.list[0].discount)
-                    };
-                    handleAdd(processedItem);
-                    setState(pre => ({ ...pre, loading: false }));
-                    return;
-                }
+                // Removed auto-insert logic for single product result
+                // Products will now only be added to cart via explicit user action
                 const processedList = res.list.map(item => ({
                     ...item,
                     price: Number(item.price),
@@ -142,15 +138,20 @@ function PosPage() {
     }, [filter, handleAdd]);
 
     const getCustomers = useCallback(async () => {
-        const res = await request('customer', 'get');
-        if (res && !res.error) {
-            setState(prev => ({
-                ...prev,
-                customers: res.list.map(customer => ({
-                    value: customer.id || 'walk-in',
-                    label: customer.name || 'Customer 1',
-                }))
-            }));
+        try {
+            const res = await request('customer', 'get');
+            if (res && !res.error) {
+                setState(prev => ({
+                    ...prev,
+                    customers: res.list.map(customer => ({
+                        value: customer.id || 'walk-in',
+                        label: customer.name || 'Customer 1',
+                    }))
+                }));
+            }
+        }
+        catch (error) {
+            console.error('Error getting customers:', error);
         }
     }, []);
 
@@ -160,10 +161,10 @@ function PosPage() {
             if (res && !res.error && res.list) {
                 // Create category icons mapping
                 const categoryIcons = {
-                    'Coffee': '☕',
-                    'Tea': '🍵',
-                    'Coconut': '🥥',
-                    'Soda': '🥤',
+                    'Hot Drink': '☕',
+                    'Could Drink': '🍦',
+                    'Soda Tea': '🥥',
+                    'Ice Tea': '🍵',
                     'Milk': '🥛',
                 };
 
@@ -223,41 +224,44 @@ function PosPage() {
     }, []);
 
     const handleIncrease = (item, index) => {
-        state.cart_list[index].cart_qty += 1;
-        setState((p) => ({ ...p, cart_list: state.cart_list }));
-        handleCalSummary();
+        try {
+            state.cart_list[index].cart_qty += 1;
+            setState((p) => ({ ...p, cart_list: state.cart_list }));
+            handleCalSummary();
+        }
+        catch (e) {
+            console.log(e, 'handleIncrease error');
+        }
     };
 
     const handleDescrease = (item, index) => {
-        if (item.cart_qty > 1) {
-            state.cart_list[index].cart_qty -= 1;
-            setState((p) => ({ ...p, cart_list: state.cart_list }));
-            handleCalSummary();
+        try {
+            if (item.cart_qty > 1) {
+                state.cart_list[index].cart_qty -= 1;
+                setState((p) => ({ ...p, cart_list: state.cart_list }));
+                handleCalSummary();
+            }
+        }
+        catch (e) {
+            console.log(e, 'handleDescrease error');
         }
     };
 
     const handleRemove = (item) => {
-        const new_list = state.cart_list.filter(
-            // (item1) => item1.barcode !== item.barcode
-            (item1) => item1.id !== item.id || item1.sugarLevel !== item.sugarLevel
-        );
-        setState((p) => ({
-            ...p,
-            cart_list: new_list,
-        }));
-        handleCalSummary();
+        try {
+            const new_list = state.cart_list.filter(
+                (item1) => item1.id !== item.id || item1.sugarLevel !== item.sugarLevel
+            );
+            setState((p) => ({
+                ...p,
+                cart_list: new_list,
+            }));
+            handleCalSummary();
+        }
+        catch (e) {
+            console.log(e, 'handleRemove error');
+        }
     };
-
-    // const handleRemove = (item) => {
-    //     const new_list = state.cart_list.filter(
-    //         (item1) => item1.barcode !== item.barcode
-    //     );
-    //     setState((p) => ({
-    //         ...p,
-    //         cart_list: new_list,
-    //     }));
-    //     handleCalSummary();
-    // };
     const handleClickOut = async () => {
         // Check if paid amount is sufficient
         if (objSummary.total_paid < objSummary.total) {
@@ -266,7 +270,7 @@ function PosPage() {
                 description: "Paid amount is not sufficient, please check again!",
                 placement: "top",
                 style: {
-                    backgroundColor: "hsl(359,100%,98%)",
+                    backgroundColor: "#ece5e5ff",
                     outline: "1px solid #ff4d4f",
                 },
             });
@@ -362,6 +366,10 @@ function PosPage() {
     }, []);
 
     const handlePrintInvoice = useReactToPrint({
+        // content: () => refInvoice.current,        // required
+        // onBeforePrint,                            // optional
+        // onAfterPrint,                             // optional
+        // onPrintError,                             // optional
         contentRef: refInvoice,
         onBeforePrint: onBeforePrint,
         onAfterPrint: onAfterPrint,
@@ -374,19 +382,33 @@ function PosPage() {
                 <PrintInvoice
                     ref={refInvoice}
                     cart_list={state.cart_list}
+                    objSummary={{
+                        ...objSummary,
+                        customer_id: objSummary.customer_id ? String(objSummary.customer_id) : "VIP Customer",
+                    }}
+                    cashier={profile?.name || 'System'}
+                // ...other props
+                />
+                {/* <PrintInvoice
+                    ref={refInvoice}
+                    cart_list={state.cart_list}
                     objSummary={objSummary}
                     cashier={profile?.name || 'System'}
-                />
+                /> */}
             </div>
             {/* <Row gutter={24} style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}></Row> */}
             <Row gutter={24} style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
                 <Col span={16} style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
-                    <div style={{ marginBottom: '1rem' }}>
+                    <div
+                        // style={{ marginBottom: '1rem' }}
+                        style={{ margin: 0, padding: 0 }}
+                    >
                         <Space >
                             {/* <Typography.Title level={3} style={{ margin: 0 }}>Products</Typography.Title> */}
                             <Flex>
                                 <Input
                                     placeholder="Search products..."
+                                    allowClear
                                     style={{ width: 250 }}
                                     onChange={(event) =>
                                         setFilter((prev) => ({
@@ -397,7 +419,7 @@ function PosPage() {
                                     onSearch={onFilter}
                                 />
                             </Flex>
-                            <Button type="primary" onClick={onFilter}> 
+                            <Button type="primary" onClick={onFilter}>
                                 <FaSearch /> Search
                             </Button>
                         </Space>
@@ -466,13 +488,16 @@ function PosPage() {
                                         }
                                     />
                                 </Col>
-                            ) : (
-                                state.list.map((item, index) => (
-                                    <Col key={index} span={8}>
-                                        <ProductItem {...item} handleAdd={handleAdd} />
-                                    </Col>
-                                ))
-                            )}
+                            )
+                                :
+                                (
+                                    state.list.map((item, index) => (
+                                        <Col key={index} span={8}>
+                                            <ProductItem {...item} handleAdd={handleAdd} />
+                                        </Col>
+                                    ))
+                                )
+                            }
                         </Row>
                     </div>
                 </Col>
@@ -499,5 +524,12 @@ function PosPage() {
         </MainPage>
     );
 }
+PrintInvoice.propTypes = {
+    objSummary: PropTypes.shape({
+        customer_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.oneOf([null])]),
+        // ...other props
+    }),
+    // ...
+};
 
 export default PosPage;

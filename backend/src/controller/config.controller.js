@@ -79,17 +79,28 @@ exports.getlist = async (req, res) => {
         const expense_type = [ 
             { label: "Staff Salary", value: "Staff Salary" },
             { label: "Product Origin", value: "Product Origin" },
-            { label: "Machine Maintenance", value: "Machine Maintenance" },
+            { label: "Machine Maintenance", value: "Machine Maintenance" }, 
             { label: "Power Consumption", value: "Power Consumption" },
             { label: "Other", value: "Other" },
         ];
-        // const expsanse_type = [ 
-        //     { label: "Staff Salary", value: "Staff Salary" },
-        //     { label: "Product Origin", value: "Product Origin" },
-        //     { label: "Machine Maintenance", value: "Machine Maintenance" },
-        //     { label: "Power Consumption", value: "Power Consumption" },
-        //     { label: "Other", value: "Other" },
-        // ]; 
+        const vendor_payee = [ 
+            { label: "Staff Payroll", value: "Staff Payroll" }, 
+            { label: "Machine Maintenance Payroll", value: "Machine Maintenance Payroll" },
+            { label: "EDC Payroll", value: "EDC Payroll" },
+            { label: "Supplier Payroll", value: "Supplier Payroll" },
+            { label: "Other", value: "Other" },
+        ]; 
+        const payment_method = [
+            { label: "Cash", value: "Cash" },
+            { label: "Credit Card", value: "Credit Card" },
+            { label: "Debit Card", value: "Debit Card" },
+        ];
+        const supplier_address =[
+            { label: "Phnom Penh", value: "Phnom Penh" },
+            { label: "Sihanoukville", value: "Sihanoukville" },
+            { label: "Vientiane", value: "Vientiane" },
+            { label: "Thailand", value: "Thailand" },
+        ];
         const [customer] = await db.query(
             "select id as value, concat(name) as label, name from customers"
         );
@@ -104,6 +115,9 @@ exports.getlist = async (req, res) => {
             product_name,
             cup_product,
             categories,
+            vendor_payee,
+            payment_method,
+            supplier_address,
             message: "success"
         })
     }

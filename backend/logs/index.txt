@@ -1,11 +1,28 @@
-SyntaxError: Unexpected token 'var' + 2025-08-02 10:20:25 
-SyntaxError: Missing initializer in destructuring declaration + 2025-08-02 10:20:28 
-SyntaxError: Missing catch or finally after try + 2025-08-02 10:20:35 
-SyntaxError: Unexpected token 'var' + 2025-08-02 10:21:46 
-SyntaxError: Unexpected token 'var' + 2025-08-02 10:21:49 
-SyntaxError: Unexpected token 'var' + 2025-08-02 10:21:54 
-SyntaxError: Unexpected token '}' + 2025-08-02 10:22:54 
-SyntaxError: Unexpected token '}' + 2025-08-02 10:22:55 
-SyntaxError: Unexpected token ':' + 2025-08-02 11:07:46 
-SyntaxError: Unexpected token ':' + 2025-08-02 11:07:47 
-SyntaxError: Identifier 'categories' has already been declared + 2025-08-02 11:09:08 
+SyntaxError: Invalid or unexpected token + 2025-08-07 23:51:52 
+SyntaxError: Invalid or unexpected token + 2025-08-07 23:51:58 
+SyntaxError: Invalid or unexpected token + 2025-08-07 23:52:00 
+SyntaxError: Invalid or unexpected token + 2025-08-07 23:52:02 
+SyntaxError: Invalid or unexpected token + 2025-08-07 23:52:05 
+SyntaxError: Invalid or unexpected token + 2025-08-07 23:52:08 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:10 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:13 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:16 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:20 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:23 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:24 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:28 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:32 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:36 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:43 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:55 
+SyntaxError: missing ) after argument list + 2025-08-07 23:52:59 
+SyntaxError: Unexpected token 'const' + 2025-08-07 23:56:23 
+SyntaxError: Unexpected token 'const' + 2025-08-07 23:56:25 
+SyntaxError: Unexpected token 'const' + 2025-08-07 23:56:32 
+SyntaxError: Missing initializer in destructuring declaration + 2025-08-07 23:56:39 
+SyntaxError: Unexpected token 'const' + 2025-08-08 00:36:01 
+SyntaxError: Missing initializer in destructuring declaration + 2025-08-08 00:36:05 
+SyntaxError: Unexpected token 'const' + 2025-08-08 01:30:51 
+SyntaxError: Missing initializer in destructuring declaration + 2025-08-08 01:30:54 
+SyntaxError: Missing initializer in destructuring declaration + 2025-08-08 01:30:57 
+SyntaxError: Missing initializer in destructuring declaration + 2025-08-08 01:30:58 

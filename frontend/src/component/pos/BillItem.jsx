@@ -25,7 +25,7 @@ function BillItem({ item, handleIncrease, handleDescrease, handleRemove }) {
                 <div className={styles.itemName}>{item.name}</div>
                 {item.sugarLevel && (
                     <div className={styles.sugarLevel}>
-                        Sugar: {item.sugarLevel}
+                        Sugar: {item.sugarLevel + '%'}
                     </div>
                 )}
                 <div className={styles.itemPrice}>

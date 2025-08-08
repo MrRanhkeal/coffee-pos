@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Input, InputNumber, Select, Empty, Space } from 'antd';
+import { Button, Input, InputNumber, Select, Empty } from 'antd';
 import PropTypes from 'prop-types';
+import ExchangePage from '../../../page/currency/ExchangePage'
 // import styled, { keyframes } from 'styled-components'; 
 import BillItem from '../BillItem';
 import MyQRCode from '../../../assets/myqr.jpg';
@@ -25,6 +26,7 @@ const RedPulseKeyframes = () => (
     </style>
 );
 
+
 function CartView({
     customers,
     state,
@@ -36,12 +38,10 @@ function CartView({
     handleRemove,
     handleClickOut
 }) {
-    // Auto scale: adjust maxHeight based on cart items
-    const baseHeight = 520;
+    const baseHeight = 650;
     const itemHeight = 56;
     const maxHeight = Math.max(baseHeight, 260 + state.cart_list.length * itemHeight);
 
-    // Auto-insert total into Amount Paid when payment method is set to QR or Cash
     React.useEffect(() => {
         if ((objSummary.payment_method === 'QR' || objSummary.payment_method === 'Cash') && objSummary.total_paid !== objSummary.total) {
             setObjSummary(prev => ({
@@ -51,15 +51,16 @@ function CartView({
         } else if (objSummary.payment_method !== 'QR' && objSummary.payment_method !== 'Cash') {
             setObjSummary(prev => ({ ...prev, total_paid: 0 }));
         }
-        // Only set if not already set to avoid infinite loop
     }, [objSummary.payment_method, objSummary.total]);
+
+    const paidInUSD = (objSummary.total_paid);
 
     return (
         <div style={{ width: '100%', height: '100%', margin: '0', padding: '0', backgroundColor: '#fff', borderRadius: '8px' }}>
             <RedPulseKeyframes />
             <div style={{
-                background: '#fff',
-                borderRadius: '8px',
+                background: '#f0f2efff',
+                borderRadius: '8px', 
                 boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                 padding: '2px',
                 maxWidth: '100%',
@@ -67,7 +68,8 @@ function CartView({
                 height: '100%',
                 // maxHeight: '100%',
                 position: 'relative',
-                margin: '0 auto',
+                // margin: '0 auto',
+                margin: '0 0 10px 0',
                 transition: 'max-height 0.3s',
                 maxHeight: maxHeight,
                 overflowY: 'auto'
@@ -76,7 +78,7 @@ function CartView({
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    marginBottom: '16px'
+                    marginBottom: '2px'
                 }}>
                     <h2 style={{ fontWeight: 'bold', fontSize: '20px', margin: 0 }}>
                         Cart <span style={{ fontWeight: 'normal', fontSize: '16px' }}>({state.cart_list.length})</span>
@@ -143,9 +145,13 @@ function CartView({
                         <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>Customer</label>
                         <Select
                             style={{ width: '100%' }}
+                            isRequired:false
                             value={objSummary.customer_id || undefined}
                             placeholder="Select Customer"
-                            onChange={(value) => setObjSummary(prev => ({ ...prev, customer_id: value }))}
+                            onChange={(value) => setObjSummary(prev => ({
+                                ...prev,
+                                customer_id: value || undefined
+                            }))}
                             options={customers}
                         />
                     </div>
@@ -200,55 +206,58 @@ function CartView({
                     <div style={{ marginBottom: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <label style={{ fontWeight: 'bold' }}>Amount Paid</label>
-                            {objSummary.total_paid < objSummary.total && (
-                                <span style={{ color: '#ff4d4f', fontSize: '12px' }}>
-                                    Paid amount (${objSummary.total - objSummary.total_paid.toFixed(2)} more needed)
+                            {paidInUSD < objSummary.total && (
+                                <span style={{ color: 'red' }}>
+                                    Paid amount (${(objSummary.total - paidInUSD).toFixed(2)} more needed)
                                 </span>
                             )}
                         </div>
-                        <InputNumber
-                            style={{ width: '100%' }}
-                            value={objSummary.total_paid}
-                            formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                            min={0}
-                            step={0.5}
-                            disabled={objSummary.payment_method === 'QR'}
-                            onChange={val => setObjSummary(prev => ({ ...prev, total_paid: Number(val).toFixed(2) }))}
-                        />
-                        <div><br /></div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <InputNumber
+                                style={{ width: '100%' }}
+                                value={objSummary.total_paid}
+                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                min={0}
+                                step={0.5}
+                                disabled={objSummary.payment_method === 'QR'}
+                                onChange={val => setObjSummary(prev => ({ ...prev, total_paid: Number(val) }))}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }}>Change</label>
                         <Input
                             style={{ width: '100%' }}
-                            value={(() => {
-                                if (objSummary.currency === 'KHR') {
-                                    return `៛ ${(Number(objSummary.total_paid) * 4100).toLocaleString()}`;
-                                } else {
-                                    return `$ ${(Number(objSummary.total_paid) / 4100).toFixed(2)}`;
-                                }
-                            })()} 
+                            value={`$ ${(objSummary.total_paid - objSummary.total).toFixed(2)}`}
+                            readOnly
+                            disabled={objSummary.payment_method === 'QR'}
                         />
                     </div>
-                    <Button
-                        onClick={handleClickOut}
-                        type="primary"
-                        style={{
-                            width: '100%',
-                            fontWeight: 'bold',
-                            fontSize: '20px',
-                            position: 'sticky',
-                            bottom: 0,
-                            zIndex: 10,
-                            marginTop: '8px'
-                        }}
-                        disabled={state.cart_list.length === 0 || objSummary.total_paid < objSummary.total}
-                    >
-                        Checkout
-                    </Button>
                 </div>
+                <Button
+                    onClick={handleClickOut}
+                    type="primary"
+                    style={{
+                        width: '100%',
+                        fontWeight: 'bold',
+                        fontSize: '20px',
+                        position: 'sticky',
+                        bottom: 0,
+                        zIndex: 10,
+                        marginTop: '8px'
+                    }}
+                    disabled={state.cart_list.length === 0 || paidInUSD < objSummary.total}
+                >
+                    Checkout
+                </Button>
+            </div>
+            <div style={{ marginTop: '12px' }}>
+                <ExchangePage />
             </div>
         </div>
-    )
+    );
 }
+
 CartView.propTypes = {
     customers: PropTypes.array.isRequired,
     state: PropTypes.object.isRequired,

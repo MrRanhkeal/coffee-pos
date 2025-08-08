@@ -29,32 +29,12 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
   const handlePrint = () => {
     const printButtons = document.querySelector('.print-buttons');
 
-    if (printButtons) {
-      // Hide the buttons before the print dialog appears
-      printButtons.style.display = 'none';
-
-      // Call the browser's print function.
-      // This call is synchronous and blocks further JavaScript execution
-      // until the print dialog is closed by the user (either print or cancel).
-      window.print();
-
-      // After the print dialog is closed (user has printed or cancelled),
-      // show the buttons again.
+    if (printButtons) { 
+      printButtons.style.display = 'none'; 
+      window.print(); 
       printButtons.style.display = 'block';
     }
-  };
-  // const handlePrint = () => {
-  //   // Hide the buttons before printing
-  //   const printButtons = document.querySelector('.print-buttons');
-  //   if (printButtons) {
-  //     printButtons.style.display = 'none';
-  //   }
-  //   window.print();
-  //   // Show the buttons after printing
-  //   if (printButtons) {
-  //     printButtons.style.display = 'block';
-  //   }
-  // };
+  }; 
 
   const handleClose = () => {
     window.close();

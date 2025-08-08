@@ -8,7 +8,7 @@ function ProductItem({
   id,
   name,
   description,
-  image,
+  image, 
   images = [], // new prop for multiple images, default to empty array
   category_name,
   brand,
@@ -36,8 +36,10 @@ function ProductItem({
       qty,
       sugarLevel: sugarLevel
     });
+    setSugarLevel(0); // Reset sugar to 0% after add to cart
     setModalOpen(false);
   };
+
 
   const handleImageClick = () => {
     setModalOpen(true);
@@ -73,10 +75,11 @@ function ProductItem({
         footer={null}
         centered
         width={400}
+        height={450}
       >
-        <div style={{
-          width: '100%',
-          height: '100%',
+        <div style={{ 
+          // width: '100%',
+          // height: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
@@ -114,7 +117,7 @@ function ProductItem({
           <br />
           <br />
           <br />
-          <div style={{ marginTop: 16, width: '100%', backgroundColor: '#e1caafff', borderRadius: '5px' }}>
+          <div style={{ marginTop: 16, width: '100%', backgroundColor: '#ebd4d1ff', borderRadius: '5px' }}>
             <span style={{ fontSize: '14px', margin: '10px 0px 0px 10px', fontWeight: 'bold' }}>Choice of Sugar Levels</span>
             <br />
             <span style={{ margin: '10px 0px 0px 10px' }}>choose 1 <text style={{ marginLeft: '240px', backgroundColor: '#dc7970ff', borderRadius: '10px',width: '100px', padding: '5px', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>need</text></span>
@@ -126,11 +129,12 @@ function ProductItem({
               //style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}
               style={{ display: 'grid', flexWrap: 'wrap', gap: '2px' }}
             >
-              <Radio style={{ marginLeft: '10px' }} value={0}>sugar 0% <text style={{ marginLeft: '212px' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={25}>sugar 25% <text style={{ marginLeft: '204px' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={50}>sugar 50% <text style={{ marginLeft: '204px' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={75}>sugar 75% <text style={{ marginLeft: '204px' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={100}>sugar 100% <text style={{ marginLeft: '196px' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '10px' }} value={0}>sugar 0% <text style={{ marginLeft: '212px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '10px' }} value={10}>sugar 10% <text style={{ marginLeft: '204px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '10px' }} value={25}>sugar 25% <text style={{ marginLeft: '204px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '10px' }} value={50}>sugar 50% <text style={{ marginLeft: '204px' ,color: '#e90b0bff'}}>free</text></Radio>
+              <Radio style={{ marginLeft: '10px' }} value={75}>sugar 75% <text style={{ marginLeft: '204px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '10px' }} value={100}>sugar 100% <text style={{ marginLeft: '196px',color: '#e90b0bff' }}>free</text></Radio>
               <br />
               <br />
               <br />
@@ -147,7 +151,7 @@ function ProductItem({
             type="primary"
             style={{ marginTop: 16, width: '100%' }}
             icon={<MdAddCircle />}
-            onClick={handleAddWithSugar}
+            onClick={handleAddWithSugar} 
           >
             Add to Cart
           </Button>

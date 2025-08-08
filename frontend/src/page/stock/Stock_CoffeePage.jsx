@@ -3,7 +3,7 @@ import { Button, Table, Modal, Form, Input, message, Select, Tag, Space, InputNu
 import { request } from '../../util/helper';
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from '@ant-design/icons';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import { configStore } from '../../store/configStore'; 
+import { configStore } from '../../store/configStore';
 import { IoMdEye } from 'react-icons/io';
 
 function Stock_CoffeePage() {
@@ -11,19 +11,19 @@ function Stock_CoffeePage() {
         loading: false,
         data: [],
         visibleModal: false,
-        id: null, 
-        product_name: null, 
-        categories: null, qty: null, 
-        cost: null, 
-        supplier_id: null, 
-        status: null 
+        id: null,
+        product_name: null,
+        categories: null, qty: null,
+        cost: null,
+        supplier_id: null,
+        status: null
     });
     const { config } = configStore();
     const [suppliers, setSuppliers] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
-    const [editingId, setEditingId] = useState({ 
-        
+    const [editingId, setEditingId] = useState({
+
     });
 
     const [filter, setFilter] = useState({
@@ -126,7 +126,7 @@ function Stock_CoffeePage() {
                 loading: false
             }));
         }
-    }; 
+    };
     const openModal = () => {
         form.setFieldsValue({
             // name: '',
@@ -166,9 +166,9 @@ function Stock_CoffeePage() {
         setState({
             ...state,
             visibleModal: true,
-            isReadOnly: true, 
+            isReadOnly: true,
             id: record.id
-        }); 
+        });
         form.setFieldsValue({
             id: record.id,
             product_name: record.product_name,
@@ -207,7 +207,7 @@ function Stock_CoffeePage() {
                 >
                     <FileAddFilled />New
                 </Button>
-            </div>  
+            </div>
             <Modal
                 title={state.isReadOnly ? "View Stock" : (editingId && editingId.id ? "Edit Stock" : "New Stock")}
                 open={state.visibleModal || isModalVisible}
@@ -306,7 +306,14 @@ function Stock_CoffeePage() {
                         name="cost"
                         label="Cost"
                     >
-                        <InputNumber min={0} style={{ width: '100%' }} disabled={state.isReadOnly} />
+                        <InputNumber
+                            min={0}
+                            style={{ width: '100%' }}
+                            formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={value => value.replace(/\$\s?|(,*)/g, '')} 
+                            step={0.5}
+                            disabled={state.isReadOnly}
+                        />
                     </Form.Item>
                     <Form.Item
                         name="supplier_id"
@@ -369,8 +376,8 @@ function Stock_CoffeePage() {
                     )}
                 </Form>
             </Modal>
-            <Table 
-                dataSource={state.data} 
+            <Table
+                dataSource={state.data}
                 columns={[
                     {
                         key: "id",
@@ -389,7 +396,7 @@ function Stock_CoffeePage() {
                     },
                     {
                         key: "qty",
-                        title: "Current Quantity",
+                        title: "Quantity",
                         dataIndex: "qty",
                     },
                     {

@@ -5,10 +5,12 @@ import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 // import PropTypes from "prop-types";
+import { configStore } from "../../store/configStore";
 import { IoMdEye } from "react-icons/io";
 import dayjs from "dayjs";
 function SupplierPage() {
     const [form] = Form.useForm();
+    const { config } = configStore();
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [state, setState] = useState({
@@ -17,7 +19,7 @@ function SupplierPage() {
         name: "",
         phone: "",
         email: "",
-        address: "",
+        supplier_address: "",
         descriptoin: "",
         status: "",
         txtSearch: "",
@@ -38,55 +40,53 @@ function SupplierPage() {
     useEffect(() => {
         getList();
     }, [getList]);
-    const onClickEdit = (data) => {
+    const onClickEdit = (items) => {
         setState({
             ...state,
             visibleModal: true,
-            id: data.id,
+            id: items.id,
         });
         form.setFieldsValue({
-            id: data.id, // hiden id (save? | update?)
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            address: data.address,
-            description: data.description,
-            status: data.status,
-        });
-        //
-        // formRef.getFieldValue("id")
+            id: items.id, // hiden id (save? | update?)
+            name: items.name,
+            phone: items.phone,
+            email: items.email,
+            supplier_address: items.supplier_address,
+            description: items.description,
+            status: items.status,
+        }); 
     };
-    const clickReadOnly = (data) => {
+    const clickReadOnly = (items) => {
         setState({
             ...state,
             visibleModal: true,
             isReadOnly: true,
-            id: data.id
+            id: items.id
         });
         form.setFieldsValue({
-            id: data.id,
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            address: data.address,
-            description: data.description,
-            status: data.status,
+            id: items.id,
+            name: items.name,
+            phone: items.phone,
+            email: items.email,
+            supplier_address: items.supplier_address,
+            description: items.description,
+            status: items.status,
         });
     }
-    const onClickDelete = async (data) => {
+    const onClickDelete = async (items) => {
         Modal.confirm({
             title: "Delete Supplier",
-            content: `Are you sure! you want to remove supplier ${data.name}?`,
+            content: `Are you sure! you want to remove supplier ${items.name}?`,
             okText: "Yes",
             onOk: async () => {
                 const res = await request("supplier", "delete", {
-                    id: data.id,
+                    id: items.id,
                 });
                 if (res && !res.error) {
                     // getList(); // request to api response
                     // remove in local
                     message.success(res.message);
-                    const newList = list.filter((item) => item.id != data.id);
+                    const newList = list.filter((item) => item.id != items.id);
                     setList(newList);
                 }
             },
@@ -114,7 +114,7 @@ function SupplierPage() {
             name: items.name,
             phone: items.phone,
             email: items.email,
-            address: items.address,
+            supplier_address: items.supplier_address,
             description: items.description,
             status: items.status,
         };
@@ -156,15 +156,15 @@ function SupplierPage() {
                 open={state.visibleModal}
                 title={state.isReadOnly ? "View Supplier" : (state.id ? "Edit Supplier" : "New Supplier")}
                 footer={null}
-                onCancel={onCloseModal}  
-                height={300} 
+                onCancel={onCloseModal}
+                height={300}
             >
                 <Form
                     layout="vertical"
                     onFinish={onFinish} form={form}
                     initialValues={{
                         status: 1
-                    }} 
+                    }}
                 >
                     <Form.Item
                         name="name"
@@ -187,8 +187,34 @@ function SupplierPage() {
                     >
                         <Input placeholder="Input Supplier email" disabled={state.isReadOnly} />
                     </Form.Item>
-                    <Form.Item name={"address"} label="Supplier address">
-                        <Input placeholder="Input Supplier address" name="address" disabled={state.isReadOnly} />
+                    <Form.Item
+                        name={"supplier_address"}
+                        label="Supplier address"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input expense type!'
+                            }
+                        ]}
+                    >
+                        <Select
+                            placeholder="Select supplier address"
+                            allowSearch
+                            allowClear
+                            options={(config.supplier_address || []).map(item => ({
+                                label: item.label,
+                                value: item.value
+                            }))}
+                            onChange={(value) => {
+                                setState(prev => ({
+                                    ...prev,
+                                    supplier_address: value
+                                }));
+                                getList();
+                            }}
+                            disabled={state.isReadOnly}
+                        />
+                        {/* <Input placeholder="Input Supplier address" name="address" disabled={state.isReadOnly} /> */}
                     </Form.Item>
                     <Form.Item name={"description"} label="description">
                         <Input.TextArea placeholder="description" disabled={state.isReadOnly} />
@@ -250,9 +276,9 @@ function SupplierPage() {
                         dataIndex: "email",
                     },
                     {
-                        key: "address",
+                        key: "supplier_address",
                         title: "Address",
-                        dataIndex: "address",
+                        dataIndex: "supplier_address",
                     },
                     {
                         key: "description",

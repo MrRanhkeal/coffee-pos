@@ -2,6 +2,7 @@ const { logErr, db, removeFile } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
+        //var txt_search = req.query.txt_search;
         var { txt_search, category_id, brand, page, is_list_all } = req.query;
         const pageSize = 10; // fix
 

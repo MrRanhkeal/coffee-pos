@@ -26,7 +26,7 @@ exports.getlist = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         //var sql = "insert into supplier(name,product_type,phone,email,address,description) values(?,?,?,?,?,?,?)";
-        var sql = "insert into supplier(name,phone,email,address,description) values(?,?,?,?,?)";
+        var sql = "insert into supplier(name,phone,email,supplier_address,description) values(?,?,?,?,?)";
         var [check] = await db.query("SELECT * FROM supplier WHERE name = ?", req.body.name);
         if (check.length > 0) {
             return res.status(400).json({
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
             req.body.name, 
             req.body.phone,
             req.body.email,
-            req.body.address,
+            req.body.supplier_address,
             req.body.description
         ]);
         res.json({
@@ -52,12 +52,12 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         // var sql = "UPDATE supplier SET name=?, product_type=?, phone=?, email=?, address=?, description=? WHERE id=?";
-        var sql = "UPDATE supplier SET name=?, phone=?, email=?, address=?, description=? WHERE id=?";
+        var sql = "UPDATE supplier SET name=?, phone=?, email=?, supplier_address=?, description=? WHERE id=?";
         var [data] = await db.query(sql, [
             req.body.name, 
             req.body.phone,
             req.body.email,
-            req.body.address,
+            req.body.supplier_address,
             req.body.description,
             req.body.id
         ]);

@@ -4,6 +4,11 @@ import { request } from '../../util/helper';
 import { IoIosRefresh } from "react-icons/io";
 import { Chart } from 'react-google-charts';
 //import { Chart } from 'react-chartjs-2';
+import { MdCalendarMonth } from "react-icons/md";
+import { FaCalendarWeek } from "react-icons/fa6";
+import { CiCalendarDate } from "react-icons/ci";
+import { BiCalendarWeek } from "react-icons/bi"; 
+import { LiaCalendarWeekSolid } from "react-icons/lia";
 
 // Helper function to parse currency string to number
 const parseCurrency = (value) => {
@@ -20,9 +25,11 @@ function SaleSummaryPage() {
     // Optionally store summary and sale_summary_by_month if needed
     const [summary, setSummary] = useState(null);
     const [saleSummaryByMonth, setSaleSummaryByMonth] = useState([]);
-    // const [summary_by_year, setSummaryByYear] = useState(null);
     const [summary_per_year, setSummaryByYear] = useState(null);
-
+    const [summaryLastMonth, setSummaryLastMonth] = useState(null);
+    const [summaryPerWeek, setSummaryPerWeek] = useState(null);
+    const [this_week, setThisWeek] = useState(null);
+    const [last_week, setLastWeek] = useState(null);
 
     useEffect(() => {
         getData();
@@ -38,15 +45,21 @@ function SaleSummaryPage() {
                 setSummary(res.summary_month ? res.summary_month[0] : null);
                 setSaleSummaryByMonth(res.sale_summary_by_month);
                 setSummaryByYear(res.summary_per_year);
+                setSummaryPerWeek(res.summary_per_week);
+                setSummaryLastMonth(res.summary_last_month || null);
+                setThisWeek(res.this_week || null);
+                setLastWeek(res.last_week || null);
+
             } else {
                 setData([]);
                 setSummary(null);
                 setSaleSummaryByMonth([]);
                 setSummaryByYear(null);
+                //setSaleSummaryByday([]);
                 message.info('No sale data found.');
             }
         } catch (err) {
-            message.error('Failed to get sale per month data.',err);
+            message.error('Failed to get sale per month data.', err);
         } finally {
             setLoading(false);
         }
@@ -56,16 +69,16 @@ function SaleSummaryPage() {
             title: 'Year',
             dataIndex: 'year',
             key: 'year',
-        }, 
+        },
         {
             title: 'មករា',
             dataIndex: 'jan',
-            key: 'jan', 
+            key: 'jan',
         },
         {
             title: 'Feb',
             dataIndex: 'feb',
-            key: 'feb', 
+            key: 'feb',
         },
         {
             title: 'Mar',
@@ -120,23 +133,79 @@ function SaleSummaryPage() {
     ]
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> 
-                <span style={{ fontWeight: 'bold', fontSize: 24 ,color:'#ef4e0aff'}}>Sale per Month Report</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <span style={{ fontWeight: 'bold', fontSize: 24, color: '#ef4e0aff' }}>Sale Reports</span>
                 <Button type="primary" onClick={getData} loading={loading}><IoIosRefresh />Refresh</Button>
             </div>
-            <div style={{ marginBottom: 16 ,fontSize: 20 ,fontWeight: 'bold',color:'#28d90cff'}}>Total Income: {summary_per_year && summary_per_year.total_income}</div>
             {summary && (
-                <div style={{ marginBottom: 16 ,fontSize: 16 }}>
-                    <b>{summary.summary.Sale}:</b> {summary.summary.Total}  <br/> <b>Total Orders:</b> {summary.summary.Total_Order}
+                <div style={{ marginBottom: 16, fontSize: 16 }}>
+                    <b>{summary.summary.Sale}:</b> <span style={{ color: '#ea4909ff', fontWeight: 'bold' }}>{summary.summary.Total}</span>  <br /> <b >Total Orders:</b> <span style={{ color: '#ea4909ff', fontWeight: 'bold' }}>{summary.summary.Total_Order}</span>
                 </div>
             )}
-            <Table 
-                style={{fontWeight: 'bold'}}
+            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
+                <h3 style={{ marginBottom: 16, color: '#fa0808ff', fontSize: 20, fontWeight: 'bold' }}>Sales Summary</h3>
+                {summaryPerWeek ? (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                        {summaryLastMonth && (
+                            <div style={{ margin: '10px', color: '#f04107ff', backgroundColor: '#e6ece4ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
+                                <MdCalendarMonth style={{ justifyContent: 'center', alignItems: 'center' }} />
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>Last Month:</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>${parseFloat(summaryLastMonth.total || '0').toFixed(2)}</span>
+                            </div>
+                        )}
+                        {summary && (
+                            <div style={{ margin: '10px', color: '#e3683fff', backgroundColor: '#e4eae2ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
+                                <FaCalendarWeek />
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>This Month:</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>${parseFloat(summary.summary.Total?.replace('$', '') || '0').toFixed(2)}</span>
+                            </div>
+                        )}
+                        {/* {(last_week || (summaryPerWeek && summaryPerWeek.length > 1)) && (
+                            <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e8e6e2ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
+                                <TbCalendarWeekFilled />
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>Last Week ({(last_week?.week_start_date || summaryPerWeek?.[1]?.week_start_date) ?? 'N/A'}):</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>
+                                    ${parseFloat((last_week?.total_last_week || summaryPerWeek?.[1]?.total_last_week || summaryPerWeek?.[1]?.total_per_week || '0')).toFixed(2)}
+                                </span>
+                            </div>
+                        )} */}
+                        {last_week && (
+                            <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e2e8ecff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}> 
+                                <LiaCalendarWeekSolid />
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>Last Week:</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>
+                                    ${parseFloat((last_week?.total_last_week || summaryPerWeek?.[1]?.total_last_week || summaryPerWeek?.[1]?.total_per_week || '0')).toFixed(2)}
+                                </span>
+                            </div>
+                        )}
+                        {(this_week || (summaryPerWeek && summaryPerWeek.length > 0)) && (
+                            <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e1e6eaff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
+                                <BiCalendarWeek />
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>This Week:</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>
+                                    ${parseFloat((this_week?.total_this_week || summaryPerWeek?.[0]?.total_this_week || '0')).toFixed(2)}
+                                </span>
+                            </div>
+                        )} 
+                        {summary_per_year && (
+                            <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e8e6e2ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
+                                <CiCalendarDate />
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>This Year:</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>${parseFloat(summary_per_year[0]?.total_per_year || '0').toFixed(2)}</span>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div>Loading summary data...</div>
+                )}
+            </div>
+            <br />
+            <Table
+                style={{ fontWeight: 'bold' }}
                 dataSource={data}
                 columns={months}
                 loading={loading}
                 pagination={false}
-                //rowKey={(record, idx) => record.title + '_' + idx}
             />
             <div style={{ marginTop: 32, marginBottom: 32 }}>
                 {saleSummaryByMonth?.[0] ? (
@@ -177,8 +246,8 @@ function SaleSummaryPage() {
                                             backgroundColor: 'transparent',
                                             pointSize: 5,
                                             pointShape: 'circle',
-                                            tooltip: { 
-                                                isHtml: true, 
+                                            tooltip: {
+                                                isHtml: true,
                                                 textStyle: { fontSize: 14 },
                                                 trigger: 'selection'
                                             },
@@ -212,15 +281,15 @@ function SaleSummaryPage() {
                                             title: '',
                                             pieHole: 0.4,
                                             is3D: false,
-                                            chartArea: { 
-                                                width: '90%', 
+                                            chartArea: {
+                                                width: '90%',
                                                 height: '80%',
                                                 top: 20,
                                                 right: 10,
                                                 bottom: 20,
                                                 left: 10
                                             },
-                                            legend: { 
+                                            legend: {
                                                 position: 'right',
                                                 alignment: 'center',
                                                 textStyle: {
@@ -228,12 +297,12 @@ function SaleSummaryPage() {
                                                 }
                                             },
                                             pieSliceText: 'value',
-                                            pieSliceTextStyle: { 
-                                                color: 'white', 
+                                            pieSliceTextStyle: {
+                                                color: 'white',
                                                 fontSize: 12,
                                                 bold: true
                                             },
-                                            tooltip: { 
+                                            tooltip: {
                                                 showColorCode: true,
                                                 text: 'value',
                                                 format: 'currency',
@@ -266,9 +335,9 @@ function SaleSummaryPage() {
                         </div>
                     </div>
                 ) : (
-                    <div style={{ 
-                        textAlign: 'center', 
-                        marginTop: 20, 
+                    <div style={{
+                        textAlign: 'center',
+                        marginTop: 20,
                         padding: '40px',
                         border: '2px dashed #ddd',
                         borderRadius: '8px',

@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
         if (data.length == 0) {
             res.json({
                 error: {
-                    message: "username does't exist"
+                    message: "username does't exists, please try again...!"
                 }, //pro data
             });
             return;

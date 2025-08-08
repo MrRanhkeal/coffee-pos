@@ -3,7 +3,7 @@ import { Button, Form, Input, InputNumber, message, Modal, Select, Space, Table 
 import { request } from "../../util/helper";
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddOutlined } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
 import { configStore } from "../../store/configStore";
 import Link from "antd/es/typography/Link";
@@ -18,8 +18,10 @@ function ExpansePage() {
     isReadOnly: false,
     id: null,
     expense_type: null,
+    vendor_payee: "",
+    payment_method: "",
     expense_date: "",
-    amount: "",
+    amount: null,
     descriptoin: "",
     status: "",
     txtSearch: "",
@@ -36,18 +38,6 @@ function ExpansePage() {
       setList(res.list);
     }
   });
-  // const getList = async () => {
-  //   setLoading(true);
-  //   var param = {
-  //     txtSearch: state.txtSearch,
-  //     expense_type: filter.expense_type,
-  //   };
-  //   const res = await request("expense", "get", param);
-  //   setLoading(false);
-  //   if (res) {
-  //     setList(res.list);
-  //   }
-  // };
   useEffect(() => {
     getList();
   }, []);
@@ -65,30 +55,27 @@ function ExpansePage() {
       });
       formRef.setFieldsValue({
         id: data.id,
-        name: data.name,
+        expense_type: data.expense_type,
+        vendor_payee: data.vendor_payee,
+        amount: data.amount,
+        payment_method: data.payment_method,
         description: data.description,
-        status: data.status,
+        expense_date: data.expense_date,
       });
     }
   };
-  // const onClickView = (data) => {
-  //   setState({
-  //     ...state,
-  //     visibleModal: true,
-  //     isReadOnly: true,
-  //     id: data.id,
-  //   });
-  //   formRef.setFieldsValue({
-  //     id: data.id,
-  //     name: data.name,
-  //     description: data.description,
-  //     status: data.status,
-  //   });
-  // };
 
   const openModal = () => {
     setState({
-      ...state,
+      // ...state,
+      id: null,
+      expense_type: "",
+      vendor_payee: "",
+      amount: '',
+      payment_method: "",
+      description: "",
+      expense_date: "",
+      isReadOnly: false,
       visibleModal: true,
     });
   };
@@ -106,9 +93,12 @@ function ExpansePage() {
   const onFinish = async (items) => {
     var data = {
       id: formRef.getFieldValue("id"),
-      name: items.name,
+      expense_type: items.expense_type,
+      vendor_payee: items.vendor_payee,
+      amount: items.amount,
+      payment_method: items.payment_method,
       description: items.description,
-      status: items.status,
+      // expense_date: items.expense_date,
     };
     var method = "post";
     if (formRef.getFieldValue("id")) {
@@ -131,9 +121,11 @@ function ExpansePage() {
     formRef.setFieldsValue({
       id: data.id,
       expense_type: data.expense_type,
+      vendor_payee: data.vendor_payee,
       amount: data.amount,
+      payment_method: data.payment_method,
       description: data.description,
-      expense_date: data.expense_date,
+      // expense_date: data.expense_date,
     });
   };
   const onClickDelete = async (data) => {
@@ -176,7 +168,7 @@ function ExpansePage() {
           onClick={openModal}
           style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}
         >
-          NEW
+          <FileAddOutlined /> New Expense
         </Button>
       </div>
       <Modal
@@ -208,7 +200,7 @@ function ExpansePage() {
                 label: item.label,
                 value: item.value
               }))}
-              onChange={(value)=>{
+              onChange={(value) => {
                 setFilter(prev => ({
                   ...prev,
                   expense_type: value
@@ -219,14 +211,75 @@ function ExpansePage() {
             />
           </Form.Item>
           <Form.Item name={"amount"} label="Amount" rules={[{ required: true, message: 'Please input amount!' }]}>
-            <InputNumber type="number" placeholder="Amount" style={{ width: "100%" }} disabled={state.isReadOnly} />
+            <InputNumber
+              min={0}
+              style={{ width: '100%' }}
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              step={0.5}
+              disabled={state.isReadOnly}
+            />
+          </Form.Item>
+          <Form.Item
+            name={"vendor_payee"}
+            label="Vendor Payee"
+            rules={[
+              {
+                required: true,
+                message: 'Please input vendor payee!'
+              }
+            ]}
+          >
+            <Select
+              placeholder="Select vendor payee"
+              showSearch
+              allowClear
+              options={(config.vendor_payee || []).map(item => ({
+                label: item.label,
+                value: item.value
+              }))}
+              onChange={(value) => {
+                setFilter(prev => ({
+                  ...prev,
+                  vendor_payee: value
+                }));
+                getList();
+              }}
+              disabled={state.isReadOnly} />
+          </Form.Item>
+          <Form.Item
+            name={"payment_method"}
+            label="Payment Method"
+            rules={[
+              {
+                required: true,
+                message: 'Please input payment_method!'
+              }
+            ]}
+          >
+            <Select
+              placeholder="Select payment method"
+              showSearch
+              allowClear
+              options={(config.payment_method || []).map(item => ({
+                label: item.label,
+                value: item.value
+              }))}
+              onChange={(value) => {
+                setFilter(prev => ({
+                  ...prev,
+                  payment_method: value
+                }));
+                getList();
+              }}
+              disabled={state.isReadOnly} />
           </Form.Item>
           <Form.Item name={"description"} label="Description" rules={[{ required: true, message: 'Please input description!' }]}>
             <Input.TextArea placeholder="Description" disabled={state.isReadOnly} />
           </Form.Item>
-          <Form.Item name={"expense_date"} label="Expense Date" rules={[{ required: true, message: 'Please input expense date!' }]}>
+          {/* <Form.Item name={"expense_date"} label="Expense Date" rules={[{ required: true, message: 'Please input expense date!' }]}>
             <Input type="date" placeholder="Expense Date" disabled={state.isReadOnly} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item style={{ textAlign: "right" }}>
             <Button onClick={onCloseModal} >Close</Button> &nbsp;
             {!state.isReadOnly && (
@@ -240,16 +293,18 @@ function ExpansePage() {
       <Table
         dataSource={list}
         columns={[
-          {
-            key: "No",
-            title: "No",
-            render: (item, data, index) => index + 1,
-          },
+          // {
+          //   key: "No",
+          //   title: "No",
+          //   render: (item, data, index) => index + 1,
+          // },
           {
             title: "Expense ID",
             dataIndex: "id",
             key: "id",
-            render: (id) => <Link to={`/expanse/${id}`} style={{ color: 'rgba(206, 19, 13, 1)', fontSize: "14px" }}>{'EXP' + '-' + ''.padStart(2, '0')}{id}</Link>
+            render: (item, data, index) => <Link style={{ color: '#cc2121ff', fontSize: "14px" }}>{'EXP-' + ''.padStart(2, '0') + index}</Link>,
+            //' + 1,
+            //render: (id) => <Link to={`/expanse/${id}`} style={{ color: 'rgba(206, 19, 13, 1)', fontSize: "14px" }}>{'EXP' + '-' + ''.padStart(2, '0')}{id}</Link>
           },
           {
             key: "expense_type",
@@ -257,9 +312,9 @@ function ExpansePage() {
             dataIndex: "expense_type",
           },
           {
-            key: "vendor/customer",
-            title: "Vendor/Customer",
-            dataIndex: "vendor_customer",
+            key: "vendor_payee",
+            title: "Vendor/Payee",
+            dataIndex: "vendor_payee",
           },
           {
             key: "amount",
@@ -281,7 +336,8 @@ function ExpansePage() {
             key: "expense_date",
             title: "Expense Date",
             dataIndex: "expense_date",
-            render: (date) => new Date(date).toLocaleDateString(),
+            render: (date) => new Date(date).toLocaleDateString("en-GB", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            //render: (date) => new Date(date).toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
           },
           {
             key: "create_by",

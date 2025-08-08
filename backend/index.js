@@ -10,7 +10,8 @@ const { log } = require("console");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({ origin: "*" }));
-
+//adjust port
+const PORT = process.env.PORT || 8081; // fallback for local dev
 // Basic route
 app.get("/", (req, res) => {
     const list = [
@@ -46,9 +47,9 @@ try {
     });
 
     // Start server
-    const port = 8081;
-    app.listen(port, () => {
-        console.log(`http://localhost:${port}`);
+    //const port = 8081;
+    app.listen(PORT, () => {
+        console.log(`http://localhost:${PORT}`);
     });
 }
 catch (error) {

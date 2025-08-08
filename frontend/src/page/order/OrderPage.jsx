@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
     Button,
     DatePicker,
-    Image, 
+    Image,
     message,
     Modal,
     Space,
@@ -36,8 +36,7 @@ function OrderPage() {
     const [filter, setFiler] = useState({
         from_date: dayjs().subtract(5, "d"), // current
         to_date: dayjs().add(1, "d"), // current
-    });
-
+    }); 
     useEffect(() => {
         getList();
     }, []);
@@ -57,8 +56,8 @@ function OrderPage() {
                 setSummary(res.summary);
             }
         }
-        catch(err){
-            res.send("data not get",err)
+        catch (err) {
+            res.send("data not get", err)
         }
     };
     const getOrderDetail = async (data) => {
@@ -155,9 +154,9 @@ function OrderPage() {
             <div className="pageHeader">
                 <Space>
                     <div>
-                        <div style={{ fontWeight: "bold",color: "#124636ff", fontSize: "20px",paddingBottom: "10px" }}>Orders</div>
-                        <div style={{ fontSize: "16px" ,fontWeight: "bold"}}>
-                            Order &nbsp;: {summary?.total_order || 0}&nbsp; Order <br/> Total&nbsp;&nbsp;&nbsp;:{" "}&nbsp;
+                        <div style={{ fontWeight: "bold", color: "#124636ff", fontSize: "20px", paddingBottom: "10px" }}>Orders</div>
+                        <div style={{ fontSize: "16px", fontWeight: "bold" }}>
+                            Order &nbsp;: {summary?.total_order || 0}&nbsp; Order <br /> Total&nbsp;&nbsp;&nbsp;:{" "}&nbsp;
                             ${summary?.total_amount || 0}
                         </div>
                     </div>
@@ -169,7 +168,7 @@ function OrderPage() {
                         onSearch={getList}
                         placeholder="Search"
                     /> */}
-                    <DatePicker.RangePicker style={{ margin : "40px 0px 0px 20px" ,width: "400px"}} 
+                    <DatePicker.RangePicker style={{ margin: "40px 0px 0px 20px", width: "400px" }}
                         value={filter.from_date && filter.to_date ? [dayjs(filter.from_date, "DD/MM/YYYY"), dayjs(filter.to_date, "DD/MM/YYYY")] : []}
                         allowClear={true}
                         format={"DD/MM/YYYY"}
@@ -341,9 +340,7 @@ function OrderPage() {
                         key: "paid_amount",
                         title: "Paid",
                         dataIndex: "paid_amount",
-                        render: (value) => (
-                            <div style={{ fontWeight: "bold", color: "green" }}>${value}</div>
-                        ),
+                        render: (value) => (<div style={{ fontWeight: "bold", color: "green" }}>${value}</div>), 
                     },
                     {
                         key: "Due",
