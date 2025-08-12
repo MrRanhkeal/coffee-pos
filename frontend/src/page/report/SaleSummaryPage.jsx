@@ -7,7 +7,7 @@ import { Chart } from 'react-google-charts';
 import { MdCalendarMonth } from "react-icons/md";
 import { FaCalendarWeek } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
-import { BiCalendarWeek } from "react-icons/bi"; 
+import { BiCalendarWeek } from "react-icons/bi";
 import { LiaCalendarWeekSolid } from "react-icons/lia";
 
 // Helper function to parse currency string to number
@@ -30,6 +30,14 @@ function SaleSummaryPage() {
     const [summaryPerWeek, setSummaryPerWeek] = useState(null);
     const [this_week, setThisWeek] = useState(null);
     const [last_week, setLastWeek] = useState(null);
+
+    useEffect(() => {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+        return () => { document.head.removeChild(link); };
+    }, []);
 
     useEffect(() => {
         getData();
@@ -66,67 +74,67 @@ function SaleSummaryPage() {
     };
     const months = [
         {
-            title: 'Year',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឆ្នាំ</span>,
             dataIndex: 'year',
             key: 'year',
         },
         {
-            title: 'មករា',
-            dataIndex: 'jan',
             key: 'jan',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>មករា</span>,
+            dataIndex: 'jan',
         },
         {
-            title: 'Feb',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>កុម្ភៈ</span>,
             dataIndex: 'feb',
             key: 'feb',
         },
         {
-            title: 'Mar',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>មីនា</span>,
             dataIndex: 'mar',
             key: 'mar',
         },
         {
-            title: 'Apr',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>មេសា</span>,
             dataIndex: 'apr',
             key: 'apr',
         },
         {
-            title: 'May',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឧសភា</span>,
             dataIndex: 'may',
             key: 'may',
         },
         {
-            title: 'Jun',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>មិថុនា</span>,
             dataIndex: 'jun',
             key: 'jun',
         },
         {
-            title: 'Jul',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>កក្កដា</span>,
             dataIndex: 'jul',
             key: 'jul',
         },
         {
-            title: 'Aug',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សីហា</span>,
             dataIndex: 'aug',
             key: 'aug',
         },
         {
-            title: 'Sep',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>កញ្ញា</span>,
             dataIndex: 'sep',
             key: 'sep',
         },
         {
-            title: 'Oct',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តុលា</span>,
             dataIndex: 'oct',
             key: 'oct',
         },
         {
-            title: 'Nov',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>វិច្ឆិកា</span>,
             dataIndex: 'nov',
             key: 'nov',
         },
         {
-            title: 'Dec',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ធ្នូ</span>,
             dataIndex: 'dec',
             key: 'dec',
         },
@@ -134,30 +142,30 @@ function SaleSummaryPage() {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <span style={{ fontWeight: 'bold', fontSize: 24, color: '#ef4e0aff' }}>Sale Reports</span>
+                <span style={{ fontWeight: 'bold', fontSize: 20, color: '#ef4e0aff', fontFamily: 'Khmer OS Muol Light' }}>របាយការណ៍នៃការលក់</span>
                 <Button type="primary" onClick={getData} loading={loading}><IoIosRefresh />Refresh</Button>
             </div>
             {summary && (
                 <div style={{ marginBottom: 16, fontSize: 16 }}>
-                    <b>{summary.summary.Sale}:</b> <span style={{ color: '#ea4909ff', fontWeight: 'bold' }}>{summary.summary.Total}</span>  <br /> <b >Total Orders:</b> <span style={{ color: '#ea4909ff', fontWeight: 'bold' }}>{summary.summary.Total_Order}</span>
+                    <b style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលក់ក្នុងខែនេះ</b> <span style={{ color: '#ea4909ff', fontWeight: 'bold' }}>{summary.summary.Total}</span>  <br /> <b style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការបញ្ជារទិញក្នុងខែនេះ</b> <span style={{ color: '#ea4909ff', fontWeight: 'bold' }}>{summary.summary.Total_Order} </span><b style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប៉ុង</b>
                 </div>
             )}
             <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-                <h3 style={{ marginBottom: 16, color: '#fa0808ff', fontSize: 20, fontWeight: 'bold' }}>Sales Summary</h3>
+                <h3 style={{ marginBottom: 16, color: '#fa0808ff', fontSize: 20, fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>របាយការណ៍នៃការលក់</h3>
                 {summaryPerWeek ? (
                     <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
                         {summaryLastMonth && (
                             <div style={{ margin: '10px', color: '#f04107ff', backgroundColor: '#e6ece4ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
                                 <MdCalendarMonth style={{ justifyContent: 'center', alignItems: 'center' }} />
-                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>Last Month:</b>
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ខែមុន&nbsp;</b>
                                 <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>${parseFloat(summaryLastMonth.total || '0').toFixed(2)}</span>
                             </div>
                         )}
                         {summary && (
                             <div style={{ margin: '10px', color: '#e3683fff', backgroundColor: '#e4eae2ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
                                 <FaCalendarWeek />
-                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>This Month:</b>
-                                <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>${parseFloat(summary.summary.Total?.replace('$', '') || '0').toFixed(2)}</span>
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ខែនេះ&nbsp;</b>
+                                <span style={{ color: '#da2016ff', fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>${parseFloat(summary.summary.Total?.replace('$', '') || '0').toFixed(2)}</span>
                             </div>
                         )}
                         {/* {(last_week || (summaryPerWeek && summaryPerWeek.length > 1)) && (
@@ -170,9 +178,9 @@ function SaleSummaryPage() {
                             </div>
                         )} */}
                         {last_week && (
-                            <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e2e8ecff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}> 
+                            <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e2e8ecff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
                                 <LiaCalendarWeekSolid />
-                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>Last Week:</b>
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សប្តាហ៍មុន&nbsp;</b>
                                 <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>
                                     ${parseFloat((last_week?.total_last_week || summaryPerWeek?.[1]?.total_last_week || summaryPerWeek?.[1]?.total_per_week || '0')).toFixed(2)}
                                 </span>
@@ -181,16 +189,16 @@ function SaleSummaryPage() {
                         {(this_week || (summaryPerWeek && summaryPerWeek.length > 0)) && (
                             <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e1e6eaff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
                                 <BiCalendarWeek />
-                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>This Week:</b>
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សប្តាហ៍នេះ&nbsp;</b>
                                 <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>
                                     ${parseFloat((this_week?.total_this_week || summaryPerWeek?.[0]?.total_this_week || '0')).toFixed(2)}
                                 </span>
                             </div>
-                        )} 
+                        )}
                         {summary_per_year && (
                             <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e8e6e2ff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
                                 <CiCalendarDate />
-                                <b style={{ color: '#2d1817ff', fontWeight: 'bold' }}>This Year:</b>
+                                <b style={{ color: '#2d1817ff', fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឆ្នាំនេះ&nbsp;</b>
                                 <span style={{ color: '#da2016ff', fontWeight: 'bold' }}>${parseFloat(summary_per_year[0]?.total_per_year || '0').toFixed(2)}</span>
                             </div>
                         )}
@@ -210,12 +218,13 @@ function SaleSummaryPage() {
             <div style={{ marginTop: 32, marginBottom: 32 }}>
                 {saleSummaryByMonth?.[0] ? (
                     <div>
-                        <h3 style={{ textAlign: 'center', marginBottom: 24, color: '#333' }}>Monthly Sales Analysis</h3>
+                        <h3 style={{ textAlign: 'center', marginBottom: 24, color: '#f33939ff', fontSize: 20, fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>ការវិភាគការលក់ប្រចាំខែ</h3>
                         <div style={{ marginBottom: 24 }}>
                             <div style={{ padding: 16, backgroundColor: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                                <h3 style={{ marginBottom: 16, color: '#333' }}>Monthly Sales Overview</h3>
-                                <div style={{ height: 400 }}>
+                                <h3 style={{ marginBottom: 16, color: '#333', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>ទិដ្ឋភាពទូទៅនៃការលក់ប្រចាំខែ</h3>
+                                <div style={{ height: 400, fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                                     <Chart
+                                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                                         width={'100%'}
                                         height={'100%'}
                                         chartType="LineChart"
@@ -226,19 +235,21 @@ function SaleSummaryPage() {
                                                 .filter(month => month.dataIndex && month.dataIndex !== 'year' && month.dataIndex !== 'currency')
                                                 .map(month => {
                                                     const value = parseCurrency(saleSummaryByMonth[0][month.dataIndex]);
-                                                    return [month.title, value];
+                                                    return [month.key, value];
                                                 })
                                         ]}
                                         options={{
                                             chartArea: { width: '85%', height: '75%' },
                                             hAxis: {
-                                                title: 'Month',
-                                                titleTextStyle: { color: '#333' },
+                                                key: 'Month',
+                                                keyTextStyle: { color: '#333' },
                                                 slantedText: true,
                                                 slantedTextAngle: 45,
+                                                fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',
+
                                             },
                                             vAxis: {
-                                                title: 'Amount ($)',
+                                                key: 'Amount ($)',
                                                 minValue: 0,
                                                 format: 'currency',
                                             },
@@ -260,7 +271,7 @@ function SaleSummaryPage() {
 
                         <div style={{ marginBottom: 24 }}>
                             <div style={{ padding: 16, backgroundColor: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                                <h3 style={{ marginBottom: 16, color: '#333' }}>Sales Distribution</h3>
+                                <h3 style={{ marginBottom: 16, color: '#333', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>គំនូសតាងនៃការលក់</h3>
                                 <div style={{ height: 400 }}>
                                     <Chart
                                         width={'100%'}
@@ -273,12 +284,12 @@ function SaleSummaryPage() {
                                                 .filter(month => month.dataIndex && month.dataIndex !== 'year' && month.dataIndex !== 'currency')
                                                 .map(month => {
                                                     const value = parseCurrency(saleSummaryByMonth[0][month.dataIndex]);
-                                                    return [month.title, value];
+                                                    return [month.key, value];
                                                 })
                                                 .filter(([, value]) => value > 0)
                                         ]}
                                         options={{
-                                            title: '',
+                                            key: '',
                                             pieHole: 0.4,
                                             is3D: false,
                                             chartArea: {
@@ -355,7 +366,6 @@ function SaleSummaryPage() {
                     <span>No data available</span>
                 </div>
             )}
-            <></>
         </div>
     )
 }

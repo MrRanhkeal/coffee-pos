@@ -30,7 +30,9 @@ function DashboardReven() {
     }, []);
     function DashboardReven({ title, value, icon }) {
         return (
-            <Card direction='horizontal' style={{ width: "210px", height: "120px", backgroundColor: "rgba(79, 255, 10, 0.5)", display: "flex", alignItems: "center" }}>
+            <Card direction='horizontal'
+                style={{margin: '10px 10px 10px 10px', width: "220px", height: "120px", backgroundColor: '#c4de75ff', borderRadius: 6, fontSize: 20, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', display: 'flex', textAlign: 'center' }}
+            >
                 <Space >
                     {icon}
                     <Statistic title={title} value={value} />
@@ -52,7 +54,7 @@ function DashboardReven() {
                         }}
                     />
                 }
-                title={"Total Revenue"}
+                title={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រាក់ចំណូលសរុប</span>}
                 value={revenue}
             />
         </Space>

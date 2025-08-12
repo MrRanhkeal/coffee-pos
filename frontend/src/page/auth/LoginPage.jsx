@@ -78,7 +78,7 @@ function LoginPage() {
           <Form.Item>
             <Button block type="primary" htmlType="submit" size="large" style={{ color: '#61E786' }}>
               <LoginOutlined />
-              Login
+              LOGIN
             </Button>
           </Form.Item>
         </Form>

@@ -92,12 +92,12 @@ function ProductItem({
               style={{ borderRadius: '10px', width: '350px', height: '290px' }}
             />
             <div>
-              <div>
-                {name}
+              <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                {name} &nbsp;
                 {description}
               </div>
               <div style={{ fontWeight: 'bold', color: 'green', marginRight: '5px' }}>${price} &nbsp;&nbsp;&nbsp; <span style={{ color: 'red', fontWeight: 'bold', marginRight: '5px' }}> {discount}%</span> <span style={{ color: 'red', fontSize: '12px' }}>off</span><br /></div>
-              <span style={{ color: 'black', fontSize: '14px' }}>1 cup</span>
+              <span style={{ color: 'black', fontSize: '14px',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' ,fontWeight:'bold'}}>១ កែវ</span>
             </div>
             {imageList.length > 1 && (
               <>
@@ -118,23 +118,23 @@ function ProductItem({
           <br />
           <br />
           <div style={{ marginTop: 16, width: '100%', backgroundColor: '#ebd4d1ff', borderRadius: '5px' }}>
-            <span style={{ fontSize: '14px', margin: '10px 0px 0px 10px', fontWeight: 'bold' }}>Choice of Sugar Levels</span>
+            <span style={{ fontSize: '14px', margin: '30px 10px 30px 10px', fontWeight: 'bold' }}>Choice of Sugar Levels</span>
             <br />
-            <span style={{ margin: '10px 0px 0px 10px' }}>choose 1 <text style={{ marginLeft: '240px', backgroundColor: '#dc7970ff', borderRadius: '10px',width: '100px', padding: '5px', color: 'white', fontSize: '12px', fontWeight: 'bold' }}>need</text></span>
+            <span style={{ margin: '10px 0 0 10px',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ជ្រើសរើស 1 <text style={{ marginLeft: '220px', backgroundColor: '#dc7970ff', borderRadius: '10px',width: '100px', padding: '5px', color: 'white', fontSize: '12px', fontWeight: 'bold',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ត្រូវការ</text></span>
             <br />
             <br />
             <Radio.Group
               value={sugarLevel}
               onChange={(e) => setSugarLevel(e.target.value)}
               //style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}
-              style={{ display: 'grid', flexWrap: 'wrap', gap: '2px' }}
+              style={{ display: 'grid', flexWrap: 'wrap', gap: '2px' ,margin:'0 0 15px 0'}}
             >
-              <Radio style={{ marginLeft: '10px' }} value={0}>sugar 0% <text style={{ marginLeft: '212px',color: '#e90b0bff' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={10}>sugar 10% <text style={{ marginLeft: '204px',color: '#e90b0bff' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={25}>sugar 25% <text style={{ marginLeft: '204px',color: '#e90b0bff' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={50}>sugar 50% <text style={{ marginLeft: '204px' ,color: '#e90b0bff'}}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={75}>sugar 75% <text style={{ marginLeft: '204px',color: '#e90b0bff' }}>free</text></Radio>
-              <Radio style={{ marginLeft: '10px' }} value={100}>sugar 100% <text style={{ marginLeft: '196px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '6px' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} value={0}>ជាតិស្ករ ០% <text style={{ marginLeft: '210px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '6px' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} value={10}>ជាតិស្ករ ១០% <text style={{ marginLeft: '202px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '6px' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} value={25}>ជាតិស្ករ ២៥% <text style={{ marginLeft: '200px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '6px' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} value={50}>ជាតិស្ករ ៥០% <text style={{ marginLeft: '200px' ,color: '#e90b0bff'}}>free</text></Radio>
+              <Radio style={{ marginLeft: '6px' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} value={75}>ជាតិស្ករ ៧៥% <text style={{ marginLeft: '198px',color: '#e90b0bff' }}>free</text></Radio>
+              <Radio style={{ marginLeft: '6px' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} value={100}>ជាតិស្ករ ១០០% <text style={{ marginLeft: '190px',color: '#e90b0bff' }}>free</text></Radio>
               <br />
               <br />
               <br />
@@ -149,15 +149,15 @@ function ProductItem({
           >discription </div> */}
           <Button
             type="primary"
-            style={{ marginTop: 16, width: '100%' }}
+            style={{ marginTop: 16, width: '100%',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
             icon={<MdAddCircle />}
-            onClick={handleAddWithSugar} 
+            onClick={handleAddWithSugar}  
           >
-            Add to Cart
+            បញ្ចូលទៅកន្ត្រក
           </Button>
         </div>
       </Modal>
-      <div className={styles.p_name + " truncate-text"}>
+      <div className={styles.p_name + " truncate-text"} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' ,margin:'0 0 0 6px'}}>
         {name}
         {/* {description} */}
       </div>
@@ -177,7 +177,7 @@ function ProductItem({
           <div className={styles.p_final_price}> {final_price}$</div>
         </div>
       ) : (
-        <div className={styles.p_price_container}>Price &nbsp;&nbsp;
+        <div className={styles.p_price_container} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',margin:'0 0 10px 6px' }}>តម្លៃ &nbsp;&nbsp;
           <div className={styles.p_final_price}>${price}</div>
         </div>
       )}

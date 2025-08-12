@@ -4,7 +4,7 @@ import { Button, Form, Input, message, Modal, Select, Space, Table, Tag, } from 
 // import { resetWarned } from "antd/es/_util/warning";
 // import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled, SearchOutlined } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
 
 
@@ -59,7 +59,7 @@ function UserPage() {
         form.setFieldsValue({
             id: record.id,
             name: record.name,
-            username: record.username, 
+            username: record.username,
             // role_id: record.role_id,
             role_id: record.role_id,
             is_active: record.is_active
@@ -91,9 +91,11 @@ function UserPage() {
     const clickBtnDelete = async (record) => {
         try {
             Modal.confirm({
-                title: "Delete User",
-                content: `Are you sure! you want to delete user ${record.name}?`,
-                okText: "Ok",
+                title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
+                content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {record.name} ?</span>,
+                okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
+                okType: 'danger',
+                cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
                 onOk: async () => {
                     const res = await request(`auth/delete/${record.id}`, "delete");
                     if (res && !res.error) {
@@ -107,7 +109,7 @@ function UserPage() {
         }
         catch (error) {
             // console.error("Delete error:", error);
-            message.error("Failed to delete user",error);
+            message.error("Failed to delete user", error);
         }
     };
 
@@ -183,23 +185,35 @@ function UserPage() {
                 }}
             >
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <div>User</div>
-                    <Input.Search style={{ marginLeft: 10 }} placeholder="Search" />
+                    <Input.Search style={{ marginLeft: 10 }} placeholder="ស្វែងរក" className="khmer-search" allowClear />
+                    <Button type="primary"
+                        onClick={getList}
+                        style={{ padding: "10px", margin: '0 0 0 14px', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        allowClear
+                    >
+                        <SearchOutlined style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} />ស្វែងរក
+                    </Button>
                 </div>
-                <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }} onClick={handleOpenModal} >
-                    <FileAddFilled />New
+                <Button type="primary"
+                    style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                    onClick={handleOpenModal}
+                    allowClear
+                >
+                    <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />បញ្ចូលថ្មី
                 </Button>
             </div>
+            <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>តារាងអ្នកប្រើប្រាស់</div>
             <Modal
+                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                 open={state.visible}
-                title={state.isReadOnly ? "View User" : (state.isEdit ? "Edit User" : "New User")}
+                title={state.isReadOnly ? "មើល" : (state.isEdit ? "កែប្រែ" : "បញ្ចូលថ្មី")}
                 onCancel={handleCloseModal}
                 footer={null}
             >
                 <Form layout="vertical" form={form} onFinish={onFinish}>
                     <Form.Item
                         name={"name"}
-                        label="Name"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះ</span>}
                         rules={[
                             {
                                 required: true,
@@ -207,27 +221,27 @@ function UserPage() {
                             },
                         ]}
                     >
-                        <Input placeholder="Input name" disabled={state.isReadOnly} />
+                        <Input placeholder="សូមបញ្ចូលឈ្មោះ" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
                     </Form.Item>
                     <Form.Item
                         name={"username"}
-                        label="Email"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ៊ីមែល</span>}
                         rules={[
                             {
                                 required: true,
-                                message: "Please fill in email",
+                                message: "សូមបញ្ចូលអ៊ីមែល",
                             },
                         ]}
                     >
-                        <Input placeholder="Input email" disabled={state.isReadOnly} />
+                        <Input placeholder="សូមបញ្ចូលអ៊ីមែល" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
                     </Form.Item>
 
                     <Form.Item
                         name="password"
-                        label="Password"
-                        rules={[{ required: true, message: 'Please input the password!' }]}
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពាក្យសម្ងាត់</span>}
+                        rules={[{ required: true, message: 'សូមបញ្ចូលពាក្យសម្ងាត់!' }]}
                     >
-                        <Input.Password placeholder="Input password" disabled={state.isReadOnly} visibilityToggle />
+                        <Input.Password placeholder="សូមបញ្ចូលពាក្យសម្ងាត់" disabled={state.isReadOnly} visibilityToggle  className="khmer-search"/>
                     </Form.Item>
 
                     {/* <Form.Item
@@ -243,30 +257,32 @@ function UserPage() {
                         <Input.Password placeholder="Input password" disabled={state.isReadOnly} />
                     </Form.Item> */}
                     <Form.Item
+                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                         name={"confirm_password"}
-                        label="Confirm Password"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បញ្ជាក់ពាក្យសម្ងាត់</span>}
                         rules={[
                             {
                                 required: true,
-                                message: "Please fill in confirm password",
+                                message: "សូមបញ្ជាក់ពាក្យសម្ងាត់",
                             },
                         ]}
                     >
-                        <Input.Password placeholder="confirm password" disabled={state.isReadOnly} />
+                        <Input.Password placeholder="សូមបញ្ជាក់ពាក្យសម្ងាត់" className="khmer-search" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
                     </Form.Item>
 
                     <Form.Item
                         name="role_id"
-                        label="Role"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តួនាទី</span>}
                         rules={[
                             {
                                 required: true,
-                                message: "Please select role",
+                                message: "សូមជ្រើសរើសតួនាទី",
                             },
                         ]}
                     >
                         <Select
-                            placeholder="Select role"
+                            placeholder="ជ្រើសរើសតួនាទី"
+                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                             disabled={state.isReadOnly}
                             options={roles.map(role => ({
                                 label: role.name,
@@ -276,7 +292,7 @@ function UserPage() {
                     </Form.Item>
                     <Form.Item
                         name={"is_active"}
-                        label="Status"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>}
                         rules={[
                             {
                                 required: true,
@@ -285,26 +301,29 @@ function UserPage() {
                         ]}
                     >
                         <Select
-                            placeholder="Select Status"
+                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            placeholder="ជ្រើសរើសស្ថានភាព"
                             disabled={state.isReadOnly}
                             options={[
                                 {
-                                    label: "Active",
+                                    label: "សកម្ម",
                                     value: 1,
+                                    style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }
                                 },
                                 {
-                                    label: "InActive",
+                                    label: "អសកម្ម",
                                     value: 0,
+                                    style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }
                                 },
                             ]}
                         />
                     </Form.Item>
                     <Form.Item style={{ textAlign: "right" }}>
                         <Space>
-                            <Button onClick={handleCloseModal}>{state.isReadOnly ? 'Close' : 'Cancel'}</Button>
+                            <Button onClick={handleCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{state.isReadOnly ? 'បិទ' : 'បោះបង់'}</Button>
                             {!state.isReadOnly && (
-                                <Button type="primary" htmlType="submit">
-                                    {state.isEdit ? 'Update' : 'Save'}
+                                <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                    {state.isEdit ? 'កែប្រែ' : 'រក្សាទុក'}
                                 </Button>
                             )}
                         </Space>
@@ -318,43 +337,47 @@ function UserPage() {
                 columns={[
                     {
                         key: "no",
-                        title: "No",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
                         render: (value, data, index) => index + 1,
                     },
                     {
                         key: "name",
-                        title: "Name",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះ</span>,
                         dataIndex: "name",
+                        render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
                     },
                     {
                         key: "username",
-                        title: "Username",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះអ្នកប្រើ</span>,
                         dataIndex: "username",
+                        render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
                     },
                     {
                         key: "role_name",
-                        title: "Role Name",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះតួនាទី</span>,
                         dataIndex: "role_name",
+                        render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
                     },
                     {
                         key: "is_active",
-                        title: "Status",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>,
                         dataIndex: "is_active",
                         render: (value) =>
                             value ? (
-                                <Tag color="green">Active</Tag>
+                                <Tag color="green" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្ម</Tag>
                             ) : (
-                                <Tag color="red">In Active</Tag>
+                                <Tag color="red" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អសកម្ម</Tag>
                             ),
                     },
                     {
                         key: "create_by",
                         title: "Create By",
                         dataIndex: "create_by",
+                        render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
                     },
                     {
                         key: "action",
-                        title: "Action",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
                         align: "center",
                         render: (value, data) => (
                             <Space>

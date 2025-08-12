@@ -29,7 +29,9 @@ function DashboardOrder() {
 
     function DashboardOrder({ title, value, icon }) {
         return (
-            <Card direction='horizontal' style={{ width: "210px", height: "120px", backgroundColor: "rgba(155, 25, 231, 0.47)", display: "flex", alignItems: "center" }}>
+            <Card direction='horizontal'
+                style={{margin: '10px 10px 10px 10px', width: "210px", height: "120px", backgroundColor: '#e5ede2ff', borderRadius: 6, fontSize: 20, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', display: 'flex', textAlign: 'center' }}
+            >
                 <Space >
                     {icon}
                     <Statistic title={title} value={value} />
@@ -51,7 +53,7 @@ function DashboardOrder() {
                         }}
                     />
                 }
-                title={"Orders"}
+                title={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការបញ្ជាទិញ</span>}
                 value={orders}
             />
         </Space>

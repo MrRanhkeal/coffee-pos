@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Input, InputNumber, Select, Empty } from 'antd';
 import PropTypes from 'prop-types';
-import ExchangePage from '../../../page/currency/ExchangePage'
 // import styled, { keyframes } from 'styled-components'; 
 import BillItem from '../BillItem';
 import MyQRCode from '../../../assets/myqr.jpg';
@@ -59,17 +58,17 @@ function CartView({
         <div style={{ width: '100%', height: '100%', margin: '0', padding: '0', backgroundColor: '#fff', borderRadius: '8px' }}>
             <RedPulseKeyframes />
             <div style={{
-                background: '#f0f2efff',
-                borderRadius: '8px', 
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                padding: '2px',
+                background: '#ffffff',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px #b5b1b1ff',
+                padding: '10px',
                 maxWidth: '100%',
                 width: '100%',
                 height: '100%',
                 // maxHeight: '100%',
                 position: 'relative',
                 // margin: '0 auto',
-                margin: '0 0 10px 0',
+                margin: '0 0 20px 0',
                 transition: 'max-height 0.3s',
                 maxHeight: maxHeight,
                 overflowY: 'auto'
@@ -88,9 +87,10 @@ function CartView({
                             danger
                             size="small"
                             onClick={handleClearCart}
-                            style={{ marginLeft: '8px' }}
+                            style={{ marginLeft: '8px', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+
                         >
-                            Clear Cart
+                            សម្អាត
                         </Button>
                     )}
                 </div>
@@ -118,53 +118,57 @@ function CartView({
                 </div>
                 <div style={{ borderTop: '1px solid #eee', paddingTop: '12px', marginBottom: '16px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                        <span>Subtotal</span>
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រាក់សរុប</span>
                         <span>${objSummary.sub_total.toFixed(2)}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                        <span>Items</span>
-                        <span>{objSummary.total_qty}</span>
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួន</span>
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{objSummary.total_qty} ធាតុ</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                        <span>Discount</span>
-                        <span>-${objSummary.save_discount.toFixed(2)}</span>
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រាក់បញ្ចុះតម្លៃ</span>
+                        <span>${objSummary.save_discount.toFixed(2)}</span>
                     </div>
                     <div style={{
                         display: 'flex',
                         justifyContent: 'space-between',
                         fontWeight: 'bold',
                         fontSize: '16px',
-                        color: '#1890ff'
+                        color: '#090d11ff'
                     }}>
-                        <span>Total</span>
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>សរុប</span>
                         <span>${objSummary.total.toFixed(2)}</span>
                     </div>
                 </div>
                 <div>
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>Customer</label>
+                        <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អតិថិជន</label>
                         <Select
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                             isRequired:false
                             value={objSummary.customer_id || undefined}
-                            placeholder="Select Customer"
+                            placeholder="ជ្រើសរើសអតិថិជន"
                             onChange={(value) => setObjSummary(prev => ({
                                 ...prev,
                                 customer_id: value || undefined
                             }))}
-                            options={customers}
+                            //options={customers}
+                            options={customers.map(c => ({
+                                value: c.value,
+                                label: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{c.label}</span>
+                            }))}
                         />
                     </div>
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>Payment Method</label>
+                        <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>វិធីសាស្រ្តបង់ប្រាក់</label>
                         <Select
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                             value={objSummary.payment_method || undefined}
-                            placeholder="Payment Method"
+                            placeholder="ជ្រើសរើសវិធីបង់ប្រាក់"
                             onChange={(value) => setObjSummary(prev => ({ ...prev, payment_method: value }))}
                             options={[
-                                { value: 'Cash', label: 'Cash' },
-                                { value: 'QR', label: 'QR Code' },
+                                { value: 'Cash', label: 'សាច់ប្រាក់', style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' } },
+                                { value: 'QR', label: 'QR Code', style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' } },
                             ]}
                         />
                     </div>
@@ -181,13 +185,13 @@ function CartView({
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <img src={MyQRCode} alt="QR Code" style={{ width: '25%', height: 'auto' }} />
                                     <div style={{ textAlign: 'left' }}>
-                                        <div style={{ ...redPulse, fontSize: '16px', fontWeight: 'bold', margin: '10% 10% 0 10%' }}>
+                                        <div style={{ ...redPulse, fontSize: '16px', fontWeight: 'bold', margin: '10% 10% 0 10%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                                             Pay to this QR Code
                                             <br />
-                                            Amount: ${objSummary.total.toFixed(2)}
+                                            ចំនួន: ${objSummary.total.toFixed(2)}
                                         </div>
-                                        <div style={{ ...redPulse, fontSize: '14px', marginTop: '8px' }}>
-                                            Scan with your mobile payment app
+                                        <div style={{ ...redPulse, fontSize: '14px', margin: '8px 8px 8px 8px', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                            ស្កេនជាមួយកម្មវិធីបង់ប្រាក់លើទូរស័ព្ទរបស់អ្នក
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +199,7 @@ function CartView({
                         </div>
                     )}
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>Remark</label>
+                        <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំណាំ</label>
                         <Input.TextArea
                             value={objSummary.remark}
                             onChange={(e) => setObjSummary(prev => ({ ...prev, remark: e.target.value }))}
@@ -205,10 +209,10 @@ function CartView({
                     </div>
                     <div style={{ marginBottom: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <label style={{ fontWeight: 'bold' }}>Amount Paid</label>
+                            <label style={{ fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួនប្រាក់ដែលបានបង់</label>
                             {paidInUSD < objSummary.total && (
-                                <span style={{ color: 'red' }}>
-                                    Paid amount (${(objSummary.total - paidInUSD).toFixed(2)} more needed)
+                                <span style={{ color: 'red', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                    ចំនួនប្រាក់ដែលបានបង់ (${(objSummary.total - paidInUSD).toFixed(2)} បន្ថែមទៀត)
                                 </span>
                             )}
                         </div>
@@ -225,7 +229,7 @@ function CartView({
                         </div>
                     </div>
                     <div>
-                        <label style={{ fontWeight: 'bold' }}>Change</label>
+                        <label style={{ fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រាក់បង់ត្រលប់</label>
                         <Input
                             style={{ width: '100%' }}
                             value={`$ ${(objSummary.total_paid - objSummary.total).toFixed(2)}`}
@@ -250,9 +254,6 @@ function CartView({
                 >
                     Checkout
                 </Button>
-            </div>
-            <div style={{ marginTop: '12px' }}>
-                <ExchangePage />
             </div>
         </div>
     );

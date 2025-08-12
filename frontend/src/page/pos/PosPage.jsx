@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import MainPage from "../../component/layout/MainPage";
 import ProductItem from "../../component/pos/ProductItem";
 import CartView from "../../component/pos/cart/CartView";
+import ExchangePage from '../currency/ExchangePage';
 import { useReactToPrint } from "react-to-print";
 import PrintInvoice from "../../component/pos/PrintInvoice";
 import { request } from "../../util/helper";
@@ -12,7 +13,6 @@ import { FaSearch } from "react-icons/fa";
 
 function PosPage() {
     const { Text } = Typography;
-
 
     const profile = getProfile();
     const refInvoice = React.useRef(null);
@@ -161,10 +161,10 @@ function PosPage() {
             if (res && !res.error && res.list) {
                 // Create category icons mapping
                 const categoryIcons = {
-                    'Hot Drink': '☕',
-                    'Could Drink': '🍦',
-                    'Soda Tea': '🥥',
-                    'Ice Tea': '🍵',
+                    'ភេសជ្ជៈក្ដៅ': '☕',
+                    'ភេសជ្ជៈត្រជាក់': '🍦',
+                    'សូដា': '🥤',
+                    'តែត្រជាក់': '🍵',
                     'Milk': '🥛',
                 };
 
@@ -175,7 +175,7 @@ function PosPage() {
                 }));
 
                 setCategories([
-                    { id: "", name: "All", icon: "🛒" },
+                    { id: "", name: "ទាំងអស់", icon: "🛒" },
                     ...categoriesFromBackend
                 ]);
             }
@@ -183,9 +183,17 @@ function PosPage() {
             console.error('Error getting categories:', error);
             // Keep default "All" category if get fails
             setCategories([
-                { id: "", name: "All", icon: "🛒" }
+                { id: "", name: "ទាំងអស់", icon: "🛒" }
             ]);
         }
+    }, []);
+
+    useEffect(() => {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+        return () => { document.head.removeChild(link); };
     }, []);
 
     useEffect(() => {
@@ -405,9 +413,10 @@ function PosPage() {
                     >
                         <Space >
                             {/* <Typography.Title level={3} style={{ margin: 0 }}>Products</Typography.Title> */}
-                            <Flex>
-                                <Input
-                                    placeholder="Search products..."
+                            <Flex style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                <Input 
+                                    placeholder="ស្វែងរក ទំនិញ..."
+                                    className="khmer-search"
                                     allowClear
                                     style={{ width: 250 }}
                                     onChange={(event) =>
@@ -419,14 +428,14 @@ function PosPage() {
                                     onSearch={onFilter}
                                 />
                             </Flex>
-                            <Button type="primary" onClick={onFilter}>
-                                <FaSearch /> Search
+                            <Button type="primary" onClick={onFilter} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                <FaSearch style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}/> ស្វែងរក
                             </Button>
                         </Space>
 
                         <div style={{ marginBottom: '1rem' }}>
-                            <Typography.Title level={5} style={{ marginBottom: '1rem', color: '#595959' }}>Categories</Typography.Title>
-                            <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                            <Typography.Title level={5} style={{ marginBottom: '1rem', color: '#595959' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}}>ប្រភេទទំនិញ</Typography.Title>
+                            <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: '0.5rem',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                                 {categories.map((category) => {
                                     {/* const isSelected = String(filter.category_name) === String(category.name); */ }
                                     const isSelected = category.id === filter.category_id;
@@ -449,16 +458,18 @@ function PosPage() {
                                                 border: isSelected ? '1px solid #1890ff' : '1px solid #f0f0f0',
                                                 borderRadius: 8,
                                                 cursor: 'pointer',
-                                                transition: 'all 0.3s'
+                                                transition: 'all 0.3s',
+                                                fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'
                                             }}
                                             styles={{ body: { padding: 12 } }}
                                         >
-                                            <Space direction="vertical" size={4} align="center">
+                                            <Space direction="vertical" size={4} align="center" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                                                 <div style={{ fontSize: '1.5rem', lineHeight: 1, color: isSelected ? '#1890ff' : '#595959' }}>{category.icon}</div>
                                                 <Text style={{
                                                     fontWeight: isSelected ? 600 : 400,
                                                     fontSize: 12,
-                                                    color: isSelected ? '#1890ff' : '#595959'
+                                                    color: isSelected ? '#1890ff' : '#595959',
+                                                    fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'
                                                 }}>
                                                     {category.name}
                                                 </Text>
@@ -502,23 +513,26 @@ function PosPage() {
                     </div>
                 </Col>
                 <Col span={8}>
-                    <CartView
-                        state={state}
-                        objSummary={objSummary}
-                        setObjSummary={setObjSummary}
-                        customers={[
-                            // { value: 'walk-in', label: 'Walk in customer' },
-                            ...(state.customers || []).map(customer => ({
-                                value: customer.id || customer.value,
-                                label: customer.name || customer.label
-                            }))
-                        ]}
-                        handleClearCart={handleClearCart}
-                        handleIncrease={handleIncrease}
-                        handleDescrease={handleDescrease}
-                        handleRemove={handleRemove}
-                        handleClickOut={handleClickOut}
-                    />
+                    <div>
+                        <CartView
+                            state={state}
+                            objSummary={objSummary}
+                            setObjSummary={setObjSummary}
+                            customers={[
+                                // { value: 'walk-in', label: 'Walk in customer' },
+                                ...(state.customers || []).map(customer => ({
+                                    value: customer.id || customer.value,
+                                    label: customer.name || customer.label
+                                }))
+                            ]}
+                            handleClearCart={handleClearCart}
+                            handleIncrease={handleIncrease}
+                            handleDescrease={handleDescrease}
+                            handleRemove={handleRemove}
+                            handleClickOut={handleClickOut}
+                        />
+                    </div>
+                    <div><ExchangePage /></div>
                 </Col>
             </Row>
         </MainPage>

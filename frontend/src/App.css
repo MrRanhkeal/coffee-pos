@@ -70,6 +70,17 @@ table.pos_tbl_invoice td {
   font-size: 11px;
   color: #888888;
 }
+
+/* google font  */
+.pag_my_header {
+  font-family: "Khmer", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+body {
+    font-family: "Noto Sans Khmer", Roboto, sans-serif;
+}
+
 /* print */
 /* @media print {
   body {

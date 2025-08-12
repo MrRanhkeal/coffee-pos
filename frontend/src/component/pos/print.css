@@ -15,7 +15,7 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .invoice-page {
+  .invoice-page { 
     width: 100%;
     background-color: white;
     padding: 10px;

@@ -293,11 +293,11 @@ function Stock_ProductPage() {
                 >
                     <Form.Item
                         name="name"
-                        label="ឈ្មោះ"
+                        label="ឈ្មោះ" 
                         rules={[{ required: true, message: 'Please input name!' }]}
                         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     >
-                        <Input placeholder="Enter stock name" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
+                        <Input placeholder="ឈ្មោះទំនិញ" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
                     </Form.Item> 
                     <Form.Item
                         name="qty"

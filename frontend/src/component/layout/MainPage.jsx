@@ -1,26 +1,27 @@
 import { Button, message, Result, Spin } from "antd";
 import React from "react";
+import PropTypes from 'prop-types';
 import { getServerStatus } from "../../store/server.store";
 
 const info = {
   404: {
-    message: "404-Route Not Found",
+    message: "404-Route Not Found !",
     sub: "404-Route Not Found. Please confirm your currect route that request to server",
   },
   403: {
-    message: "403-Authorized",
+    message: "403-Authorized !",
     sub: "Sorry, you are not authorized to access this page.",
   },
   500: {
-    message: "500-Internal Error Server",
+    message: "500-Internal Error Server !",
     sub: "please contact administrator",
   },
   error: {
-    message: "Can not connect to server",
+    message: "Can not connect to server !",
     sub: "please contact administrator",
   },
 };
-export default function MainPage({ children, loading }) {
+function MainPage({ children, loading }) {
   var server_status = getServerStatus();
   const isServerError =
     server_status == "403" ||
@@ -44,3 +45,9 @@ export default function MainPage({ children, loading }) {
     </div>
   );
 }
+MainPage.propTypes = {
+  children: PropTypes.node,
+  loading: PropTypes.bool,
+};
+
+export default MainPage;

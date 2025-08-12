@@ -22,10 +22,10 @@ function BillItem({ item, handleIncrease, handleDescrease, handleRemove }) {
                 />
             </div>
             <div className={styles.itemInfo}>
-                <div className={styles.itemName}>{item.name}</div>
+                <div className={styles.itemName} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{item.name}</div>
                 {item.sugarLevel && (
-                    <div className={styles.sugarLevel}>
-                        Sugar: {item.sugarLevel + '%'}
+                    <div className={styles.sugarLevel} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                        ជាតិស្ករ: {item.sugarLevel + '%'}
                     </div>
                 )}
                 <div className={styles.itemPrice}>
@@ -44,26 +44,29 @@ function BillItem({ item, handleIncrease, handleDescrease, handleRemove }) {
             </div>
             <div className={styles.itemControls}>
                 <Button 
-                    size="small" 
+                    size="large" 
                     type="text"
                     onClick={handleDescrease}
                     disabled={item.cart_qty <= 1}
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' ,fontWeight:'bold' ,width:'40px'}}
                 >
                     -
                 </Button>
                 <span className={styles.quantity}>{item.cart_qty}</span>
                 <Button 
-                    size="small" 
+                    size="large" 
                     type="text"
                     onClick={handleIncrease}
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' ,fontWeight:'bold',width:'40px'}}
                 >
                     +
                 </Button>
                 <Button 
-                    size="small" 
+                    size="large" 
                     type="text"
                     danger 
                     onClick={handleRemove}
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' ,fontWeight:'bold'}}
                 >
                     ×
                 </Button>

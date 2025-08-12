@@ -43,17 +43,17 @@ function ReportSalePage() {
     const columns = [
         { 
             key: 'No',
-            title: 'No',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
             dataIndex: 'No',
             render: (value, record, index) => index + 1, 
         },
         {
-            title: 'Order No',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លេខបញ្ជារទិញ</span>,
             dataIndex: 'order_no',
             key: 'order_no'
         },
         {
-            title: 'Order Date',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ថ្ងៃខែ/បញ្ជារទិញ</span>,
             dataIndex: 'order_date',
             key: 'order_date',
             // render: (value) => formatDateClient(value,"DD/MM/YYYY h:mm A")
@@ -61,44 +61,49 @@ function ReportSalePage() {
             // render: (date) => new Date(date).toLocaleDateString("en-GB", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
         },
         {
-            title: 'Customer',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អតិថិជន</span>,
             dataIndex: 'customer_name',
-            key: 'customer_name'
+            key: 'customer_name',
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
         },
         {
-            title: 'Cashier',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ្នកលក់</span>,
             dataIndex: 'user_name',
-            key: 'user_name'
+            key: 'user_name',
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
         },
         {
-            title: 'Product',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះទំនិញ</span>,
             dataIndex: 'product_name',
-            key: 'product_name'
+            key: 'product_name',
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
         },
         {
-            title: 'Qty',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួន</span>,
             dataIndex: 'qty',
-            key: 'qty'
+            key: 'qty',
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
         },
         {
-            title: 'Price',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តម្លៃលក់</span>,
             dataIndex: 'product_price_at_order',
             key: 'product_price_at_order',
             render: (value) =>' $'+parseFloat(value).toFixed(2) 
         },
         {
-            title: 'Discount',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការបញ្ចុះតម្លៃ</span>,
             dataIndex: 'order_detail_discount',
             key: 'order_detail_discount',
             render: (value) =>parseFloat(value).toFixed(2) + '%'
         },
         {
-            title: 'Brand',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ម៉ាក/Brand</span>,
             dataIndex: 'product_brand',
-            key: 'product_brand'
+            key: 'product_brand',
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
         },
         {
-            title: 'Total',
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សរុប</span>,
             dataIndex: 'order_detail_total',
             key: 'order_detail_total',
             render: (value) =>' $'+parseFloat(value).toFixed(2) 
@@ -107,7 +112,7 @@ function ReportSalePage() {
     
     return (
         <div>
-            <h2 style={{ fontSize: "20px", fontWeight: "bold", color: "rgba(222, 33, 121, 1)" }}>Sale Report</h2><br />
+            <h2 style={{ fontSize: "20px", fontWeight: "bold", color: '#e35214ff',fontFamily: 'Khmer OS Muol Light' }}>របាយការណ៍លក់</h2><br />
             <Space style={{ marginBottom: 16 }}> 
                 <DatePicker.RangePicker style={{ width: "400px" }}
                     allowClear={true}

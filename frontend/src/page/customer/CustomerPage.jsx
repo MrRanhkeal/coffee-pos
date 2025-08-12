@@ -35,6 +35,14 @@ function CustomerPage() {
   }, [state, setLoading, setList]);
 
   useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, []);
+
+  useEffect(() => {
     getList();
   }, [getList]);
   const onClickEdit = (data) => {
@@ -74,9 +82,11 @@ function CustomerPage() {
   }
   const onClickDelete = async (data) => {
     Modal.confirm({
-      title: "Delete Customer",
-      content: `Are you sure! you want to remove customer ${data.name}?`,
-      okText: "Yes",
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {data.name} ?</span>,
+      okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
+      okType: 'danger',
+      cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
       onOk: async () => {
         const res = await request("customer", "delete", {
           id: data.id,
@@ -126,40 +136,43 @@ function CustomerPage() {
     const res = await request("customer", method, data);
     if (res && !res.error) {
       // message.success(res.message);
-      message.success(`Customer ${method === "put" ? "updated" : "created"} successfully`);
+      message.success(`Customer ${method === "put" ? "Edited" : "Created"} Successfully`);
       getList();
       onCloseModal();
     }
   };
   return (
-    <MainPage loading={loading}>
-      <div className="pageHeader">
+    <MainPage loading={loading} > 
+      <div className="pageHeader" style={{fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}}>
         <Space>
           {/* <Flex vertical gap={12}>
             <Input placeholder="Outlined" />
-          </Flex> */}
-          <div>Customer List </div>
+          </Flex> */} 
           <Flex>
             <Input
+              style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
               onChange={(value) =>
                 setState((p) => ({ ...p, txtSearch: value.target.value }))
               }
               allowClear
               onSearch={getList}
-              placeholder="Search" 
+              placeholder="ស្វែងរក"
+              className="khmer-search"
             />
           </Flex>
-          <Button type="primary" onClick={getList}>
-            <FaSearch /> Search
-          </Button>
-        </Space>
-        <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }} onClick={onClickAddBtn} >
-          <FileAddFilled /> New
+          <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+            <FaSearch style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> ស្វែងរក
+          </Button> 
+        </Space>  
+        <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} onClick={onClickAddBtn} >
+          <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> បញ្ចូលថ្មី
         </Button>
       </div>
+      <div style={{fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold',margin:'0 0 10px 0'}}>តារាងអតិថិជន </div>
       <Modal
+        style={{fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}}
         open={state.visibleModal}
-        title={state.isReadOnly ? "View Customer" : (state.id ? "Edit Customer" : "New Customer")}
+        title={state.isReadOnly ? "មើល" : (state.id ? "កែប្រែ" : "បញ្ចូលអតិថិជន")}
         footer={null}
         onCancel={onCloseModal}
       >
@@ -167,58 +180,63 @@ function CustomerPage() {
           status: 1
         }}>
           <Form.Item
+            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
             name="name"
-            label="Customer name"
-            rules={[{ required: true, message: 'Please input customer name!' }]}
+            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះអតិថិជន</span>}
+            rules={[{ required: true, message: 'សូមបញ្ចូល ឈ្មោះអតិថិជន!' }]}
           >
-            <Input placeholder="Input Customer name" disabled={state.isReadOnly} />
+            <Input placeholder="បញ្ចូល ឈ្មោះអតិថិជន" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
           <Form.Item
             name="phone"
-            label="Customer phone"
-            rules={[{ required: true, message: 'Please input customer phone!' }]}
+            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លេខទូរស័ព្ទ</span>}
+            rules={[{ required: true, message: 'សូមបញ្ចូល លេខទូរស័ព្ទ!' }]}
           >
-            <Input placeholder="Input Customer phone" disabled={state.isReadOnly} />
+            <Input placeholder="បញ្ចូល លេខទូរស័ព្ទ" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
           <Form.Item
             name="email"
-            label="Customer email"
-            rules={[{ required: true, message: 'Please input customer email!' }, { type: 'email', message: 'Please enter a valid email!' }]}
+            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ៊ីម៉ែល</span>}
+            rules={[{ required: true, message: 'សូមបញ្ចូល អ៊ីម៉ែល!' }, { type: 'email', message: 'Please enter a valid email!' }]}
           >
-            <Input placeholder="Input Customer email" disabled={state.isReadOnly} />
+            <Input placeholder="បញ្ចូល អ៊ីម៉ែល" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
-          <Form.Item name={"address"} label="Customer address">
-            <Input placeholder="Input Customer address" name="address" disabled={state.isReadOnly} />
+          <Form.Item name={"address"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ទីកន្លែង</span>}>
+            <Input placeholder="បញ្ចូល ទីកន្លែង" name="address" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
-          <Form.Item name={"description"} label="description">
-            <Input.TextArea placeholder="description" disabled={state.isReadOnly} />
+          <Form.Item name={"description"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពណ៌នា</span>}>
+            <Input.TextArea placeholder="ពណ៌នា" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
           <Form.Item
+            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
             name="status"
-            label="Status"
+            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>}
             rules={[{ required: true, message: 'Please select a status!' }]}
           >
             <Select
-              placeholder="Select status"
+              style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+              placeholder="ជ្រើសរើស្ថានភាព"
               disabled={state.isReadOnly}
               options={[
                 {
-                  label: "Active",
+                  label: "សកម្ម",
                   value: 1,
+                  style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' },
                 },
                 {
-                  label: "InActive",
+                  label: "អសកម្ម",
                   value: 0,
+                  style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' },
                 },
               ]}
             />
           </Form.Item>
           <Form.Item style={{ textAlign: "right" }}>
             <Space>
-              <Button type="default" onClick={onCloseModal} >Close</Button>
+              <Button type="default" onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បិទ</Button>
               {!state.isReadOnly && (
-                <Button type="primary" htmlType="submit">
-                  {form.getFieldValue("id") ? "Update" : "Save"}
+                <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                  {form.getFieldValue("id") ? "កែប្រែ" : "រក្សាទុក"}
                 </Button>
               )}
             </Space>
@@ -231,43 +249,51 @@ function CustomerPage() {
         columns={[
           {
             key: "No",
-            title: "No",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
             render: (item, data, index) => index + 1,
           },
           {
             key: "name",
-            title: "Name",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោរ</span>,
             dataIndex: "name",
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
           },
           {
             key: "phone",
-            title: "Phone",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លេខទូរស័ព្ទ</span>,
             dataIndex: "phone",
           },
           {
             key: "email",
-            title: "Email",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ទំនាក់ទំនង</span>,
             dataIndex: "email",
           },
           {
             key: "address",
-            title: "Address",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ទីកន្លែង</span>,
             dataIndex: "address",
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
+          },
+          {
+            key: "description",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពណ៌នា</span>,
+            dataIndex: "description",
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
           },
           {
             key: "status",
-            title: "Status",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>,
             dataIndex: "status",
             render: (status) =>
               status == 1 ? (
-                <Tag color="green">Active</Tag>
+                <Tag color="green" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្ម</Tag>
               ) : (
-                <Tag color="red">InActive</Tag>
+                <Tag color="red" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អសកម្ម</Tag>
               ),
           },
           {
             key: "Action",
-            title: "Action",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
             align: "center",
             render: (item, data, index) => (
               <Space>

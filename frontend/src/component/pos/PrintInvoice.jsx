@@ -54,8 +54,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Invoice</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></link>
-      <div className="container my-5"
-        ref={ref}>
+      <div className="container" style={{ padding: '0', margin: '0 auto', maxWidth: '500px' }} ref={ref}>
         <div className="invoice-container">
           {/* Invoice Header */}
           <div className="invoice-header row">
@@ -100,11 +99,11 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
           <div className="invoice-details row">
             <div className="col-6">
               <h5>Bill To:</h5>
-              <p className="mb-0">Customer: {customerDisplay}</p>
+              <p className="mb-0" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អតិថិជន: {customerDisplay}</p>
               <p>Payment Method: {paymentMethod}</p>
             </div>
             <div className="col-6 text-end">
-              <p className="mb-0">Cashier: {cashier || 'Unknown'}</p>
+              <p className="mb-0" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ្នកគិតលុយ: {cashier || 'Unknown'}</p>
               <p>Terminal: V-Friends</p>
             </div>
           </div>
@@ -114,7 +113,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
             <table className="table table-items">
               <thead>
                 <tr>
-                  <th>No</th>
+                  <th>Nº</th>
                   <th>Item</th>
                   <th className="text-center">Qty</th>
                   <th className="text-end">Price</th>
@@ -127,7 +126,7 @@ const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashie
                 {Array.isArray(cart_list) && cart_list.map((item, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{item.name} {item.sugarLevel}%</td>
+                    <td style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' ,fontWeight:'bold'}}>{item.name} {item.sugarLevel}%</td>
                     <td className="text-center">{item.cart_qty} </td>
                     <td className="text-end">{formatCurrency(item.price)}</td>
                     <td className="text-center">{item.discount}%</td>

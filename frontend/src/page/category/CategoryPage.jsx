@@ -42,6 +42,14 @@ function CategoryPage() {
     getList();
   }, [state, setLoading, setList]);
 
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, []);
+
   const onClickEdit = (data) => {
     setState({
       ...state,
@@ -72,9 +80,11 @@ function CategoryPage() {
   };
   const onClickDelete = async (data,) => {
     Modal.confirm({
-      title: "Delete Category",
-      content: `Are you sure! you want to remove category ${data.name}?`,
-      okText: "Ok",
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {data.name} ?</span>,
+      okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
+      okType: 'danger',
+      cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
       onOk: async () => {
         const res = await request("category", "delete", {
           id: data.id,
@@ -144,64 +154,76 @@ function CategoryPage() {
   };
 
   return (
-    <MainPage loading={loading}>
-      <div className="pageHeader">
-        <Space>
-          <div>Category</div>
-          <Flex>
+    <MainPage loading={loading} className="pag_my_header">
+      <div
+        className="pageHeader"
+      >
+        <Space> 
+          <Flex style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
             <Input
+              style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
               onChange={(value) =>
                 setState((p) => ({ ...p, txtSearch: value.target.value }))
               }
               allowClear
               onSearch={getList}
-              placeholder="Search"
+              placeholder="ស្វែងរក"
+              className="khmer-search"
             />
           </Flex>
-          <Button type="primary" onClick={getList}>
-            <FaSearch /> Search
+          <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+            <FaSearch style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> ស្វែងរក
           </Button>
         </Space>
-        <Button type="primary" onClick={onClickAddBtn} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}>
-          <FileAddFilled />New
+        <Button type="primary" onClick={onClickAddBtn} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+          <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />បញ្ចូលថ្មី
         </Button>
       </div>
+      <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' , fontWeight: 'bold',margin:'0 0 10px 0'}}>តារាងប្រភេទទំនិញ</div>
       <Modal
         open={state.visibleModal}
+        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
         // title={formRef.getFieldValue("id") ? "Edit Category" : "New Category"}
-        title={state.isReadOnly ? "View Category" : (formRef.getFieldValue("id") ? "Edit Category" : "New Category")}
+        title={state.isReadOnly ? "មើល" : (formRef.getFieldValue("id") ? "កែប្រែ" : "បញ្ចូលថ្មី")}
         footer={null}
         onCancel={onCloseModal}
       >
         <Form layout="vertical" onFinish={onFinish} form={formRef}>
-          <Form.Item name={"name"} label="Category name">
-            <Input placeholder="Input Category name" disabled={state.isReadOnly} />
+          <Form.Item name={"name"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះប្រភេទទំនិញ</span>}>
+            <Input placeholder="បញ្ចូល ឈ្មោះប្រភេទទំនិញ" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
-          <Form.Item name={"description"} label="description">
-            <Input.TextArea placeholder="description" disabled={state.isReadOnly} />
+          <Form.Item name={"description"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពណ៌នា</span>}>
+            <Input.TextArea placeholder="ពណ៌នា" disabled={state.isReadOnly} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
           </Form.Item>
-          <Form.Item name={"status"} label="status">
+          <Form.Item
+            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+            name="status"
+            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>}
+          >
             <Select
-              placeholder="Select status"
+              style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+              placeholder="ជ្រើសរើសសកម្មភាព"
               disabled={state.isReadOnly}
               options={[
                 {
-                  label: "Active",
+                  label: "សកម្ម",
                   value: 1,
+                  style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' },
                 },
                 {
-                  label: "InActive",
+                  label: "អសកម្ម",
                   value: 0,
+                  style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' },
                 },
               ]}
             />
           </Form.Item>
           <Form.Item style={{ textAlign: "right" }}>
             <Space>
-              <Button onClick={onCloseModal}>{state.isReadOnly ? "Close" : "Cancel"}</Button>
+              <Button onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{state.isReadOnly ? "បិទ" : "បោះបង់"}</Button>
               {!state.isReadOnly && (
-                <Button type="primary" htmlType="submit">
-                  {formRef.getFieldValue("id") ? "Update" : "Save"}
+                <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                  {formRef.getFieldValue("id") ? "កែប្រែ" : "រក្សាទុក"}
                 </Button>
               )}
             </Space>
@@ -214,18 +236,21 @@ function CategoryPage() {
         columns={[
           {
             key: "No",
-            title: "No",
+            //title: "ល.រ",
+            title: <span style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
             render: (item, data, index) => index + 1,
           },
           {
             key: "name",
-            title: "name",
+            title: <span style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះ</span>,
             dataIndex: "name",
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
           },
           {
             key: "description",
-            title: "description",
+            title: <span style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការពណ៌នា</span>,
             dataIndex: "description",
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
           },
           // {
           //   key: "create_by",
@@ -234,18 +259,18 @@ function CategoryPage() {
           // },
           {
             key: "status",
-            title: "status",
+            title: <span style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>,
             dataIndex: "status",
             render: (status) =>
               status == 1 ? (
-                <Tag color="green">Active</Tag>
+                <Tag color="green" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្ម</Tag>
               ) : (
-                <Tag color="red">InActive</Tag>
+                <Tag color="red" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អសកម្ម</Tag>
               ),
           },
           {
             key: "Action",
-            title: "Action",
+            title: <span style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
             align: "center",
             render: (item, data, index) => (
               <Space>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {Button,Col,Form,Image,Input,InputNumber,message,Modal,Row,Select,Space,Table,Tag,Upload,} from "antd";
+import { Button, Col, Flex, Form, Image, Input, InputNumber, message, Modal, Row, Select, Space, Table, Tag, Upload, } from "antd";
 import { request } from "../../util/helper";
 import { MdDelete, MdEdit, MdImage } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
@@ -43,7 +43,7 @@ function ProductPage() {
 
   const [filter, setFilter] = useState({
     txt_search: "",
-    category_id: "",
+    //category_id: "",
     brand: "",
   });
 
@@ -52,6 +52,13 @@ function ProductPage() {
   const [imageDefault, setImageDefault] = useState([]);
   // const [imageOptional, setImageOptional] = useState([]);
   // const [imageOptional_Old, setImageOptional_Old] = useState([]);
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, []);
 
   useEffect(() => {
     getList();
@@ -62,7 +69,7 @@ function ProductPage() {
       page: refPage.current, // get value
       txt_search: filter.txt_search,
       // category_id: filter.category_id,
-      // brand: filter.brand,
+      brand: filter.brand,
       // page: filter.page,
     };
     setState((pre) => ({ ...pre, loading: true }));
@@ -213,10 +220,10 @@ function ProductPage() {
 
   const onFilter = () => {
     getList();
-  }; 
+  };
   const onClickEdit = async (item) => {
     formRef.setFieldsValue({
-      ...item, 
+      ...item,
     });
     setState((pre) => ({ ...pre, visibleModal: true }));
     if (item.image != "" && item.image != null) {
@@ -225,7 +232,7 @@ function ProductPage() {
           uid: "-1",
           name: item.image,
           status: "done",
-          url: "http://localhost/coffee/" + item.image,
+          url: "http://localhost/mycoffee/" + item.image,
         },
       ];
       setImageDefault(imageProduct);
@@ -233,7 +240,7 @@ function ProductPage() {
     } else {
       setImageDefault([]);
     }
-    getList(); 
+    getList();
   };
   const clickReadOnly = (item) => {
     setState((p) => ({
@@ -249,7 +256,7 @@ function ProductPage() {
           uid: '-1',
           name: item.image,
           status: 'done',
-          url: `http://localhost/coffee/${item.image}`,
+          url: `http://localhost/mycoffee/${item.image}`,
         }
       ]);
     } else {
@@ -271,8 +278,11 @@ function ProductPage() {
   };
   const onClickDelete = (item) => {
     Modal.confirm({
-      title: "Delete Product",
-      content: `Are you sure! you want to remove porduct ${item.name}?`,
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {item.name} ?</span>,
+      okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
+      okType: 'danger',
+      cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
       onOk: async () => {
         const res = await request("product", "delete", item);
         if (res && !res.error) {
@@ -295,16 +305,32 @@ function ProductPage() {
       </Modal> */}
       <div className="pageHeader">
         <Space>
-          <div>Product {state.total}</div>
-          <Input
+
+          <Flex style={{ width: "100%", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+            <Input
+              placeholder="ស្វែងរក..."
+              className="khmer-search"
+              allowClear
+              style={{ width: 250 }}
+              onChange={(event) =>
+                setFilter((prev) => ({
+                  ...prev,
+                  txt_search: event.target.value,
+                }))
+              }
+              onSearch={onFilter}
+            />
+          </Flex>
+          {/* <Input
             onChange={(value) =>
               setFilter((p) => ({ ...p, txt_search: value.target.value }))
             }
             allowClear 
             onSearch={onFilter}
             placeholder="Search"
-          />
-          <Select
+            
+          /> */}
+          {/* <Select
             allowClear
             style={{ width: 130 }}
             placeholder="Category"
@@ -313,11 +339,11 @@ function ProductPage() {
               setFilter((pre) => ({ ...pre, category_id: id }));
             }}
 
-          />
+          /> */}
           <Select
+            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', width: 130 }}
             allowClear
-            style={{ width: 130 }}
-            placeholder="Brand"
+            placeholder="ម៉ាក/Brand"
             options={config.brand}
             onChange={(id) => {
               setFilter((pre) => ({ ...pre, brand: id }));
@@ -327,29 +353,31 @@ function ProductPage() {
             <FaSearch />Filter
           </Button>
         </Space>
-        <Button type="primary" onClick={onBtnNew} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}>
-          <FileAddFilled /> New
+        <Button type="primary" onClick={onBtnNew} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+          <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> បញ្ចូលថ្មី
         </Button>
       </div>
+      <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', margin: '0 0 10px 0' }}>ចំនួនផលិតផល {state.total}</div>
       <Modal
+        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
         open={state.visibleModal}
-        title={state.isReadOnly ? "View Product" : formRef.getFieldValue("id") ? "Edit Product" : "New Product"}
+        title={state.isReadOnly ? "មើល" : formRef.getFieldValue("id") ? "កែប្រែ" : "បញ្ចូលថ្មី"}
         footer={
           state.isReadOnly ? (
             // View Product modal - only show Close button
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button onClick={onCloseModal}>
-                Close
+              <Button onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                បិទ
               </Button>
             </div>
           ) : (
             // Edit/New Product modal - show Save and Cancel buttons
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-              <Button onClick={onCloseModal}>
-                Cancel
+              <Button onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                បោះបង់
               </Button>
-              <Button type="primary" onClick={() => formRef.submit()}>
-                {formRef.getFieldValue("id") ? "Update" : "Save"}
+              <Button type="primary" onClick={() => formRef.submit()} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                {formRef.getFieldValue("id") ? "កែប្រែ" : "រក្សាទុក"}
               </Button>
             </div>
           )
@@ -368,19 +396,19 @@ function ProductPage() {
               <Col span={12}>
                 <Form.Item
                   name={"name"}
-                  label="Product name"
+                  label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះទំនិញ</span>}
                   rules={[
                     {
                       required: true,
-                      message: "Please fill in product name",
+                      message: "Please fill in បញ្ចូលឈ្មោះទំនិញ",
                     },
                   ]}
                 >
-                  <Input placeholder="Product name" />
+                  <Input placeholder="បញ្ចូលឈ្មោះទំនិញ" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
                 </Form.Item>
                 <Form.Item
                   name={"brand"}
-                  label="Brand"
+                  label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ម៉ាក/Brand</span>}
                   rules={[
                     {
                       required: true,
@@ -389,10 +417,19 @@ function ProductPage() {
                   ]}
                 >
                   <Select
-                    placeholder="Select brand"
-                    options={config.brand?.map((item) => ({
-                      label: item.label + " (" + item.country + ")",
-                      value: item.value,
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                    placeholder="ជ្រាប់ម៉ាក/Brand"
+                    // options={config.brand?.map((item) => ({
+                    //   label: item.label + " (" + item.country + ")",
+                    //   value: item.value,
+                    // }))}
+                    options={config.brand?.map((opt) => ({
+                      value: opt.value,
+                      label: (
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                          {opt.label}
+                        </span>
+                      )
                     }))}
                   />
                 </Form.Item>
@@ -407,14 +444,15 @@ function ProductPage() {
                 {/* <Form.Item name={"qty"} label="Quantity">
                 <InputNumber placeholder="Quantity" style={{ width: "100%" }} />
               </Form.Item> */}
-                <Form.Item name={"discount"} label="Discount" style={{ width: "100%" }}>
-                  <InputNumber placeholder="Discount" style={{ width: "100%" }} />
+                <Form.Item name={"discount"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បញ្ចុះតម្លៃ</span>}>
+                  <InputNumber placeholder="បញ្ចុះតម្លៃ" className="khmer-search" style={{ width: "100%"}} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
+                  style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                   name={"category_id"}
-                  label="Category"
+                  label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រភេទទំនិញ</span>}
                   rules={[
                     {
                       required: true,
@@ -423,39 +461,54 @@ function ProductPage() {
                   ]}
                 >
                   <Select
-                    placeholder="Select category"
-                    options={config.category}
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                    placeholder="ជ្រើសរើសប្រភេទទំនិញ"
+                    options={config.category?.map((opt) => ({
+                      value: opt.value,
+                      label: (
+                        <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                          {opt.label}
+                        </span>
+                      )
+                    }))}
                     onChange={(id) => {
                       setFilter((pre) => ({ ...pre, category_id: id }));
                     }}
                   />
                 </Form.Item>
 
-                <Form.Item name={"price"} label="Price">
-                  <InputNumber placeholder="Price" style={{ width: "100%" }} />
+                <Form.Item
+                  name={"price"}
+                  style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                  label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តម្លៃលក់</span>}
+                >
+                  <InputNumber placeholder="តម្លៃលក់" className="khmer-search" style={{width: "100%" }} />
                 </Form.Item>
-                <Form.Item name={"status"} label="status">
+                <Form.Item name={"status"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>}>
                   <Select
-                    placeholder="Select status"
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                    placeholder="ជ្រើសរើសស្ថានភាព"
                     options={[
                       {
-                        label: "Active",
+                        label: "សកម្ម",
                         value: 1,
+                        style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' },
                       },
                       {
-                        label: "InActive",
+                        label: "អសកម្ម",
                         value: 0,
+                        style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' },
                       },
                     ]}
                   />
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item name={"description"} label="Description" style={{ width: "100%" }}>
-              <Input.TextArea placeholder="Description" autoSize={{ minRows: 3, maxRows: 6 }} />
+            <Form.Item name={"description"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពណ៌នា</span>} style={{ width: "100%", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+              <Input.TextArea placeholder="ពណ៌នា" autoSize={{ minRows: 3, maxRows: 6 }} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
             </Form.Item>
 
-            <Form.Item name={"image_default"} label="Image" className="product_image" style={{width: "100%", borderRadius: "20px"}}>
+            <Form.Item name={"image_default"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បញ្ចូលរូបភាព</span>} className="product_image" style={{ width: "100%", borderRadius: "20px", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
               <Upload
                 customRequest={(options) => {
                   options.onSuccess();
@@ -468,8 +521,11 @@ function ProductPage() {
                 fileList={imageDefault}
                 onPreview={handlePreview} //please chech this
                 onChange={handleChangeImageDefault}
+                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
               >
-                <MdImage style={{ fontSize: "30px" }} />Picture
+                {/* <MdImage style={{ fontSize: "30px", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />រូបភាព */}
+                <MdImage style={{ fontSize: "30px", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
+                <b style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>រូបភាព</b>
               </Upload>
             </Form.Item>
 
@@ -492,20 +548,20 @@ function ProductPage() {
             {previewImage && (
               <Image
                 wrapperStyle={{
-                  display: "none",  
-                }} 
+                  display: "none",
+                }}
                 preview={{
                   visible: previewOpen,
                   onVisibleChange: (visible) => setPreviewOpen(visible,),
-                  afterOpenChange: (visible) => !visible && setPreviewImage(""), 
+                  afterOpenChange: (visible) => !visible && setPreviewImage(""),
                 }}
                 src={previewImage}
-                // style={{ width: 50, height: 50 ,borderRadius:2}}
-                // style={{
-                //   width: 30,
-                //   height: 30,
-                //   borderRadius: 2,
-                // }}
+              // style={{ width: 50, height: 50 ,borderRadius:2}}
+              // style={{
+              //   width: 30,
+              //   height: 30,
+              //   borderRadius: 2,
+              // }}
               />
             )}
             {/* <Form.Item style={{ textAlign: "right" }}>
@@ -546,15 +602,15 @@ function ProductPage() {
         columns={[
           {
             key: "No",
-            title: "No",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
             render: (item, data, index) => index + 1,
           },
           {
             key: "name",
-            title: "Name",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះទំនិញ</span>,
             dataIndex: "name",
             render: (text) => (
-              <div className="truncate-text" title={text}>
+              <div className="truncate-text" title={text} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                 {text}
               </div>
             ),
@@ -566,10 +622,10 @@ function ProductPage() {
           // },
           {
             key: "Description",
-            title: "description",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពណ៌នា</span>,
             dataIndex: "description",
             render: (text) => (
-              <div className="truncate-text" title={text}>
+              <div className="truncate-text" title={text} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                 {text}
               </div>
             ),
@@ -577,13 +633,23 @@ function ProductPage() {
 
           {
             key: "category_name",
-            title: "Category",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រភេទទំនិញ</span>,
             dataIndex: "category_name",
+            render: (text) => (
+              <div className="truncate-text" title={text} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                {text}
+              </div>
+            ),
           },
           {
             key: "brand",
-            title: "Brand",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ម៉ាក/Brand</span>,
             dataIndex: "brand",
+            render: (text) => (
+              <div className="truncate-text" title={text} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                {text}
+              </div>
+            ),
           },
           // {
           //   key: "qty",
@@ -592,33 +658,35 @@ function ProductPage() {
           // },
           {
             key: "price",
-            title: "price",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តម្លៃលក់</span>,
             dataIndex: "price",
+            render: (price) => "$" + parseFloat(price).toFixed(2),
           },
           {
             key: "discount",
-            title: "Discount",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បញ្ជុះតម្លៃ</span>,
             dataIndex: "discount",
+            render: (price) => "$" + parseFloat(price).toFixed(2),
           },
           {
             key: "status",
-            title: "Status",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>,
             dataIndex: "status",
             render: (status) =>
               status == 1 ? (
-                <Tag color="green">Active</Tag>
+                <Tag color="green" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្ម</Tag>
               ) : (
-                <Tag color="red">InActive</Tag>
+                <Tag color="red" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អសកម្ម</Tag>
               ),
           },
           {
             key: "image",
-            title: "Image",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>រូបភាព</span>,
             dataIndex: "image",
             render: (value) =>
               value ? (
                 <Image
-                  src={"http://localhost/coffee/" + value}
+                  src={"http://localhost/mycoffee/" + value}
                   style={{ width: 50, height: 50, borderRadius: 3 }}
                 />
               ) : (
@@ -629,7 +697,7 @@ function ProductPage() {
           },
           {
             key: "Action",
-            title: "Action",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
             align: "center",
             render: (item, data, index) => (
               <Space>

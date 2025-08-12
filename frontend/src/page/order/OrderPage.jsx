@@ -36,7 +36,16 @@ function OrderPage() {
     const [filter, setFiler] = useState({
         from_date: dayjs().subtract(5, "d"), // current
         to_date: dayjs().add(1, "d"), // current
-    }); 
+    });
+
+    useEffect(() => {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+        return () => { document.head.removeChild(link); };
+    }, []);
+
     useEffect(() => {
         getList();
     }, []);
@@ -154,9 +163,9 @@ function OrderPage() {
             <div className="pageHeader">
                 <Space>
                     <div>
-                        <div style={{ fontWeight: "bold", color: "#124636ff", fontSize: "20px", paddingBottom: "10px" }}>Orders</div>
-                        <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-                            Order &nbsp;: {summary?.total_order || 0}&nbsp; Order <br /> Total&nbsp;&nbsp;&nbsp;:{" "}&nbsp;
+                        <div style={{ fontWeight: "bold", color: "#ed5125ff", fontSize: "20px", paddingBottom: "10px", fontFamily: 'Khmer OS Muol Light' }}>ការបញ្ជារទិញ</div>
+                        <div style={{ fontSize: "16px", fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                            ការបញ្ជារទិញ &nbsp;: {summary?.total_order || 0}&nbsp; ប៉ុង <br /> ការបញ្ជារទិញសរុប&nbsp;&nbsp;&nbsp;:{" "}&nbsp;
                             ${summary?.total_amount || 0}
                         </div>
                     </div>
@@ -191,37 +200,51 @@ function OrderPage() {
             </div>
             <Modal
                 open={state.visibleModal}
-                title={"Order Details View"}
+                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                title={"លម្អិត"}
                 footer={null}
                 onCancel={onCloseModal}
                 width={800}
             >
                 <Table
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     dataSource={orderDetail}
                     pagination={false}
                     columns={[
                         {
                             key: "p_name",
-                            title: "Product",
-                            dataIndex: "p_name",
-                            render: (data, row) => (
-                                <div>
-                                    <div style={{ fontWeight: "bold" }}>{data}</div>
-                                    <div>
-                                        {row.p_brand} -{row.p_des}
-                                    </div>
-                                    {/* <div>{row.p_des}</div> */}
-                                </div>
-                            ),
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ទំនិញ</span>,
+                            dataIndex: "p_name", 
+                            render: (data,row) => (
+                                <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                    {data}
+                                    <div>{row.p_des}</div>
+                                </span>
+                            )
+                            // render: (data, row) => (
+                            //     <div>
+                            //         <div style={{ fontWeight: "bold" }}>{data}</div>
+                            //         <div>
+                            //             {row.p_brand} -{row.p_des}
+                            //         </div>
+                            //         {/* <div>{row.p_des}</div> */}
+                            //     </div>
+                            // ),
                         },
                         {
                             key: "p_category_name",
-                            title: "Categories",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រភេទទំនិញ</span>,
+                            // dataIndex: "p_category_name",
                             dataIndex: "p_category_name",
+                            render: (text) => (
+                                <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                    {text}
+                                </span>
+                            )
                         },
                         {
                             key: "p_image",
-                            title: "Image",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>រូបភាព</span>,
                             dataIndex: "p_image",
                             render: (value) => (
                                 <Image
@@ -233,37 +256,37 @@ function OrderPage() {
                         },
                         {
                             key: "sugar_level",
-                            title: "Sugar ",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ករ</span>,
                             dataIndex: "sugar_level",
                             render: (value) => <Tag color="blue">{value}%</Tag>,
                         },
                         {
                             key: "qty",
-                            title: "Qty",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួន</span>,
                             dataIndex: "qty",
                         },
                         {
                             key: "price",
-                            title: "Price",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តម្លៃ</span>,
                             dataIndex: "price",
                             render: (value) => <Tag color="green">{value}$</Tag>,
                         },
                         {
                             key: "discount",
-                            title: "Discount",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បញ្ចុះតម្លៃ</span>,
                             dataIndex: "discount",
                             render: (value) => <Tag color="red">{value}%</Tag>,
                         },
                         {
                             key: "total",
-                            title: "Total",
+                            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តម្លៃសរុប</span>,
                             dataIndex: "total",
                             render: (value) => <Tag color="green">{value}$</Tag>,
                         }
                     ]}
                 />
                 <div style={{ marginTop: 16, textAlign: "right" }}>
-                    <Button onClick={onCloseModal}>Close</Button>
+                    <Button onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បិទ</Button>
                     <Button
                         type="primary"
                         style={{ marginLeft: 10 }}
@@ -309,42 +332,44 @@ function OrderPage() {
                 columns={[
                     {
                         key: "No",
-                        title: "No",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
                         dataIndex: "No",
                         render: (value, data, index) => index + 1,
                     },
                     {
                         key: "order_no",
-                        title: "Order No",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លេខបញ្ជារទិញ</span>,
                         dataIndex: "order_no",
+                        render: (value) => <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{value}</div>,
                     },
                     {
                         key: "customer_name",
-                        title: "Customer",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អតិថិជន</span>,
                         dataIndex: "customer_name",
                         render: (value, data) => (
                             <div>
-                                <div style={{ fontWeight: "bold" }}>{data.customer_name}</div>
-                                <div>{data.customer_tel}</div>
-                                <div>{data.customer_address}</div>
+                                <div style={{ fontWeight: "bold", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{data.customer_name}</div>
+                                <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{data.customer_tel}</div>
+                                <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{data.customer_address}</div>
                             </div>
                         ),
                     },
                     {
                         key: "total_amount",
-                        title: "Total",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សរុប</span>,
                         dataIndex: "total_amount",
-                        render: (value) => ' $' + parseFloat(value).toFixed(2)
+                        // render: (value) => ' $' + parseFloat(value).toFixed(2)
+                        render: (value) => (<div style={{ fontWeight: "bold", color: '#e13333ff' }}>${value}</div>),
                     },
                     {
                         key: "paid_amount",
-                        title: "Paid",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បានបង់</span>,
                         dataIndex: "paid_amount",
-                        render: (value) => (<div style={{ fontWeight: "bold", color: "green" }}>${value}</div>), 
+                        render: (value) => (<div style={{ fontWeight: "bold", color: '#3bb722ff' }}>${value}</div>),
                     },
                     {
                         key: "Due",
-                        title: "Change",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ត្រលប់វិញ</span>,
                         render: (value, data) => (
                             <Tag color="red">$
                                 {(Number(data.total_amount) - Number(data.paid_amount)).toFixed(
@@ -355,29 +380,30 @@ function OrderPage() {
                     },
                     {
                         key: "payment_method",
-                        title: "Payment Method",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ទូទាត់</span>,
                         dataIndex: "payment_method",
                     },
                     {
                         key: "remark",
-                        title: "Remark",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំណាំ</span>,
                         dataIndex: "remark",
                     },
                     {
                         key: "create_by",
-                        title: "User",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ្នកលក់</span>,
                         dataIndex: "create_by",
+                        render: (value) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{value}</span>,
                     },
                     {
                         key: "create_at",
-                        title: "Order Date",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ថ្ងៃខែបញ្ជារទិញ</span>,
                         dataIndex: "create_at",
                         //render: (value) => formatDateClient(value, "DD/MM/YYYY h:mm A"),
                         render: (date) => new Date(date).toLocaleDateString("en-GB", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
                     },
                     {
                         key: "Action",
-                        title: "Action",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
                         align: "center",
                         render: (item, data, index) => (
                             <Space>

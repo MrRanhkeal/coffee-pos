@@ -58,7 +58,7 @@ function RolePage() {
         form.setFieldsValue({
             id: record.id,
             name: record.name,
-           // permission: permission
+            // permission: permission
         });
         setState(pre => ({ ...pre, visible: true }));
     };
@@ -66,11 +66,11 @@ function RolePage() {
     // Handle delete button click
     const handleDelete = (record) => {
         Modal.confirm({
-            title: "Delete Role",
-            content: `Are you sure! you want to delete ${record.name}?`,
-            okText: "Yes",
-            okType: "danger",
-            cancelText: "No",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
+            content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {record.name} ?</span>,
+            okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
+            okType: 'danger',
+            cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
             onOk: async () => {
                 try {
                     const res = await request("role", "delete", { id: record.id });
@@ -122,20 +122,21 @@ function RolePage() {
     // Table columns configuration
     const columns = [
         {
-            title: "No",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
             key: "index",
             width: 70,
             render: (_, __, index) => index + 1
         },
         {
-            title: "Name",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះ</span>,
             dataIndex: "name",
+            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
             key: "name",
-            style: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-            }
+            // style: {
+            //     whiteSpace: "nowrap",
+            //     overflow: "hidden",
+            //     textOverflow: "ellipsis"
+            // }
         },
         // {
         //     title: "Permission",
@@ -160,7 +161,7 @@ function RolePage() {
         //     }
         // },
         {
-            title: "Action",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
             key: "action",
             width: 150,
             render: (_, record) => (
@@ -179,8 +180,7 @@ function RolePage() {
     return (
         <div className="page-content" >
             <div className="page-header" style={{ display: "flex" }}>
-                <h3>Role Management</h3>
-                <Button type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto" }}
+                <Button type="primary" onClick={() => setState(pre => ({ ...pre, visible: true }))} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                 // icon={<FileAddTwoTone />}
                 // style={{
                 //     marginLeft: "auto",
@@ -188,11 +188,11 @@ function RolePage() {
                 //     color: "green",
                 // }}
                 >
-                    <FileAddFilled />
-                    New
+                    <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
+                    បញ្ចូលថ្មី
                 </Button>
             </div>
-
+            <h3 style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', margin: '0 0 10px 0' }}>តារាងគ្រប់គ្រងតួនាទី</h3>
             <Table
                 columns={columns}
                 dataSource={state.list}
@@ -202,7 +202,8 @@ function RolePage() {
             />
 
             <Modal
-                title={form.getFieldValue("id") ? "Edit Role" : "Create Role"}
+                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                title={form.getFieldValue("id") ? "កែប្រែ" : "បង្កើតថ្មី"}
                 open={state.visible}
                 onCancel={handleCancel}
                 footer={null}
@@ -211,7 +212,7 @@ function RolePage() {
                 <Form
                     form={form}
                     layout="vertical"
-                    onFinish={onFinish} 
+                    onFinish={onFinish}
                 >
                     <Form.Item name="id" hidden>
                         <Input />
@@ -219,10 +220,10 @@ function RolePage() {
 
                     <Form.Item
                         name="name"
-                        label="Role Name"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះតួនាទី</span>}
                         rules={[{ required: true, message: "Please input role name" }]}
                     >
-                        <Input />
+                        <Input placeholder="ឈ្មោះតួនាទី" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
                     </Form.Item>
 
                     {/* <Form.Item
@@ -239,8 +240,11 @@ function RolePage() {
                     </Form.Item> */}
 
                     <Form.Item style={{ textAlign: "right" }}>
-                        <Button type="primary" htmlType="submit" >
-                            Submit
+                        <Button style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',margin: '0 8px 0 0' }} onClick={handleCancel}>
+                            បោះបង់
+                        </Button>
+                        <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                            រក្សាទុក
                         </Button>
                     </Form.Item>
                 </Form>
