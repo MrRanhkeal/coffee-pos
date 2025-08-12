@@ -2,24 +2,74 @@ const { logErr, db, removeFile } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
-        //var txt_search = req.query.txt_search;
+        // //var txt_search = req.query.txt_search;
+        // var { txt_search, category_id, brand, page, is_list_all } = req.query;
+        // const pageSize = 10; // fix
+
+        // // Ensure that 'page' is a valid number and default it to 1 if not
+        // page = Number(page);
+        // if (isNaN(page) || page < 1) {
+        //     page = 1;  // Default to page 1 if invalid or missing
+        // }
+
+        // const offset = (page - 1) * pageSize; // calculate offset
+
+        // var sqlSelect = "SELECT p.*, c.name AS category_name ";
+        // var sqlJoin = " FROM products p INNER JOIN category c ON p.category_id = c.id ";
+        // var sqlWhere = " WHERE true";
+
+
+        // if (txt_search) {
+        //     sqlWhere += " AND (p.name LIKE :txt_search) ";
+        // }
+        // if (category_id) {
+        //     sqlWhere += " AND p.category_id = :category_id";
+        // }
+        // if (brand) {
+        //     sqlWhere += " AND p.brand = :brand";
+        // }
+
+        // var sqlLimit = " LIMIT " + pageSize + " OFFSET " + offset;
+        // if (is_list_all) {
+        //     sqlLimit = "";
+        // }
+
+        // var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
+        // var sqlparam = {
+        //     txt_search: "%" + txt_search + "%",
+        //     category_id,
+        //     brand,
+        // };
+
+        // const [list] = await db.query(sqlList, sqlparam);
+
+        // var dataCount = 0;
+        // if (page == 1) {
+        //     let sqlTotal = " SELECT COUNT(p.id) as total " + sqlJoin + sqlWhere;
+        //     var [dataCountResult] = await db.query(sqlTotal, sqlparam);
+        //     dataCount = dataCountResult[0].total;
+        // }
+        // Destructure and get query parameters
         var { txt_search, category_id, brand, page, is_list_all } = req.query;
-        const pageSize = 10; // fix
+
+        const pageSize = 10; // Items per page
 
         // Ensure that 'page' is a valid number and default it to 1 if not
         page = Number(page);
         if (isNaN(page) || page < 1) {
-            page = 1;  // Default to page 1 if invalid or missing
+            page = 1;
         }
 
-        const offset = (page - 1) * pageSize; // calculate offset
+        const offset = (page - 1) * pageSize; // Calculate offset
 
-        var sqlSelect = "SELECT p.*, c.name AS category_name ";
-        var sqlJoin = " FROM products p INNER JOIN category c ON p.category_id = c.id ";
-        var sqlWhere = " WHERE true ";
+        // Build base SQL
+        var sqlSelect = "SELECT p.*, c.name AS category_name";
+        var sqlJoin = " FROM products p INNER JOIN category c ON p.category_id = c.id";
+        var sqlWhere = " WHERE true";
 
+        // Apply filters
         if (txt_search) {
-            sqlWhere += " AND (p.name LIKE :txt_search) ";
+            sqlWhere += " AND (p.name LIKE :txt_search)";
         }
         if (category_id) {
             sqlWhere += " AND p.category_id = :category_id";
@@ -28,23 +78,29 @@ exports.getlist = async (req, res) => {
             sqlWhere += " AND p.brand = :brand";
         }
 
-        var sqlLimit = " LIMIT " + pageSize + " OFFSET " + offset;
-        if (is_list_all) {
-            sqlLimit = "";
-        }
+        // Add ORDER BY clause
+        var sqlOrder = " ORDER BY p.id DESC";
 
-        var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
+        // Add pagination unless is_list_all is set
+        var sqlLimit = is_list_all ? "" : " LIMIT " + pageSize + " OFFSET " + offset;
+
+        // Final SQL query
+        var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlOrder + sqlLimit;
+
+        // SQL parameters
         var sqlparam = {
-            txt_search: "%" + txt_search + "%",
+            txt_search: txt_search ? "%" + txt_search + "%" : undefined,
             category_id,
             brand,
         };
 
+        // Execute product list query
         const [list] = await db.query(sqlList, sqlparam);
 
+        // Count total only for the first page
         var dataCount = 0;
-        if (page == 1) {
-            let sqlTotal = " SELECT COUNT(p.id) as total " + sqlJoin + sqlWhere;
+        if (page === 1 && !is_list_all) {
+            let sqlTotal = "SELECT COUNT(p.id) as total" + sqlJoin + sqlWhere;
             var [dataCountResult] = await db.query(sqlTotal, sqlparam);
             dataCount = dataCountResult[0].total;
         }

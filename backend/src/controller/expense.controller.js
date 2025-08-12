@@ -1,4 +1,4 @@
-const e = require("express");
+// const e = require("express");
 const { db, isArray, isEmpty, logErr } = require("../util/helper");
 
 exports.getList = async (req, res) => {
@@ -99,6 +99,28 @@ exports.getexpense_summary = async (req, res) => {
             GROUP BY YEAR(e.create_at), MONTH(e.create_at)
             ORDER BY YEAR(e.create_at) DESC, MONTH(e.create_at) DESC;`
         );
+        const [expense_this_month] = await db.query(
+            `SELECT 
+                YEAR(e.create_at) AS year,
+                MONTH(e.create_at) AS month,
+                SUM(e.amount) AS expense_this_month
+            FROM expenses e
+            WHERE 
+                YEAR(e.create_at) = YEAR(CURRENT_DATE)
+                AND MONTH(e.create_at) = MONTH(CURRENT_DATE)
+            GROUP BY YEAR(e.create_at), MONTH(e.create_at);`
+        );
+        const [expense_last_month] = await db.query(
+            `SELECT 
+                YEAR(e.create_at) AS year,
+                MONTH(e.create_at) AS month,
+                SUM(e.amount) AS expense_last_month
+            FROM expenses e
+            WHERE 
+                YEAR(e.create_at) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)
+                AND MONTH(e.create_at) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)
+            GROUP BY YEAR(e.create_at), MONTH(e.create_at);`
+        );
         const [expense_year] = await db.query( 
             `SELECT 
                 YEAR(e.create_at) as year, 
@@ -108,9 +130,32 @@ exports.getexpense_summary = async (req, res) => {
             GROUP BY YEAR(e.create_at)
             ORDER BY YEAR(e.create_at) DESC;`
         );
+        const [expense_this_year] = await db.query(
+            `SELECT 
+                SUM(e.amount) AS expense_this_year
+                FROM expenses e
+                WHERE 
+                YEAR(e.create_at) = YEAR(CURRENT_DATE);`
+        );
+        const [total_expense] = await db.query(
+            `SELECT 
+                SUM(expense) AS total_expense
+            FROM (
+                SELECT SUM(e.amount) AS expense
+                FROM expenses e
+                WHERE 
+                    (YEAR(e.create_at) = YEAR(CURRENT_DATE) AND MONTH(e.create_at) = MONTH(CURRENT_DATE))
+                    OR
+                    (YEAR(e.create_at) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(e.create_at) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH))
+            ) AS monthly_expenses;`
+        );
         res.json({
             expense_month: expense_month,
-            expense_year: expense_year
+            expense_this_month: expense_this_month,
+            expense_last_month: expense_last_month,
+            expense_year: expense_year,
+            expense_this_year: expense_this_year,
+            total_expense: total_expense
         });
     } catch (error) {
         logErr("expense.getexpense_summary", error, res);

@@ -6,16 +6,16 @@ const { getAccessToken } = require("../middleware/jwt_token");
 exports.getlist = async (req, res) => {
     try {
         let sql =
-            "select " +
-            "u.id, " +
-            "u.role_id, " +
-            "u.name, " +
-            "u.username, " +
-            "u.create_by, " +
-            "u.is_active, " +
-            "r.name as role_name " +
-            "from users u " +
-            "inner join roles r on u.role_id = r.id";
+            `select
+                u.id,
+                u.role_id, 
+                u.name, 
+                u.username, 
+                u.create_by, 
+                u.is_active, 
+                r.name as role_name 
+            from users u 
+            inner join roles r on u.role_id = r.id`;
         const [list] = await db.query(sql);
         const [role] = await db.query("select id as value, name as label from roles");
         res.json({

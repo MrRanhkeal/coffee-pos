@@ -120,27 +120,7 @@ exports.create = async (req, res) => {
             //     });
             //     console.log('DEBUG: Stock update result:', updateResult);
             // }
-        }));
-
-        // Use Promise.all to wait for all order details to be inserted
-        // await Promise.all(order_details.map(async (item) => {
-        //     // order product
-        //     var sqlOrderDetails =
-        //         "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total) VALUES (:order_id,:product_id,:qty,:price,:discount,:total) ";
-        //     await db.query(sqlOrderDetails, {
-        //         ...item,
-        //         order_id: data.insertId, // override key order_id
-        //     });
-        //     //cut stock when order =1 set stock_cup(qty - 1)
-        //     // re stock modify stock relation to product_stock
-        //     // var sqlReStock =
-        //     //     "UPDATE products SET qty = (qty-:order_qty) WHERE id = :product_id ";
-        //     // await db.query(sqlReStock, {
-        //     //     order_qty: item.qty,
-        //     //     product_id: item.product_id,
-        //     // });
-        // }));
-
+        })); 
         const [currentOrder] = await db.query(
             "select * from orders where id=:id",
             {
@@ -157,150 +137,12 @@ exports.create = async (req, res) => {
         logErr("order.create", error, res);
     }
 };
-
-//fix create
-// exports.create = async (req, res) => {
-//     // Start a database transaction
-//     let connection;
-//     try {
-//         // Assuming your `db` object has a method to get a connection and start a transaction
-//         // This might look different depending on your database library (e.g., mysql2, knex)
-//         connection = await db.getConnection(); // Get a connection from the pool
-//         await connection.beginTransaction();   // Start the transaction
-
-//         var { order, order_details = [] } = req.body;
-
-//         // Validate data and prepare order object
-//         order = {
-//             ...order,
-//             order_no: await newOrderNo(), // Generate order_no
-//             user_id: req.auth?.id,        // Current access user ID
-//             create_by: req.auth?.name,    // Current access user name
-//         };
-
-//         // 1. Insert into orders table
-//         var sqlOrder =
-//             "INSERT INTO orders (order_no,customer_id,total_amount,paid_amount,payment_method,remark,user_id,create_by) VALUES (:order_no,:customer_id,:total_amount,:paid_amount,:payment_method,:remark,:user_id,:create_by)";
-//         var [orderResult] = await connection.query(sqlOrder, order); // Use connection for query
-//         const orderId = orderResult.insertId;
-
-//         // Prepare order_details for bulk insertion and stock deduction
-//         const detailPromises = order_details.map(async (item) => {
-//             // Deduct stock for each item *before* inserting the order detail (or alongside it)
-//             // It's crucial that stock_cup has a product_id for accurate deduction.
-//             // If stock_cup doesn't have product_id, this logic needs adjustment.
-//             if (!item.stockproduct_id || !item.qty || !item.product_id) {
-//                 console.warn('WARNING: Missing stockproduct_id, qty, or product_id for stock deduction in item:', item);
-//                 // Depending on your business logic, you might throw an error here
-//                 // or just skip stock deduction for this specific item.
-//             } else {
-//                 let order_qty = parseInt(item.qty, 10);
-//                 if (isNaN(order_qty) || order_qty <= 0) {
-//                     console.warn('WARNING: Invalid quantity for stock deduction:', item.qty, 'in order_detail item:', item);
-//                     // Decide whether to skip this item or throw an error
-//                     // For a robust system, you'd likely throw an error here to prevent incorrect stock deduction.
-//                     // For now, we'll just skip the deduction for this item.
-//                 } else {
-//                     // Correct SQL for individual stock deduction based on the specific item's details
-//                     // This updates stock_cup directly using the item's stockproduct_id and product_id
-//                     // Ensure 'product_id' exists in your 'stock_cup' table as discussed previously.
-//                     console.log('[DEBUG] Attempting to deduct stock:', {
-//                         stockproduct_id: item.stockproduct_id,
-//                         product_id: item.product_id,
-//                         deductQty: order_qty
-//                     });
-//                     var sqlDeductStock =
-//                         "UPDATE stock_cup " +
-//                         "SET qty = qty - :deductQty " +
-//                         "WHERE id = :stockproduct_id AND product_id = :product_id"; // Add product_id condition
-//                     const [stockUpdateResult] = await connection.query(sqlDeductStock, { // Use connection for query
-//                         deductQty: order_qty,
-//                         stockproduct_id: item.stockproduct_id,
-//                         product_id: item.product_id // Make sure item has product_id
-//                     });
-//                     console.log('[DEBUG] Stock deduction result:', stockUpdateResult);
-
-//                     // Optional: Check if stock was actually updated (e.g., if rowCount === 0, stockproduct_id/product_id might be wrong)
-//                     if (stockUpdateResult.affectedRows === 0) {
-//                         console.warn(`WARNING: Stock not found or not updated for stockproduct_id: ${item.stockproduct_id}, product_id: ${item.product_id}. Check if stock exists or if quantity would go negative.`);
-//                         // You might want to throw an error here if stock must exist
-//                         throw new Error(`Insufficient stock or invalid stock location for product ID: ${item.product_id} at stockcup ID: ${item.stockproduct_id}`);
-//                     }
-//                 }
-//             }
-
-//             // Ensure stockproduct_id is present; if not, fetch it
-//             if (!item.stockproduct_id) {
-//                 const [cupRows] = await connection.query(
-//                     "SELECT id FROM stock_cup WHERE product_id = :product_id AND qty > 0 LIMIT 1",
-//                     { product_id: item.product_id }
-//                 );
-//                 if (!cupRows || cupRows.length === 0) {
-//                     throw new Error(`No cup stock available for product_id ${item.product_id}`);
-//                 }
-//                 item.stockproduct_id = cupRows[0].id;
-//             }
-//             // Insert order detail
-//             var sqlOrderDetails =
-//                 "INSERT INTO order_detail (order_id,product_id,qty,price,discount,total,stockproduct_id) VALUES (:order_id,:product_id,:qty,:price,:discount,:total,:stockproduct_id)";
-//             return connection.query(sqlOrderDetails, { // Use connection for query
-//                 ...item,
-//                 order_id: orderId, // Use the newly inserted order ID
-//             });
-//         });
-
-//         await Promise.all(detailPromises); // Wait for all detail inserts and stock deductions to complete
-
-//         // If all operations are successful, commit the transaction
-//         await connection.commit();
-
-//         // Fetch the created order for response
-//         const [currentOrder] = await db.query( // Can use `db` here as transaction is committed
-//             "SELECT * FROM orders WHERE id = :id",
-//             { id: orderId }
-//         );
-
-//         res.json({
-//             order: currentOrder.length > 0 ? currentOrder[0] : null,
-//             order_details: order_details,
-//             message: "Order created and stock deducted successfully!",
-//         });
-
-//     } catch (error) {
-//         // If an error occurs, roll back the transaction
-//         if (connection) {
-//             await connection.rollback();
-//             console.error('Transaction rolled back due to error:', error);
-//         }
-//         logErr("order.create", error, res);
-//     } finally {
-//         // Release the connection back to the pool
-//         if (connection) {
-//             connection.release();
-//         }
-//     }
-// };
-// //newOrderNo
-// // const newOrderNo = async () => {
-// //     try {
-// //         var sql =
-// //             "SELECT " +
-// //             "CONCAT('INV',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM orders), 3, '0')) " +
-// //             "as order_no";
-// //         var [data] = await db.query(sql);
-// //         return data[0].order_no;
-// //     }
-// //     catch (error) {
-// //         logErr("newOrderNo.create", error, res);
-// //     }
-// // };
-
 // //fix newOrderNo
 const newOrderNo = async () => {
     try {
         var sql =
             "SELECT " +
-            "CONCAT('INV',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM orders), 3, '0')) " +
+            "CONCAT('INV-',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM orders), 3, '0')) " +
             "as order_no";
         var [data] = await db.query(sql);
         return data[0].order_no;
