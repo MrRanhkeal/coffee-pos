@@ -27,6 +27,18 @@ exports.getlist = async (req, res) => {
             { label: "Coconut", value: "Coconut", country: "kh" },
             { label: "Test", value: "Test", country: "kh" },
         ];
+        const name_product =[
+            { label: "អាម៉ាហ្សូន", value: "អាម៉ាហ្សូន" },
+            { label: "Mondolkiri", value: "Mondolkiri" },
+            { label: "Vietnam", value: "Vietnam" },
+        ];
+        const brand_name = [
+            { label: "khmer cup", value: "khmer cup" }, 
+            { label: "vietnam cup", value: "vietnam cup" }, 
+            { label: "orthers cup", value: "orthers cup" }, 
+
+
+        ];
         //product_type
         const product_type = {
             Coffee: [
@@ -124,6 +136,8 @@ exports.getlist = async (req, res) => {
             vendor_payee,
             payment_method,
             supplier_address,
+            name_product,
+            brand_name,
             message: "success"
         })
     }

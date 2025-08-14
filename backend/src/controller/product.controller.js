@@ -2,54 +2,6 @@ const { logErr, db, removeFile } = require("../util/helper");
 
 exports.getlist = async (req, res) => {
     try {
-        // //var txt_search = req.query.txt_search;
-        // var { txt_search, category_id, brand, page, is_list_all } = req.query;
-        // const pageSize = 10; // fix
-
-        // // Ensure that 'page' is a valid number and default it to 1 if not
-        // page = Number(page);
-        // if (isNaN(page) || page < 1) {
-        //     page = 1;  // Default to page 1 if invalid or missing
-        // }
-
-        // const offset = (page - 1) * pageSize; // calculate offset
-
-        // var sqlSelect = "SELECT p.*, c.name AS category_name ";
-        // var sqlJoin = " FROM products p INNER JOIN category c ON p.category_id = c.id ";
-        // var sqlWhere = " WHERE true";
-
-
-        // if (txt_search) {
-        //     sqlWhere += " AND (p.name LIKE :txt_search) ";
-        // }
-        // if (category_id) {
-        //     sqlWhere += " AND p.category_id = :category_id";
-        // }
-        // if (brand) {
-        //     sqlWhere += " AND p.brand = :brand";
-        // }
-
-        // var sqlLimit = " LIMIT " + pageSize + " OFFSET " + offset;
-        // if (is_list_all) {
-        //     sqlLimit = "";
-        // }
-
-        // var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
-        // var sqlparam = {
-        //     txt_search: "%" + txt_search + "%",
-        //     category_id,
-        //     brand,
-        // };
-
-        // const [list] = await db.query(sqlList, sqlparam);
-
-        // var dataCount = 0;
-        // if (page == 1) {
-        //     let sqlTotal = " SELECT COUNT(p.id) as total " + sqlJoin + sqlWhere;
-        //     var [dataCountResult] = await db.query(sqlTotal, sqlparam);
-        //     dataCount = dataCountResult[0].total;
-        // }
-        // Destructure and get query parameters
         var { txt_search, category_id, brand, page, is_list_all } = req.query;
 
         const pageSize = 10; // Items per page
@@ -189,35 +141,7 @@ exports.update = async (req, res) => {
             image: filename,
             create_by: req.auth?.name
         });
-        // image opitonal
-        // if (req.files && req.files?.upload_image_optional) {
-        //     var paramImagePorduct = [];
-        //     req.files?.upload_image_optional.map((item, index) => {
-        //         paramImagePorduct.push([req.body.id, item.filename]);
-        //     });
-        //     var sqlImageProduct =
-        //         "INSERT INTO product_image (product_id,image) VALUES :data";
-        //     var [dataImage] = await db.query(sqlImageProduct, {
-        //         data: paramImagePorduct,
-        //     });
-        // }
-        //multiple image  ( case remove)
-        // if (req.body.image_optional && req.body.image_optional.length > 0) {
-        //     // console.log(req.body.image_optional);
-        //     if (typeof req.body.image_optional == "string") {
-        //         req.body.image_optional = [req.body.image_optional];
-        //     }
-        //     req.body.image_optional?.map(async (item, index) => {
-        //         // remove database
-        //         let [data] = await db.query(
-        //             "DELETE FROM product_image WHERE image = :image",
-        //             { image: item }
-        //         );
-        //         // unlink from hard
-        //         removeFile(item); // remove image
-        //     });
-        // }
-
+        
         res.json({
             data: data,
             message: "success",
@@ -247,49 +171,3 @@ exports.remove = async (req, res) => {
         logErr("remove.create", error, res);
     }
 };
-// exports.newBarcode = async (req, res) => {
-//     try {
-//         var sql =
-//             "SELECT " +
-//             "CONCAT('P',LPAD((SELECT COALESCE(MAX(id),0) + 1 FROM products), 3, '0')) " +
-//             "as barcode";
-//         var [data] = await db.query(sql);
-//         res.json({
-//             barcode: data[0].barcode,
-//             message: "success",
-//             error: false
-//         })
-//     }
-//     catch (error) {
-//         logErr("remove.create", error, res);
-//     }
-// };
-// exports.productImage = async (req, res) => {
-//     try {
-//         var sql = "SELECT *  FROM product_image WHERE product_id=:product_id";
-//         var [list] = await db.query(sql, {
-//             product_id: req.params.product_id,
-//         });
-//         res.json({
-//             list,
-//             message: "success",
-//         });
-//     }
-//     catch (err) {
-//         logErr("remove.create", err, res);
-//     }
-// };
-// isExistBarcode = async (barcode) => {
-//     try {
-//         var sql = "SELECT COUNT(id) as Total FROM products WHERE barcode=:barcode";
-//         var [data] = await db.query(sql, {
-//             barcode: barcode,
-//         });
-//         if (data.length > 0 && data[0].Total > 0) {
-//             return true; // ស្ទួន
-//         }
-//         return false; // អត់ស្ទួនទេ
-//     } catch (error) {
-//         logError("remove.create", error, res);
-//     }
-// };

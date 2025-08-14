@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
         if (data.length == 0) {
             res.json({
                 error: {
-                    message: "username does't exists, please try again...!"
+                    message: "ឈ្មោះអ្នកប្រើប្រាស់មិនមាន, សូមព្យាយាមម្តងទៀត!"
                 }, //pro data
             });
             return;
@@ -107,8 +107,8 @@ exports.login = async (req, res) => {
             let isMatch = bcrypt.compareSync(password, dbPassword); //this compare true and false pass
             if (!isMatch) {
                 res.json({
-                    error: {
-                        message: "password does't match, please try again...!"
+                    error: { 
+                        message: "ពាក្យសម្ងាត់មិត្រឹមត្រូវ, សូមព្យាយាមម្តងទៀត!"
                     }, //pro data
                 });
                 return;
@@ -120,7 +120,7 @@ exports.login = async (req, res) => {
                     permission: data[0].role_name === 'Admin' ? ["view", "create", "update", "delete"] : ["view"]
                 }
                 res.json({
-                    message: "login success",
+                    message: "login successfully",
                     ...obj, //this javascript spread operator (...) allows us to quickly copy the contents all part of an existing object into another object
                     // get token
                     access_token: await getAccessToken(obj)
