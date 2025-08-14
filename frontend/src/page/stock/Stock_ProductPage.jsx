@@ -1,29 +1,38 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Table, Modal, Form, Input, message, Select, Tag, Space, InputNumber } from 'antd';
-import ProductList from './ProductList';
 import { request } from '../../util/helper';
-import { DeleteOutlined, EditOutlined, FileAddFilled } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from '@ant-design/icons';
 import { MdDelete, MdEdit } from 'react-icons/md';
-
+import { configStore } from '../../store/configStore';
+import { IoMdEye } from 'react-icons/io';
 
 function Stock_ProductPage() {
-    useEffect(() => {
-        const link = document.createElement('link');
-        link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
-        link.rel = 'stylesheet';
-        document.head.appendChild(link);
-        return () => { document.head.removeChild(link); };
-    }, []);
     const [state, setState] = useState({
         loading: false,
         data: [],
+        visibleModal: false,
+        id: null,
+        name_product: null,
+        brand_name: null,
+        qty: null,
+        cost: null,
+        total_cost: null,
+        supplier_id: null,
+        status: null
     });
+    const { config } = configStore();
     const [suppliers, setSuppliers] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
-    const [editingId, setEditingId] = useState({ id: null, status: null });
-    const { products, loading: productLoading,setProducts } = ProductList();
-
+    const [editingId, setEditingId] = useState({});
+    const [total_cost, setTotalCost] = useState(0);
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [filter, setFilter] = useState({
+        name_product: "",
+        brand_name: "",
+        txtSearch: "",
+    });
     // get suppliers list
     const getSuppliers = useCallback(async () => {
         try {
@@ -34,18 +43,7 @@ function Stock_ProductPage() {
         } catch (error) {
             console.error('Failed to get suppliers:', error);
         }
-    }, []);
-    //get product list
-    const getProducts = useCallback(async () => {
-        try {
-            const res = await request('product', 'get', {});
-            if (res && !res.error && res.list) {
-                setProducts(res.list);
-            }
-        } catch (error) {
-            console.error('Failed to get products:', error);
-        }
-    }, []); 
+    }, [setState, filter.product_name]);
 
     // get stock list
     const getList = useCallback(async () => {
@@ -56,9 +54,14 @@ function Stock_ProductPage() {
             }));
             const res = await request('stock_product', 'get');
             if (res && !res.error) {
+                // Calculate total_cost for each item
+                const processedData = (res.data || []).map(item => ({
+                    ...item,
+                    total_cost: (parseFloat(item.cost) * parseFloat(item.qty)).toFixed(2)
+                }));
                 setState((p) => ({
                     ...p,
-                    data: res.data,
+                    data: processedData,
                     loading: false
                 }))
             }
@@ -73,10 +76,18 @@ function Stock_ProductPage() {
     }, []);
 
     useEffect(() => {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&family=Roboto:wght@400;700&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+        return () => { document.head.removeChild(link); };
+    }, []);
+
+    useEffect(() => {
         getList();
         getSuppliers();
-        getProducts();
-    }, [getList, getSuppliers]);
+        getTotalProductCost();
+    }, []);
 
     // Helper function to get supplier name by ID
     const getSupplierName = (supplierId) => {
@@ -84,6 +95,28 @@ function Stock_ProductPage() {
         return supplier ? supplier.name : `ID: ${supplierId}`;
     };
 
+    const getTotalProductCost = useCallback(async () => {
+        //setLoading(true);
+        try {
+            const res = await request('total_product_cost', 'get');
+            if (res && !res.error) {
+                setData(res);
+                setTotalCost(res.total_cost || null);
+            }
+            else {
+                setData([]);
+                // setSummary(null);
+                setTotalCost(null);
+                message.info('No total product cost data found.');
+            }
+        }
+        catch (err) {
+            console.error('Failed to get total product cost data.', err);
+        }
+        finally {
+            setLoading(false);
+        }
+    });
     // Handle form submission for both create and update
     const onFinish = async (values) => {
         try {
@@ -96,14 +129,13 @@ function Stock_ProductPage() {
 
             // Calculate new total quantity
             const updatedQty = parseInt(values.qty) + parseInt(values.newQty || 0);
-            //const newQty = parseInt(values.newQty || 0);
 
             const payload = {
-                name: values.name,
-                //newQty: newQty,
+                name_product: values.name_product,
+                brand_name: values.brand_name,
                 qty: updatedQty,
+                cost: values.cost,
                 supplier_id: values.supplier_id,
-                product_id: values.product_id,
                 description: values.description,
                 status: values.status
             };
@@ -132,28 +164,30 @@ function Stock_ProductPage() {
             }));
         }
     };
-    //check product is exist or not then continue
     const openModal = () => {
         form.setFieldsValue({
-            name: '',
+            name_product: '',
+            brand_name: '',
             qty: 0,
             newQty: 0,
+            cost: 0,
             supplier_id: undefined,
-            product_id: undefined,
             description: '',
             status: 1
         });
         setEditingId(null);
         setIsModalVisible(true);
     };
-    const handleDelete = async (record) => {
+    const onClickDelete = async (record) => {
         try {
             Modal.confirm({
-                title: 'Delete Stock',
-                content: `Are you sure you want to delete this stock ${record.name} ?`,
-                okText: 'Yes',
+                title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
+                // content: `តើអ្នកចង់លុបទំនិញនេះមែនទេ! ${record.product_name} ?`,
+                content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {record.product_name} ?</span>,
+                //okText: 'បាទ/ចាស',
+                okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
                 okType: 'danger',
-                cancelText: 'No',
+                cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
                 onOk: async () => {
                     const res = await request('stock_product', 'delete', { id: record.id });
                     if (res && !res.error) {
@@ -166,170 +200,177 @@ function Stock_ProductPage() {
             message.error(`Delete failed: ${error.message}`);
         }
     };
-    //upadte stock current qty + new qty
-    const handleEdit = (record) => {
+    const clickReadOnly = (record) => {
+        setState({
+            ...state,
+            visibleModal: true,
+            isReadOnly: true,
+            id: record.id
+        });
         form.setFieldsValue({
-            name: record.name,
+            id: record.id,
+            name_product: record.product_name,
+            brand_name: record.brand_name,
+            qty: record.qty,
+            cost: record.cost,
+            supplier_id: record.supplier_id,
+            description: record.description,
+            status: record.status,
+        });
+    }
+    //upadte stock current qty + new qty
+    const onClickEdit = (record) => {
+        form.setFieldsValue({
+            name_product: record.name_product,
+            brand_name: record.brand_name,
             qty: record.qty,
             newQty: 0,  // Initialize additional quantity to 0
+            cost: record.cost,
             supplier_id: record.supplier_id,
-            product_id: record.product_id,
             description: record.description,
             status: record.status
         });
         setEditingId(record.id);
         setIsModalVisible(true);
     };
-
-    const columns = [
-        {
-            key: 'No',
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
-            render: (item, data, index) => index + 1,
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះ</span>,
-            dataIndex: 'name',
-            key: 'name',
-            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះផលិត</span>,
-            dataIndex: 'product_id',
-            key: 'product_id',
-            render: (productId) => {
-                const product = products.find(p => p.id === productId);
-                return (
-                    <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                        {product ? product.name : `ID: ${productId}`}
-                    </span>
-                );
-            },
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួន</span>,
-            dataIndex: 'qty',
-            key: 'qty',
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ្នកផ្គត់ផ្គង់</span>,
-            dataIndex: 'supplier_id',
-            key: 'supplier_id',
-            render: (supplierId) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{getSupplierName(supplierId)}</span>,
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>មតិយោបល់</span>,
-            dataIndex: 'description',
-            key: 'description',
-            render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
-            dataIndex: 'status',
-            key: 'status',
-            render: (state) => (state == 1 ? (
-                <Tag color="green" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>Active</Tag>
-            ) : (
-                <Tag color="red" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>InActive</Tag>
-            )),
-        },
-        {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>,
-            key: 'actions',
-            render: (_, record) => (
-                <Space >
-                    <EditOutlined
-                        type='primary'
-                        onClick={() => handleEdit(record)}
-                        icon={<MdEdit />}
-                        style={{ color: "green", fontSize: 20 }}
-                    />
-                    <DeleteOutlined
-                        type='primary'
-                        danger
-                        onClick={() => handleDelete(record)}
-                        icon={<MdDelete />}
-                        style={{ color: "red", fontSize: 20 }}
-                    />
-                </Space>
-            ),
-        },
-    ];
-
     return (
-        <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} >Stock Products
-            <div style={{ marginBottom: 16, textAlign: "right", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+        <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={loading}>
+            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
+                <h3 style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}> Total Cost</h3>
+                {(() => {
+                    const TotalCost = Array.isArray(total_cost) && total_cost.length > 0
+                        ? total_cost[0].total_cost || 0
+                        : 0;
+                    return <span>ការចំណាយសរុប: ${Number(TotalCost).toFixed(2)}</span>;
+                })()}
+            </div>
+            <div style={{ marginBottom: 2, textAlign: 'right', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                 <Button
                     Button type="primary"
                     onClick={openModal}
                     style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                 >
-                    <FileAddFilled />New
+                    <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />បញ្ចូលថ្មី
                 </Button>
             </div>
-
-            <Table
-                columns={columns}
-                dataSource={state.data}
-                rowKey="id"
-                loading={state.loading}
-            />
-
+            <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', margin: '0 0 10px 0' }}>ស្តុកផលិតផលផ្សេងៗ</div>
             <Modal
-                title={editingId ? 'Edit Stock' : 'Add New Stock'}
-                open={isModalVisible}
+                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                open={state.visibleModal || isModalVisible}
+                title={state.isReadOnly ? "មើល" : editingId ? "កែប្រែ" : (editingId && editingId.id ? "" : "បញ្ចូលថ្មី")}
                 onCancel={() => {
                     setIsModalVisible(false);
+                    setState(p => ({ ...p, visibleModal: false, isReadOnly: false }));
                     form.resetFields();
                     setEditingId(null);
                 }}
-                footer={null}
-                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                footer={state.isReadOnly ? [
+                    <Button key="close" type="primary"
+                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        onClick={() => {
+                            setIsModalVisible(false);
+                            setState(p => ({ ...p, visibleModal: false, isReadOnly: false }));
+                            form.resetFields();
+                            setEditingId(null);
+                        }}>
+                        បិទ
+                    </Button>
+                ] : null}
+                width={600}
             >
                 <Form
                     form={form}
                     layout="vertical"
                     onFinish={onFinish}
+                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                 >
                     <Form.Item
-                        name="name"
-                        label="ឈ្មោះ" 
-                        rules={[{ required: true, message: 'Please input name!' }]}
-                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                    >
-                        <Input placeholder="ឈ្មោះទំនិញ" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
-                    </Form.Item> 
-                    <Form.Item
-                        name="qty"
-                        label="ចំនួនស្តុកចាស់"
-                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                    >
-                        <InputNumber disabled min={0} style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="newQty"
-                        label="ចំនួនបន្ថែម"
-                        rules={[{ required: true, message: 'Please input quantity to add!' }]}
-                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                    >
-                        <InputNumber min={0} style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} placeholder="Enter additional quantity" />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="supplier_id"
-                        label="អ្នកផ្គត់ផ្គង់"
-                        rules={[{ required: true, message: 'Please select a supplier!' }]}
-                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        name="name_product"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះទំនិញ</span>}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'សូមបញ្ចូល ឈ្មោះទំនិញ!'
+                            }
+                        ]}
                     >
                         <Select
-                            placeholder="ជ្រើសអ្នកផ្គត់ផ្គង់"
+                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            placeholder="ជ្រើសរើស ឈ្មោះទំនិញ"
+                            showSearch
+                            allowClear
+                            // options={(config.product_name || []).map(item => ({
+                            //     label: item.label,
+                            //     value: item.value
+                            // }))}
+                            options={config.name_product?.map((opt) => ({
+                                value: opt.value,
+                                label: (
+                                    <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                        {opt.label}
+                                    </span>
+                                )
+                            }))}
+                            onChange={(value) => {
+                                setFilter(prev => ({
+                                    ...prev,
+                                    name_product: value
+                                }));
+                                getList();
+                            }}
+                            disabled={state.isReadOnly}
+                        />
+
+                    </Form.Item>
+                    <Form.Item
+                        name="brand_name"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ម៉ាកទំនិញ</span>}
+                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        rules={[{ required: true, message: 'សូមបញ្ចូលម៉ាកទំនិញ!' }]}
+                    >
+                        <Select
+                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            placeholder="ជ្រើសរើសម៉ាកទំនិញ"
+                            showSearch
+                            allowClear
+                            optionFilterProp="children"
+                            // options={(config.categories || []).map(item => ({
+                            //     label: item.label,
+                            //     value: item.value
+                            // }))}
+                            options={config.brand_name?.map((opt) => ({
+                                value: opt.value,
+                                label: (
+                                    <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                        {opt.label}
+                                    </span>
+                                )
+                            }))}
+                            onChange={(value) => {
+                                setFilter(prev => ({
+                                    ...prev,
+                                    brand_name: value
+                                }));
+                                getList();
+                            }}
+                            disabled={state.isReadOnly}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="supplier_id"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ្នកផ្គត់ផ្គង់ទំនិញ</span>}
+                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        rules={[{ required: true, message: 'Please select a supplier!' }]}
+                    >
+                        <Select
+                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            placeholder="ជ្រើសរើសអ្នកផ្គត់ទំនិញ"
                             showSearch
                             optionFilterProp="children"
                             filterOption={(input, option) =>
                                 (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
                             }
-                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            disabled={state.isReadOnly}
                         >
                             {suppliers.map(supplier => (
                                 <Select.Option key={supplier.id} value={supplier.id} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
@@ -338,73 +379,207 @@ function Stock_ProductPage() {
                             ))}
                         </Select>
                     </Form.Item>
-
                     <Form.Item
-                        name="product_id"
-                        label="ផលិតផល"
-                        rules={[{ required: true, message: 'Please select a product!' }]}
+                        name="qty"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួនទំនិញក្នុងស្តុក</span>}
                         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     >
-                        <Select
-                            placeholder="ជ្រើសផលិតផល"
-                            loading={productLoading}
-                            showSearch
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
-                            }
-                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                        >
-                            {products.map(product => (
-                                <Select.Option key={product.id} value={product.id} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                                    {product.name} (ID: {product.id})
-                                </Select.Option>
-                            ))}
-                        </Select>
+                        <InputNumber disabled min={0} style={{ width: '100%' }} />
                     </Form.Item>
 
                     <Form.Item
-                        name="description"
-                        label="មតិយោបល់"
-                        rules={[{ required: true, message: 'Please input description!' }]}
+                        name="newQty"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួនបន្ថែម</span>}
+                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        rules={[{ required: true, message: 'Please input quantity to add!' }]}
+                    >
+                        <InputNumber min={0} style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} placeholder="បញ្ចូលចំនួនបន្ថែម" disabled={state.isReadOnly} />
+                    </Form.Item>
+                    <Form.Item
+                        name="cost"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការចំណាយ/Kg</span>}
                         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     >
+                        <InputNumber
+                            min={0}
+                            style={{ width: '100%' }}
+                            formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            step={0.5}
+                            disabled={state.isReadOnly}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="description"
+                        label={<span style={{ fontFamily: '"Noto Sans Khmer", Roboto, sans-serif' }}>ពណ៌នា</span>}
+                        style={{ fontFamily: '"Noto Sans Khmer", Roboto, sans-serif' }}
+                        rules={[{ required: true, message: 'Please input description!' }]}
+                    >
                         <Input.TextArea
+                            style={{ fontFamily: '"Noto Sans Khmer", Roboto, sans-serif' }}
                             rows={3}
-                            placeholder="Enter description"
-                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            placeholder="ពណ៌នា"
+                            disabled={state.isReadOnly}
                         />
                     </Form.Item>
 
+
                     <Form.Item
                         name="status"
-                        label="សកម្មភាព"
-                        initialValue={1}
+                        label={<span style={{ fontFamily: '"Noto Sans Khmer", Roboto, sans-serif' }}>ស្ថានភាព</span>}
                         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        initialValue={1}
                     >
-                        <Select placeholder="ជ្រើសសកម្មភាព" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                            <Select.Option value={1} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>Active</Select.Option>
-                            <Select.Option value={0} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>Inactive</Select.Option>
+                        <Select
+                            placeholder="សូមជ្រើសរើសស្ថានភាព"
+                            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            disabled={state.isReadOnly}
+                        >
+                            <Select.Option value={1} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្ម</Select.Option>
+                            <Select.Option value={0} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អសកម្ម</Select.Option>
                         </Select>
                     </Form.Item>
 
-                    <Form.Item
-                        style={{ textAlign: "right", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                    >
-                        <Button type="primary" htmlType="submit" style={{ marginRight: 8, fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={state.loading}>
-                            {editingId ? 'កែប្រែ' : 'បន្ថែមថ្មី'}
-                        </Button>
+                    {!state.isReadOnly && (
+                        <Form.Item
+                            style={{ textAlign: "right" }}
+                        >
+                            <Button
+                                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', marginRight: '8px' }}
+                                onClick={() => {
+                                    setIsModalVisible(false);
+                                    form.resetFields();
+                                    setEditingId(null);
+                                }}>
+                                បោះបង់
+                            </Button>
+                            <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={state.loading}>
+                                {editingId ? "កែប្រែ" : (editingId && editingId.id ? "" : "រក្សាទុក")}
+                            </Button>
 
-                        <Button onClick={() => {
-                            setIsModalVisible(false);
-                            form.resetFields();
-                            setEditingId(null);
-                        }} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                            បិទ
-                        </Button>
-                    </Form.Item>
+                        </Form.Item>
+                    )}
                 </Form>
-            </Modal>
+            </Modal> 
+            <Table
+                dataSource={state.data}
+                columns={[
+                    {
+                        key: "id",
+                        //title: "ល.រ",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ល.រ</span>,
+                        render: (item, data, index) => index + 1,
+                    },
+                    {
+                        key: "name_product",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះទំនិញ</span>,
+                        dataIndex: "name_product",
+                        render: (data) => (
+                            <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                {data}
+                            </span>
+                        ),
+                    },
+                    {
+                        key: "brand_name",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ម៉ាក</span>,
+                        dataIndex: "brand_name",
+                        render: (data) => (
+                            <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                {data}
+                            </span>
+                        ),
+                    },
+                    {
+                        key: "supplier_id",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អ្នកផ្គត់ផ្គង់</span>,
+                        dataIndex: "supplier_id",
+                        // render: (data, row) => (
+                        //     <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                        //         <div>{row.supplier_id}</div>
+                        //     </span>
+                        // )
+                        render: (supplierId) => (
+                            <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                {getSupplierName(supplierId)}
+                            </span>
+                        )
+                    },
+                    {
+                        key: "qty",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួនក្នុងស្តុក</span>,
+                        dataIndex: "qty",
+                        render: (qty) => parseFloat(qty).toFixed(2) + ' Kg',
+                    },
+                    {
+                        key: "cost",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំណាយ/Kg</span>,
+                        dataIndex: "cost",
+                        render: (cost) => '$' + cost,
+                    },
+                    {
+                        key: "total_cost",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំណាយសរុប</span>,
+                        dataIndex: "total_cost",
+                        render: (total_cost) => '$' + total_cost,
+                    },
+                    {
+                        key: "description",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សម្គាល់</span>,
+                        dataIndex: "description",
+                        render: (description) => (
+                            <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                {description}
+                            </span>
+                        ),
+
+                    },
+                    {
+                        key: "create_at",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>កាលបរិច្ឆេទបង្កើត</span>,
+                        dataIndex: "create_at",
+                        render: (date) => new Date(date).toLocaleDateString("en-GB", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                    },
+                    {
+                        key: "status",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>,
+                        dataIndex: "status",
+                        render: (status) =>
+                            status == 1 ? (
+                                <Tag color="green" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្ម</Tag>
+                            ) : (
+                                <Tag color="red" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អសកម្ម</Tag>
+                            ),
+                    },
+                    {
+                        key: "Action",
+                        title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សកម្មភាព</span>,
+                        align: "center",
+                        render: (item, data, index) => (
+                            <Space>
+                                <EditOutlined
+                                    type="primary"
+                                    style={{ color: "green", fontSize: 20 }}
+                                    icon={<MdEdit />}
+                                    onClick={() => onClickEdit(data, index)}
+                                />
+                                <DeleteOutlined
+                                    type="primary"
+                                    danger
+                                    style={{ color: "red", fontSize: 20 }}
+                                    icon={<MdDelete />}
+                                    onClick={() => onClickDelete(data, index)}
+                                />
+                                <EyeOutlined
+                                    style={{ color: 'rgb(12, 59, 4)', fontSize: 20 }}
+                                    onClick={() => clickReadOnly(data)}
+                                    icon={<IoMdEye />}
+                                />
+                            </Space>
+                        ),
+                    }, 
+                ]} 
+            /> 
         </div>
     );
 }

@@ -11,19 +11,14 @@ import UserPage from "./page/user/UserPage";
 import ProductPage from "./page/product/ProductPage";
 import ExpansePage from "./page/expanse/ExpansePage";
 import PosPage from "./page/pos/PosPage";
-import OrderPage from "./page/order/OrderPage";
-import ReportSaleSummaryPage from "./page/report/ReportSaleSummaryPage";
-import ReportExpenseSummaryPage from "./page/report/ReportExpenseSummaryPage";
+import OrderPage from "./page/order/OrderPage"; 
 import LoginPage from "./page/auth/LoginPage";
 import ExchangePage from "./page/currency/ExchangePage";
 import Dashboard from "./page/dashboard/Dashboard";
-import ProtectedRoute from "./component/protects/ProtectedRoute";
-// import Stock_CupPage from "./page/stock/Stock_CupPage";
-// import Stock_CoffeePage from "./page/stock/Stock_CoffeePage";
+import ProtectedRoute from "./component/protects/ProtectedRoute"; 
 import StockPage from "./page/stock/StockPage";
-import ReportSalePage from "./page/report/ReportSalePage";
-import SaleSummaryPage from "./page/report/SaleSummaryPage";
-import ProductStock from "./page/stock/ProductStock";
+import ReportSalePage from "./page/report/ReportSalePage"; 
+import SaleSummaryPage from "./page/report/SaleSummaryPage"; 
 
 function App() {
   return (
@@ -42,29 +37,17 @@ function App() {
           <Route path="/user" element={<ProtectedRoute permissionKey="user" element={<UserPage />} />} />
           <Route path="/role" element={<ProtectedRoute permissionKey="role" element={<RolePage />} />} />
           <Route path="/expanse" element={<ProtectedRoute permissionKey="expanse" element={<ExpansePage />} />} />
-          <Route path="/stock" element={<ProtectedRoute permissionKey="stock" element={<StockPage />} />} />
-          <Route path="/product_stock" element={<ProtectedRoute permissionKey="product_stock" element={<ProductStock />} />}/>
-          {/* Stock related routes */}
-          {/* <Route path="/stock-cup" element={<Stock_CupPage />} />
-          <Route path="/stock-coffee" element={<Stock_CoffeePage />} /> */}
+          <Route path="/stock" element={<ProtectedRoute permissionKey="stock" element={<StockPage />} />} /> 
 
           <Route path="/currency" element={<ExchangePage />} />
-
+  
           <Route
-            path="/report_sale_summary"
-            element={<ProtectedRoute permissionKey="report_sale_summary" element={<ReportSaleSummaryPage />} />}
-          />
-          <Route
-            path="/report_expense_summary"
-            element={<ProtectedRoute permissionKey="report_expense_summary" element={<ReportExpenseSummaryPage />} />}
-          />
-          <Route
-            path="/sale_report"
-            element={<ProtectedRoute permissionKey="sale_report" element={<ReportSalePage />} />}
+            path="/getsalereport"
+            element={<ProtectedRoute permissionKey="getsalereport" element={<ReportSalePage />} />}
           />
           <Route
             path="/get_sale_summary"
-            element={<ProtectedRoute permissionKey="sale_month_report" element={<SaleSummaryPage />} />}
+            element={<ProtectedRoute permissionKey="get_sale_summary" element={<SaleSummaryPage />} />}
           />
           <Route path="*" element={<h1>404-Route Not Found!</h1>} />
         </Route>

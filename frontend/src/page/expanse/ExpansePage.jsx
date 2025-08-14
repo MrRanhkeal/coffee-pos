@@ -179,8 +179,8 @@ function ExpansePage() {
   };
   const onClickDelete = async (data) => {
     Modal.confirm({
-      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
-      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {data.expense_type} ?</span>,
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{data.expense_type}</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {data.expense_type} មែនទេ ?</span>,
       okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
       okType: 'danger',
       cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
@@ -261,7 +261,7 @@ function ExpansePage() {
               </div>
             </div>
           );
-        })()}
+        })()} 
       </div>
       <Modal
         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
@@ -393,7 +393,7 @@ function ExpansePage() {
             <Input type="date" placeholder="Expense Date" disabled={state.isReadOnly} />
           </Form.Item> */}
           <Form.Item style={{ textAlign: "right" }}>
-            <Button onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បិទ</Button> &nbsp;
+            <Button onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{state.isReadOnly ? "បិទ" : "បោះបង់"}</Button> &nbsp;
             {!state.isReadOnly && (
               <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                 {formRef.getFieldValue("id") ? "កែប្រែ" : "រក្សាទុក"}

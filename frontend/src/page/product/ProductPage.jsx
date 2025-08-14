@@ -278,8 +278,8 @@ function ProductPage() {
   };
   const onClickDelete = (item) => {
     Modal.confirm({
-      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
-      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {item.name} ?</span>,
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{item.name}</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {item.name} មែនទេ ?</span>,
       okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
       okType: 'danger',
       cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
@@ -445,7 +445,7 @@ function ProductPage() {
                 <InputNumber placeholder="Quantity" style={{ width: "100%" }} />
               </Form.Item> */}
                 <Form.Item name={"discount"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បញ្ចុះតម្លៃ</span>}>
-                  <InputNumber placeholder="បញ្ចុះតម្លៃ" className="khmer-search" style={{ width: "100%"}} />
+                  <InputNumber placeholder="បញ្ចុះតម្លៃ" className="khmer-search" style={{ width: "100%" }} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -482,7 +482,7 @@ function ProductPage() {
                   style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                   label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>តម្លៃលក់</span>}
                 >
-                  <InputNumber placeholder="តម្លៃលក់" className="khmer-search" style={{width: "100%" }} />
+                  <InputNumber placeholder="តម្លៃលក់" className="khmer-search" style={{ width: "100%" }} />
                 </Form.Item>
                 <Form.Item name={"status"} label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ស្ថានភាព</span>}>
                   <Select

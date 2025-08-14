@@ -66,8 +66,8 @@ function RolePage() {
     // Handle delete button click
     const handleDelete = (record) => {
         Modal.confirm({
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
-            content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {record.name} ?</span>,
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{record.name}</span>,
+            content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {record.name} មែនទេ ?</span>,
             okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
             okType: 'danger',
             cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
@@ -224,28 +224,16 @@ function RolePage() {
                         rules={[{ required: true, message: "Please input role name" }]}
                     >
                         <Input placeholder="ឈ្មោះតួនាទី" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
-                    </Form.Item>
-
-                    {/* <Form.Item
-                        name="permission"
-                        label="Permission"
-                        rules={[{ required: true, message: "Please select at least one permission" }]}
-                        help="Select allowed routes for this role"
-                    >
-                        <Select
-                            mode="multiple"
-                            options={availableRoutes}
-                            placeholder="Select permissions"
-                        />
-                    </Form.Item> */}
-
+                    </Form.Item> 
                     <Form.Item style={{ textAlign: "right" }}>
-                        <Button style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',margin: '0 8px 0 0' }} onClick={handleCancel}>
-                            បោះបង់
-                        </Button>
-                        <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                            រក្សាទុក
-                        </Button>
+                        <Space>
+                            <Button type="default" onClick={handleCancel} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{state.isReadOnly ? "បិទ" : "បោះបង់"}</Button>
+                            <Button type="primary" htmlType="submit"
+                                style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                            >
+                                {form.getFieldValue("id") ? "កែប្រែ" : "រក្សាទុក"}
+                            </Button>
+                        </Space>
                     </Form.Item>
                 </Form>
             </Modal>

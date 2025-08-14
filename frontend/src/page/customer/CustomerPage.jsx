@@ -82,8 +82,8 @@ function CustomerPage() {
   }
   const onClickDelete = async (data) => {
     Modal.confirm({
-      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
-      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {data.name} ?</span>,
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{data.name}</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {data.name} មែនទេ ?</span>,
       okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
       okType: 'danger',
       cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
@@ -142,12 +142,12 @@ function CustomerPage() {
     }
   };
   return (
-    <MainPage loading={loading} > 
-      <div className="pageHeader" style={{fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}}>
+    <MainPage loading={loading} >
+      <div className="pageHeader" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
         <Space>
           {/* <Flex vertical gap={12}>
             <Input placeholder="Outlined" />
-          </Flex> */} 
+          </Flex> */}
           <Flex>
             <Input
               style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
@@ -162,15 +162,15 @@ function CustomerPage() {
           </Flex>
           <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
             <FaSearch style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> ស្វែងរក
-          </Button> 
-        </Space>  
+          </Button>
+        </Space>
         <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} onClick={onClickAddBtn} >
           <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> បញ្ចូលថ្មី
         </Button>
       </div>
-      <div style={{fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold',margin:'0 0 10px 0'}}>តារាងអតិថិជន </div>
+      <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', margin: '0 0 10px 0' }}>តារាងអតិថិជន </div>
       <Modal
-        style={{fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}}
+        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
         open={state.visibleModal}
         title={state.isReadOnly ? "មើល" : (state.id ? "កែប្រែ" : "បញ្ចូលអតិថិជន")}
         footer={null}
@@ -233,7 +233,7 @@ function CustomerPage() {
           </Form.Item>
           <Form.Item style={{ textAlign: "right" }}>
             <Space>
-              <Button type="default" onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>បិទ</Button>
+              <Button type="default" onClick={onCloseModal} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{state.isReadOnly ? "បិទ" : "បោះបង់"}</Button>
               {!state.isReadOnly && (
                 <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                   {form.getFieldValue("id") ? "កែប្រែ" : "រក្សាទុក"}

@@ -35,7 +35,7 @@ function OrderPage() {
     //const user = JSON.parse(localStorage.getItem("user")); //check it for get user 
     const [filter, setFiler] = useState({
         from_date: dayjs().subtract(5, "d"), // current
-        to_date: dayjs().add(1, "d"), // current
+        to_date: dayjs().add(0, "d"), // current
     });
 
     useEffect(() => {
@@ -101,11 +101,11 @@ function OrderPage() {
     });
     const onClickDelete = async (data) => {
         Modal.confirm({
-            title: "Delete Order",
-            content: `Are you sure you want to delete order no. ${data.order_no}?`,
-            okText: "Delete",
-            cancelText: "Cancel",
-            okType: "danger",
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{data.id}</span>,
+                content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {data.id} មែនទេ ?</span>,
+                okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
+                okType: 'danger',
+                cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
             onOk: async () => {
                 const res = await request("order", "delete", {
                     id: data.id,

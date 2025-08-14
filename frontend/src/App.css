@@ -78,7 +78,14 @@ table.pos_tbl_invoice td {
   font-style: normal;
 }
 body {
-    font-family: "Noto Sans Khmer", Roboto, sans-serif;
+  font-family: "Noto Sans Khmer", Roboto, sans-serif;
+}
+/* global orveride */
+.ant-form-item-explain-error {
+  color: red !important;
+  font-size: 14px;
+  font-style: italic;
+  font-family: Noto Sans Khmer, Roboto, sans-serif;
 }
 
 /* print */

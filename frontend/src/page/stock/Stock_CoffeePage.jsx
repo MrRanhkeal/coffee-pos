@@ -24,10 +24,10 @@ function Stock_CoffeePage() {
     const [suppliers, setSuppliers] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
-    const [editingId, setEditingId] = useState({
-
-    });
-
+    const [editingId, setEditingId] = useState({});
+    const [total_cost, setTotalCost] = useState(0);
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
         product_name: "",
         categories: "",
@@ -86,6 +86,7 @@ function Stock_CoffeePage() {
     useEffect(() => {
         getList();
         getSuppliers();
+        getTotalProductCost();
     }, [getList, getSuppliers]);
 
     // Helper function to get supplier name by ID
@@ -93,7 +94,28 @@ function Stock_CoffeePage() {
         const supplier = suppliers.find(s => s.id === supplierId);
         return supplier ? supplier.name : `ID: ${supplierId}`;
     };
-
+    const getTotalProductCost = useCallback(async () => {
+        //setLoading(true);
+        try {
+            const res = await request('total_coffee_cost', 'get');
+            if (res && !res.error) {
+                setData(res);
+                setTotalCost(res.total_cost || null);
+            }
+            else {
+                setData([]);
+                // setSummary(null);
+                setTotalCost(null);
+                message.info('No total product cost data found.');
+            }
+        }
+        catch (err) {
+            console.error('Failed to get total product cost data.', err);
+        }
+        finally {
+            setLoading(false);
+        }
+    });
     // Handle form submission for both create and update
     const onFinish = async (values) => {
         try {
@@ -215,7 +237,16 @@ function Stock_CoffeePage() {
         setIsModalVisible(true);
     };
     return (
-        <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} >Stock Coffee
+        <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={loading}>
+            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
+                <h3 style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}> Total Cost</h3>
+                {(() => {
+                    const TotalCost = Array.isArray(total_cost) && total_cost.length > 0
+                        ? total_cost[0].total_cost || 0
+                        : 0;
+                    return <span>ការចំណាយសរុប: ${Number(TotalCost).toFixed(2)}</span>;
+                })()}
+            </div>
             <div style={{ marginBottom: 2, textAlign: 'right', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                 <Button
                     Button type="primary"
@@ -225,11 +256,11 @@ function Stock_CoffeePage() {
                     <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />បញ្ចូលថ្មី
                 </Button>
             </div>
+            <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', margin: '0 0 10px 0' }}>ស្តុកកាហ្វេ</div>
             <Modal
                 style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                 open={state.visibleModal || isModalVisible}
-                //title={state.isReadOnly ? "មើលទំនិញ" : (editingId && editingId.id ? "កែប្រែស្តុកទំនិញ" : "បញ្ចូលទំនិញថ្មី")}
-                title={state.isReadOnly ? "មើល" : (editingId && editingId.id ? "កែប្រែ" : "បញ្ចូលថ្មី")}
+                title={state.isReadOnly ? "មើល" : editingId ? "កែប្រែ" : (editingId && editingId.id ? "" : "បញ្ចូលថ្មី")}
                 onCancel={() => {
                     setIsModalVisible(false);
                     setState(p => ({ ...p, visibleModal: false, isReadOnly: false }));
@@ -403,7 +434,7 @@ function Stock_CoffeePage() {
                         initialValue={1}
                     >
                         <Select
-                            placeholder="Select status"
+                            placeholder="សូមជ្រើសរើសស្ថានភាព"
                             style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                             disabled={state.isReadOnly}
                         >
@@ -426,7 +457,7 @@ function Stock_CoffeePage() {
                                 បោះបង់
                             </Button>
                             <Button type="primary" htmlType="submit" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={state.loading}>
-                                {editingId && editingId.id ? 'កែប្រែ' : 'រក្សាទុក'}
+                                {editingId ? "កែប្រែ" : (editingId && editingId.id ? "" : "រក្សាទុក")}
                             </Button>
 
                         </Form.Item>

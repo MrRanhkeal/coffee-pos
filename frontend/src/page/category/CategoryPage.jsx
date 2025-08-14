@@ -78,10 +78,10 @@ function CategoryPage() {
       status: data.status,
     });
   };
-  const onClickDelete = async (data,) => {
+  const onClickDelete = async (data) => {
     Modal.confirm({
-      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ការលុបទំនិញ</span>,
-      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុបទំនិញនេះមែនទេ! {data.name} ?</span>,
+      title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{data.name}</span>,
+      content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {data.name} មែនទេ ?</span>,
       okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
       okType: 'danger',
       cancelText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#25a331ff' }}>ទេ!</span>,
@@ -158,7 +158,7 @@ function CategoryPage() {
       <div
         className="pageHeader"
       >
-        <Space> 
+        <Space>
           <Flex style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
             <Input
               style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
@@ -179,7 +179,7 @@ function CategoryPage() {
           <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />បញ្ចូលថ្មី
         </Button>
       </div>
-      <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' , fontWeight: 'bold',margin:'0 0 10px 0'}}>តារាងប្រភេទទំនិញ</div>
+      <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', margin: '0 0 10px 0' }}>តារាងប្រភេទទំនិញ</div>
       <Modal
         open={state.visibleModal}
         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}

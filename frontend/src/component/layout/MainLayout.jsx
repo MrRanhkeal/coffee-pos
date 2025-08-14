@@ -111,14 +111,14 @@ const items_menu = [
         icon: "💹"
         // icon: <StockOutlined/>
       },
-      {
-        key: 'product_stock',
-        style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'},
-        label: "ស្តុកផ្សេងៗ",
-        children: null,
-        icon: "💹"
-        // icon: <StockOutlined/>
-      }
+      // {
+      //   key: 'product_stock',
+      //   style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'},
+      //   label: "ស្តុកផ្សេងៗ",
+      //   children: null,
+      //   icon: "💹"
+      //   // icon: <StockOutlined/>
+      // }
     ],
     icon: <SlidersOutlined />
   },
@@ -139,7 +139,7 @@ const items_menu = [
       //   icon: <AccountBookOutlined />
       // },
       {
-        key: "sale_report",
+        key: "getsalereport",
         style: { fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'},
         label: "របាយការណ៍នៃការលក់",
         children: null,
