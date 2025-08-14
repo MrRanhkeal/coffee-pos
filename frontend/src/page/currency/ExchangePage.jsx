@@ -12,35 +12,48 @@ function ExchangePage() {
         link.rel = 'stylesheet';
         document.head.appendChild(link);
         return () => { document.head.removeChild(link); };
-    }, []);
-    // The exchange rate for USD to KHR.
-    const USD_TO_KHR_RATE = 4000; // 1 USD = 4100 KHR 
+    }, []); 
+    const USD_TO_KHR_RATE = 4000; // $1 = 4,000៛
+
     // Handle KHR input change
     const handleKHRChange = (e) => {
-        const value = e.target.value;
+        let value = e.target.value.replace(/,/g, '');
         setKHRValue(value);
+
         if (value && !isNaN(value)) {
-            const usd = parseFloat(value) / USD_TO_KHR_RATE;
-            setUSDValue(usd ? usd.toFixed(2) : '');
-            form.setFieldsValue({ usd: usd ? usd.toFixed(2) : '' });
+            const floatValue = parseFloat(value);
+            const usd = floatValue / USD_TO_KHR_RATE;
+            const formattedUSD = usd.toFixed(2);
+
+            setUSDValue(formattedUSD);
+            form.setFieldsValue({ usd: formattedUSD });
         } else {
             setUSDValue('');
             form.setFieldsValue({ usd: '' });
         }
     };
+
     // Handle USD input change
     const handleUSDChange = (e) => {
-        const value = e.target.value;
+        let value = e.target.value.replace(/,/g, '');
         setUSDValue(value);
+
         if (value && !isNaN(value)) {
-            const khr = parseFloat(value) * USD_TO_KHR_RATE;
-            setKHRValue(khr ? khr.toFixed(2) : '');
-            form.setFieldsValue({ khr: khr ? khr.toFixed(2) : '' });
+            const floatValue = parseFloat(value);
+            const khr = floatValue * USD_TO_KHR_RATE;
+            const formattedKHR = khr.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+
+            setKHRValue(formattedKHR);
+            form.setFieldsValue({ khr: formattedKHR });
         } else {
             setKHRValue('');
             form.setFieldsValue({ khr: '' });
         }
     };
+
     // Reset form fields
     const handleReset = () => {
         setKHRValue('');
@@ -62,7 +75,7 @@ function ExchangePage() {
                         autoComplete="off"
 
                     /><b>&nbsp;&nbsp;&nbsp;=</b>
-                </div> 
+                </div>
                 <div style={{ marginBottom: '1rem', marginLeft: '10px' }}>
                     <label style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', margin: '0 0 10px 0' }}>ប្រាក់រៀល (KHR)</label><br />
                     <Input
