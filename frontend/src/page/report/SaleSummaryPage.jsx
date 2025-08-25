@@ -2,21 +2,23 @@ import { Table, Button, message } from 'antd';
 import { useState, useEffect } from 'react';
 import { request } from '../../util/helper';
 import { IoIosRefresh } from "react-icons/io";
-import { Chart } from 'react-google-charts';
+// import { Chart } from 'react-google-charts';
+import SaleSummaryChart from '../report/SaleSummaryChart';
 //import { Chart } from 'react-chartjs-2';
 import { MdCalendarMonth } from "react-icons/md";
 import { FaCalendarWeek } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
 import { BiCalendarWeek } from "react-icons/bi";
 import { LiaCalendarWeekSolid } from "react-icons/lia";
+import SaleSummaryPieChart from './SaleSummaryPieChart';
 
 // Helper function to parse currency string to number
-const parseCurrency = (value) => {
-    if (typeof value === 'string') {
-        return parseFloat(value.replace(/[^0-9.-]+/g, '')) || 0;
-    }
-    return value || 0;
-};
+// const parseCurrency = (value) => {
+//     if (typeof value === 'string') {
+//         return parseFloat(value.replace(/[^0-9.-]+/g, '')) || 0;
+//     }
+//     return value || 0;
+// };
 
 function SaleSummaryPage() {
     const [loading, setLoading] = useState(false);
@@ -42,7 +44,6 @@ function SaleSummaryPage() {
     useEffect(() => {
         getData();
     }, []);
-
     const getData = async () => {
         setLoading(true);
         try {
@@ -186,7 +187,7 @@ function SaleSummaryPage() {
                                 </span>
                             </div>
                         )} */}
-                        
+
                         {(this_week || (summaryPerWeek && summaryPerWeek.length > 0)) && (
                             <div style={{ margin: '10px', color: '#0c3e6b', backgroundColor: '#e1e6eaff', borderRadius: 6, fontSize: 20, padding: 18, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', fontWeight: 'bold', textAlign: 'center' }}>
                                 <BiCalendarWeek />
@@ -219,132 +220,13 @@ function SaleSummaryPage() {
             <div style={{ marginTop: 32, marginBottom: 32 }}>
                 {saleSummaryByMonth?.[0] ? (
                     <div>
-                        <h3 style={{ textAlign: 'center', marginBottom: 24, color: '#f33939ff', fontSize: 20, fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>ការវិភាគការលក់ប្រចាំខែ</h3>
-                        <div style={{ marginBottom: 24 }}>
-                            <div style={{ padding: 16, backgroundColor: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                                <h3 style={{ marginBottom: 16, color: '#333', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>ទិដ្ឋភាពទូទៅនៃការលក់ប្រចាំខែ</h3>
-                                <div style={{ height: 400, fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                                    <Chart
-                                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                                        width={'100%'}
-                                        height={'100%'}
-                                        chartType="LineChart"
-                                        loader={<div>Loading Chart...</div>}
-                                        data={[
-                                            ['Month', 'Sales ($)'],
-                                            ...months
-                                                .filter(month => month.dataIndex && month.dataIndex !== 'year' && month.dataIndex !== 'currency')
-                                                .map(month => {
-                                                    const value = parseCurrency(saleSummaryByMonth[0][month.dataIndex]);
-                                                    return [month.key, value];
-                                                })
-                                        ]}
-                                        options={{
-                                            chartArea: { width: '85%', height: '75%' },
-                                            hAxis: {
-                                                key: 'Month',
-                                                keyTextStyle: { color: '#333' },
-                                                slantedText: true,
-                                                slantedTextAngle: 45,
-                                                fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',
-
-                                            },
-                                            vAxis: {
-                                                key: 'Amount ($)',
-                                                minValue: 0,
-                                                format: 'currency',
-                                            },
-                                            colors: ['#ef4e0a'],
-                                            backgroundColor: 'transparent',
-                                            pointSize: 5,
-                                            pointShape: 'circle',
-                                            tooltip: {
-                                                isHtml: true,
-                                                textStyle: { fontSize: 14 },
-                                                trigger: 'selection'
-                                            },
-                                            legend: { position: 'top' },
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style={{ marginBottom: 24 }}>
-                            <div style={{ padding: 16, backgroundColor: '#fff', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                                <h3 style={{ marginBottom: 16, color: '#333', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>គំនូសតាងនៃការលក់</h3>
-                                <div style={{ height: 400 }}>
-                                    <Chart
-                                        width={'100%'}
-                                        height={'100%'}
-                                        chartType="PieChart"
-                                        loader={<div>Loading Chart...</div>}
-                                        data={[
-                                            ['Month', 'Sales'],
-                                            ...months
-                                                .filter(month => month.dataIndex && month.dataIndex !== 'year' && month.dataIndex !== 'currency')
-                                                .map(month => {
-                                                    const value = parseCurrency(saleSummaryByMonth[0][month.dataIndex]);
-                                                    return [month.key, value];
-                                                })
-                                                .filter(([, value]) => value > 0)
-                                        ]}
-                                        options={{
-                                            key: '',
-                                            pieHole: 0.4,
-                                            is3D: false,
-                                            chartArea: {
-                                                width: '90%',
-                                                height: '80%',
-                                                top: 20,
-                                                right: 10,
-                                                bottom: 20,
-                                                left: 10
-                                            },
-                                            legend: {
-                                                position: 'right',
-                                                alignment: 'center',
-                                                textStyle: {
-                                                    fontSize: 12
-                                                }
-                                            },
-                                            pieSliceText: 'value',
-                                            pieSliceTextStyle: {
-                                                color: 'white',
-                                                fontSize: 12,
-                                                bold: true
-                                            },
-                                            tooltip: {
-                                                showColorCode: true,
-                                                text: 'value',
-                                                format: 'currency',
-                                                ignoreBounds: false,
-                                                trigger: 'focus'
-                                            },
-                                            slices: {
-                                                0: { color: '#ef4e0a' },
-                                                1: { color: '#ff9800' },
-                                                2: { color: '#ffc107' },
-                                                3: { color: '#8bc34a' },
-                                                4: { color: '#4caf50' },
-                                                5: { color: '#00bcd4' },
-                                                6: { color: '#2196f3' },
-                                                7: { color: '#3f51b5' },
-                                                8: { color: '#673ab7' },
-                                                9: { color: '#9c27b0' },
-                                                10: { color: '#e91e63' },
-                                                11: { color: '#f44336' }
-                                            },
-                                            animation: {
-                                                startup: true,
-                                                duration: 1000,
-                                                easing: 'out'
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                        <h3 style={{ textAlign: 'center', marginBottom: 24, color: '#f33939ff', fontSize: 20, fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold' }}>ការវិភាគការលក់ប្រចាំខែ</h3> 
+                        <div style={{ marginBottom: 24 }}> 
+                            <div style={{ height: 400 ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',display: 'flex', justifyContent: 'space-between'}}>
+                                <SaleSummaryChart />
+                                <SaleSummaryPieChart />
+                            </div> 
+                        </div> 
                     </div>
                 ) : (
                     <div style={{
@@ -371,4 +253,4 @@ function SaleSummaryPage() {
     )
 }
 
-export default SaleSummaryPage
+export default SaleSummaryPage;

@@ -145,7 +145,7 @@ function CartView({
                         <label style={{ fontWeight: 'bold', marginBottom: '4px', display: 'block', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>អតិថិជន</label>
                         <Select
                             style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                            isRequired:false
+                            //isRequired:false
                             value={objSummary.customer_id || undefined}
                             placeholder="ជ្រើសរើសអតិថិជន"
                             onChange={(value) => setObjSummary(prev => ({
@@ -153,9 +153,9 @@ function CartView({
                                 customer_id: value || undefined
                             }))}
                             //options={customers}
-                            options={customers.map(c => ({
-                                value: c.value,
-                                label: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{c.label}</span>
+                            options={customers.map(cust => ({
+                                value: cust.value,
+                                label: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{cust.label}</span>
                             }))}
                         />
                     </div>
@@ -212,7 +212,7 @@ function CartView({
                             <label style={{ fontWeight: 'bold', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ចំនួនប្រាក់ដែលបានបង់</label>
                             {paidInUSD < objSummary.total && (
                                 <span style={{ color: 'red', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                                    ចំនួនប្រាក់ដែលបានបង់ (${(objSummary.total - paidInUSD).toFixed(2)} បន្ថែមទៀត)
+                                    ចំនួនប្រាក់ដែលត្រូវបង់ (${(objSummary.total - paidInUSD).toFixed(2)} បន្ថែមទៀត)
                                 </span>
                             )}
                         </div>

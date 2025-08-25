@@ -4,8 +4,8 @@ import "./Print.css";
 import Logo from "../../assets/v-friends.jpg"
 const PrintInvoice = React.forwardRef(({ cart_list = [], objSummary = {}, cashier = '' }, ref) => {
   // Get customer name from objSummary, handle both direct name and customer object
-  //const customerDisplay = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
-  const customerDisplay = typeof objSummary?.customer_id === 'string' ? objSummary.customer_id : 'Customer 1';
+  //const customerName = typeof objSummary?.customer_name === 'string' ? objSummary.customer_name : 'Guest';
+  const customerDisplay = typeof objSummary?.customer_id === 'string' ? objSummary.customer_id : 'Customer VIP';
 
   // Get payment method from objSummary
   const paymentMethod = objSummary?.payment_method || 'Cash';
@@ -199,7 +199,7 @@ PrintInvoice.propTypes = {
     })
   ),
   objSummary: PropTypes.shape({
-    customer_id: PropTypes.string,
+    customer_id: PropTypes.string, 
     payment_method: PropTypes.string,
     total: PropTypes.number,
     total_paid: PropTypes.number

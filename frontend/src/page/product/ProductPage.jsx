@@ -6,8 +6,7 @@ import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
 import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
-import { FaSearch } from "react-icons/fa";
-
+import { FiSearch } from "react-icons/fi";
 //please check this
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -36,6 +35,7 @@ function ProductPage() {
     list: [],
     total: 0,
     loading: false,
+    txt_search: "",
     visibleModal: false,
   });
 
@@ -43,8 +43,8 @@ function ProductPage() {
 
   const [filter, setFilter] = useState({
     txt_search: "",
-    //category_id: "",
-    brand: "",
+    // category_id: "",
+    // brand: "",
   });
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -60,19 +60,21 @@ function ProductPage() {
     return () => { document.head.removeChild(link); };
   }, []);
 
-  useEffect(() => {
-    getList();
-  }, []);
   const getList = useCallback(async () => {
-    var param = {
-      //...filter,
-      page: refPage.current, // get value
-      txt_search: filter.txt_search,
-      // category_id: filter.category_id,
-      brand: filter.brand,
-      // page: filter.page,
-    };
+    // var param = {
+    //   //...filter,
+    //   page: refPage.current, // get value
+    //   //txt_search: filter.txt_search,
+    //   // category_id: filter.category_id,
+    //   //brand: filter.brand,
+    //   // page: filter.page,
+    // };
     setState((pre) => ({ ...pre, loading: true }));
+    const param = {
+      ...filter,
+      page: refPage.current,
+      txt_search: filter.txt_search,
+    };
     const res = await request("product", "get", param);
     if (res && !res.error) {
       setState((pre) => ({
@@ -82,7 +84,34 @@ function ProductPage() {
         loading: false,
       }));
     }
+    else {
+      setState((pre) => ({
+        ...pre,
+        list: [],
+        total: 0,
+        loading: false,
+      }));
+    }
   })
+  useEffect(() => {
+    getList();
+  }, []);
+  // useEffect(() => {
+  //   if (filter.category_id !== undefined) {
+  //     getList();
+  //   }
+  // }, [filter.category_id, getList]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      getList();
+    }, 400); // 400ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [filter.txt_search, getList]);
+
   // const getList = async () => {
   //   var param = {
   //     ...filter,
@@ -218,9 +247,9 @@ function ProductPage() {
   // const handleChangeImageOptional = ({ fileList: newFileList }) =>
   //   setImageOptional(newFileList);
 
-  const onFilter = () => {
-    getList();
-  };
+  // const onFilter = () => {
+  //   getList();
+  // };
   const onClickEdit = async (item) => {
     formRef.setFieldsValue({
       ...item,
@@ -305,20 +334,20 @@ function ProductPage() {
       </Modal> */}
       <div className="pageHeader">
         <Space>
-
           <Flex style={{ width: "100%", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
             <Input
-              placeholder="ស្វែងរក..."
+              placeholder="ស្វែងរក"
+              prefix={<FiSearch />}
               className="khmer-search"
-              allowClear
-              style={{ width: 250 }}
+              value={filter.txt_search || ""}
               onChange={(event) =>
                 setFilter((prev) => ({
                   ...prev,
                   txt_search: event.target.value,
                 }))
               }
-              onSearch={onFilter}
+              allowClear
+              style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
             />
           </Flex>
           {/* <Input
@@ -340,18 +369,26 @@ function ProductPage() {
             }}
 
           /> */}
-          <Select
+          {/* <Select
             style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', width: 130 }}
-            allowClear
             placeholder="ម៉ាក/Brand"
-            options={config.brand}
+            showSearch
+            allowClear
+            options={config.brand?.map((opt) => ({
+              value: opt.value,
+              label: (
+                <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                  {opt.label}
+                </span>
+              )
+            }))} 
             onChange={(id) => {
               setFilter((pre) => ({ ...pre, brand: id }));
             }}
-          />
-          <Button onClick={onFilter} type="primary">
+          /> */}
+          {/* <Button onClick={onFilter} type="primary">
             <FaSearch />Filter
-          </Button>
+          </Button> */}
         </Space>
         <Button type="primary" onClick={onBtnNew} style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
           <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> បញ្ចូលថ្មី
@@ -400,7 +437,7 @@ function ProductPage() {
                   rules={[
                     {
                       required: true,
-                      message: "Please fill in បញ្ចូលឈ្មោះទំនិញ",
+                      message: "សូមបញ្ចូលឈ្មោះទំនិញ!",
                     },
                   ]}
                 >
@@ -412,13 +449,14 @@ function ProductPage() {
                   rules={[
                     {
                       required: true,
-                      message: "Please fill in product name",
+                      message: "សូមបញ្ចូលម៉ាក/Brand!",
                     },
                   ]}
                 >
                   <Select
                     style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                    placeholder="ជ្រាប់ម៉ាក/Brand"
+                    placeholder="ជ្រើសរើសម៉ាក/Brand"
+                    allowClear
                     // options={config.brand?.map((item) => ({
                     //   label: item.label + " (" + item.country + ")",
                     //   value: item.value,
@@ -451,18 +489,19 @@ function ProductPage() {
               <Col span={12}>
                 <Form.Item
                   style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                  name={"category_id"}
+                  name={"category_id"} 
                   label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រភេទទំនិញ</span>}
                   rules={[
                     {
                       required: true,
-                      message: "Please fill in product name",
+                      message: "សូមបញ្ចូលប្រភេទទំនិញ",
                     },
-                  ]}
+                  ]} 
                 >
                   <Select
                     style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     placeholder="ជ្រើសរើសប្រភេទទំនិញ"
+                    allowClear
                     options={config.category?.map((opt) => ({
                       value: opt.value,
                       label: (
@@ -471,9 +510,9 @@ function ProductPage() {
                         </span>
                       )
                     }))}
-                    onChange={(id) => {
-                      setFilter((pre) => ({ ...pre, category_id: id }));
-                    }}
+                    // onChange={(id) => {
+                    //   setFilter((pre) => ({ ...pre, category_id: id }));
+                    // }}
                   />
                 </Form.Item>
 

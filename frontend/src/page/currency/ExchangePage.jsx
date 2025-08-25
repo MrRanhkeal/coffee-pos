@@ -12,22 +12,47 @@ function ExchangePage() {
         link.rel = 'stylesheet';
         document.head.appendChild(link);
         return () => { document.head.removeChild(link); };
-    }, []); 
+    }, []);
     const USD_TO_KHR_RATE = 4000; // $1 = 4,000៛
 
     // Handle KHR input change
-    const handleKHRChange = (e) => {
-        let value = e.target.value.replace(/,/g, '');
-        setKHRValue(value);
+    // const handleKHRChange = (e) => {
+    //     let value = e.target.value.replace(/,/g, '');
+    //     setKHRValue(value);
 
-        if (value && !isNaN(value)) {
-            const floatValue = parseFloat(value);
+    //     if (value && !isNaN(value)) {
+    //         const floatValue = parseFloat(value);
+    //         const usd = floatValue / USD_TO_KHR_RATE;
+    //         const formattedUSD = usd.toFixed(2);
+
+    //         setUSDValue(formattedUSD.replace(/,/g, ''));
+    //         form.setFieldsValue({ usd: formattedUSD });
+    //     } else {
+    //         setUSDValue('');
+    //         form.setFieldsValue({ usd: '' });
+    //     }
+    // };
+    const handleKHRChange = (e) => {
+        let rawValue = e.target.value.replace(/,/g, '');
+
+        if (rawValue && !isNaN(rawValue)) {
+            const floatValue = parseFloat(rawValue);
+
+            // Format KHR value if >= 5000
+            if (floatValue >= 1000) {
+                const formattedValue = floatValue.toLocaleString(); // e.g., 1000 -> "5,000"
+                setKHRValue(formattedValue);
+            } else {
+                setKHRValue(rawValue);
+            }
+
             const usd = floatValue / USD_TO_KHR_RATE;
             const formattedUSD = usd.toFixed(2);
-
             setUSDValue(formattedUSD);
             form.setFieldsValue({ usd: formattedUSD });
+
         } else {
+            setKHRValue(rawValue); // Still set to show user input
             setUSDValue('');
             form.setFieldsValue({ usd: '' });
         }
@@ -61,8 +86,9 @@ function ExchangePage() {
         form.resetFields();
     };
     return (
-        <div style={{ minHeight: '20%', background: '#ffffff', padding: 10, borderRadius: 8, boxShadow: '0 2px 8px #b5b1b1ff', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}><div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', fontSize: '24px', alignItems: 'center', justifyContent: 'center', display: 'flex', margin: '0 0 6px 0' }}>អត្រាប្ដូរប្រាក់</div>
-            <div style={{ width: '100%', display: 'flex' }}>
+        <div style={{minHeight: '20%',width: '100%', background: '#ffffff', padding: 10, borderRadius: 8, boxShadow: '0 2px 8px #b5b1b1ff', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+            <div style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', fontSize: '24px', alignItems: 'center', justifyContent: 'center', display: 'flex', margin: '0 0 6px 0' }}>អត្រាប្ដូរប្រាក់</div>
+            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 0 6px 0' }}>
                 <div style={{ marginBottom: '1rem' }}>
                     <label style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', margin: '0 0 10px 0' }}>ប្រាក់ដុល្លា (USD)</label><br />
                     <Input
@@ -89,7 +115,7 @@ function ExchangePage() {
                     />
                 </div>
             </div>
-            <div>
+            <div style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', margin: '0 0 6px 0' }}>
                 <Row justify="space-between">
                     <Col>
                         <Button onClick={handleReset} icon={<ReloadOutlined />} type="default" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>

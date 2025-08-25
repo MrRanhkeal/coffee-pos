@@ -1,8 +1,6 @@
-/* Background and centering */
-.login-page {
-    /* height: 100vh; */
+/* .login-page {
     width: 100vw;
-    height: 100vh; 
+    height: 100vh;
     background-image: url("../../../../frontend/src/assets/coffee_Image_backgorund.png");
     background-size: cover;
     background-position: center;
@@ -17,22 +15,18 @@ body {
     margin: 0;
 }
 
-/* Glassmorphism container */
 .login-container {
-    background: rgba(35, 32, 32, 0.409);
     backdrop-filter: blur(8px);
-    border-radius: 16px; 
-    /* padding: 40px;*/
+    border-radius: 16px;
     padding: 20px 20px 20px 20px;
-    width: 500px; 
+    width: 500px;
     height: 450px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(200, 189, 189, 0.2);
-    color: white; 
+    color: white;
     text-align: center;
 }
 
-/* Title */
 .login-container h2 {
     margin-bottom: 30px;
     font-weight: 600;
@@ -40,8 +34,7 @@ body {
     color: white;
 }
 
-/* Form styling */
-.login-container .ant-form-item-label > label {
+.login-container .ant-form-item-label>label {
     color: white;
 }
 
@@ -65,7 +58,6 @@ body {
     color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* Form options */
 .login-options {
     display: flex;
     justify-content: space-between;
@@ -81,9 +73,8 @@ body {
     border-color: rgba(192, 180, 180, 0.3);
 }
 
-/* Button styling */
 .login-container .ant-btn-primary {
-    background: '#FC5C7D,#6A82FB';
+    background: "#FC5C7D,#6A82FB";
     border: none;
     height: 40px;
     border-radius: 8px;
@@ -92,13 +83,11 @@ body {
 }
 
 .login-container .ant-btn-primary:hover {
-    /* background: rgba(96, 158, 215, 0.9); */
-    background: '#FC5C7D,#6A82FB';
+    background: "#FC5C7D,#6A82FB";
     transform: translateY(-1px);
     box-shadow: 0 4px 15px rgba(1, 8, 14, 0.3);
 }
 
-/* Links */
 .forgot-link {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
@@ -110,4 +99,7 @@ body {
     text-decoration: underline;
 }
 
- 
+.khmer-search:focus~label,
+.khmer-search:valid~label {
+    top: -10px;
+} */

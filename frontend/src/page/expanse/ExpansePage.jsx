@@ -11,6 +11,7 @@ import { MdCalendarMonth } from "react-icons/md";
 import { FaCalendarWeek } from "react-icons/fa6";
 import { BiCalendarWeek } from "react-icons/bi";
 import { LiaCalendarWeekSolid } from "react-icons/lia";
+import { FiSearch } from "react-icons/fi";
 import './ex.css'
 function ExpansePage() {
   const [formRef] = Form.useForm();
@@ -67,6 +68,15 @@ function ExpansePage() {
       setList(res.list);
     }
   });
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      getList();
+    }, 400); // 400ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [state.txtSearch, getList]);
   const getExpense = useCallback(async () => {
     setLoading(true);
     try {
@@ -199,18 +209,39 @@ function ExpansePage() {
     <MainPage loading={loading}>
       <div className="pageHeader">
         <Space>
-          <Input.Search
-            onChange={(value) =>
-              setState((p) => ({ ...p, txtSearch: value.target.value }))
+          <Input
+            placeholder="ស្វែងរក"
+            prefix={<FiSearch />}
+            className="khmer-search"
+            value={state.txtSearch || ""}
+            onChange={(event) =>
+              setState((prev) => ({
+                ...prev,
+                txtSearch: event.target.value,
+              }))
             }
             allowClear
-            onSearch={getList}
-            placeholder="ស្វែងរក"
-            className="khmer-search"
+            style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+          // placeholder="ស្វែងរក"
+          // className="khmer-search"
+          // value={state.txtSearch || ""}
+          // onChange={(event) =>
+          //   setState((prev) => ({
+          //     ...prev,
+          //     txtSearch: event.target.value,
+          //   }))
+          // }
+          // style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontSize: '16px', borderRadius: '8px', padding: '8px 12px' }}
+          // onChange={(value) =>
+          //   setState((p) => ({ ...p, txtSearch: value.target.value }))
+          // }
+          // allowClear
+          // onSearch={getList}
+          // value={state.txtSearch}
+          // placeholder="ស្វែងរក"
+          // className="khmer-search"
+          // style={{ width: '100%',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif',fontSize: '16px',borderRadius: '8px',padding: '8px 12px'}}
           />
-          <Button type="primary" onClick={getList}>
-            Filter
-          </Button>
         </Space>
         <Button
           type="primary"
@@ -261,7 +292,7 @@ function ExpansePage() {
               </div>
             </div>
           );
-        })()} 
+        })()}
       </div>
       <Modal
         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
@@ -373,10 +404,18 @@ function ExpansePage() {
               placeholder="ជ្រើសរើស ការទូទាត់"
               showSearch
               allowClear
-              options={(config.payment_method || []).map(item => ({
-                label: item.label,
-                value: item.value
+              options={config.payment_method?.map((opt) => ({
+                value: opt.value,
+                label: (
+                  <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                    {opt.label}
+                  </span>
+                )
               }))}
+              // options={(config.payment_method || []).map(item => ({
+              //   label: item.label,
+              //   value: item.value
+              // }))}
               onChange={(value) => {
                 setFilter(prev => ({
                   ...prev,

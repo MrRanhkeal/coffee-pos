@@ -17,14 +17,17 @@
   padding: 5px 5px;
   border-bottom: 1px solid gray;
 }
+
 .pos_tbl_invoice {
   width: 100%;
   border-collapse: collapse;
   border: 1pt solid rgb(229, 229, 229);
 }
+
 .pos_tbl_invoice tr {
   border-bottom: 1pt solid rgb(229, 229, 229);
 }
+
 table.pos_tbl_invoice th,
 table.pos_tbl_invoice td {
   text-align: left;
@@ -77,15 +80,25 @@ table.pos_tbl_invoice td {
   font-weight: 400;
   font-style: normal;
 }
+
 body {
   font-family: "Noto Sans Khmer", Roboto, sans-serif;
 }
+
 /* global orveride */
 .ant-form-item-explain-error {
   color: red !important;
   font-size: 14px;
   font-style: italic;
   font-family: Noto Sans Khmer, Roboto, sans-serif;
+}
+
+.Input.Search {
+  font-family: 'Noto Sans Khmer', Roboto, sans-serif;
+}
+
+.khmer-search input {
+  font-family: 'Noto Sans Khmer', 'Roboto', sans-serif !important;
 }
 
 /* print */

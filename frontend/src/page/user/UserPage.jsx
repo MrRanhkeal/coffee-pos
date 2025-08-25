@@ -4,9 +4,8 @@ import { Button, Form, Input, message, Modal, Select, Space, Table, Tag, } from 
 // import { resetWarned } from "antd/es/_util/warning";
 // import { configStore } from "../../store/configStore";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
 import { IoMdEye } from "react-icons/io";
-
 
 function UserPage() {
     const [form] = Form.useForm();
@@ -25,10 +24,11 @@ function UserPage() {
         getList();
         gethRoles();
     }, []);
+
     const getList = async () => {
         setState((prev) => ({ ...prev, loading: true }));
         try {
-            const res = await request("auth/get-list", "get");
+            const res = await request("auth/getlist", "get");
             if (res && !res.error) {
                 setList(res.data || []); // Changed from res.list to res.data to match backend response
                 setState(prev => ({
@@ -55,6 +55,7 @@ function UserPage() {
             message.error("Failed to get roles", error);
         }
     };
+
     const clickBtnEdit = (record) => {
         form.setFieldsValue({
             id: record.id,
@@ -147,7 +148,6 @@ function UserPage() {
             role_id: state.role_id || item.role_id,
             create_by: state.isEdit ? undefined : create_by, // Only set create_by for new users
         };
-
         try {
             let res;
             if (state.isEdit) {
@@ -165,16 +165,23 @@ function UserPage() {
                 message.success(res.message || (state.isEdit ? "Update successful" : "Registration successful"));
                 getList();
                 handleCloseModal();
-            } else {
-                message.warning(res.message || (state.isEdit ? "Update failed" : "Registration failed"));
             }
-        } catch (err) {
+            else {
+                // Show backend message (fallback to default if not provided)
+                const defaultMsg = state.isEdit
+                    ? "Name or username already exists!"
+                    : "Name or username already exists!";
+                message.warning(res.message || defaultMsg);
+            }
+            // else { 
+            //     message.warning(res.message || (!state.isEdit ? "name or username already exists!" : "name or email already exists!"));
+            // }
+        }
+        catch (err) {
             console.error(state.isEdit ? "Update error:" : "Registration error:", err);
             message.error(`Something went wrong during ${state.isEdit ? "update" : "registration"}!`);
         }
     };
-
-
     return (
         <div>
             <div
@@ -184,16 +191,6 @@ function UserPage() {
                     paddingBottom: 10,
                 }}
             >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Input.Search style={{ marginLeft: 10 }} placeholder="ស្វែងរក" className="khmer-search" allowClear />
-                    <Button type="primary"
-                        onClick={getList}
-                        style={{ padding: "10px", margin: '0 0 0 14px', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-                        allowClear
-                    >
-                        <SearchOutlined style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} />ស្វែងរក
-                    </Button>
-                </div>
                 <Button type="primary"
                     style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                     onClick={handleOpenModal}
@@ -241,21 +238,8 @@ function UserPage() {
                         label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ពាក្យសម្ងាត់</span>}
                         rules={[{ required: true, message: 'សូមបញ្ចូលពាក្យសម្ងាត់!' }]}
                     >
-                        <Input.Password placeholder="សូមបញ្ចូលពាក្យសម្ងាត់" disabled={state.isReadOnly} visibilityToggle  className="khmer-search"/>
+                        <Input.Password placeholder="សូមបញ្ចូលពាក្យសម្ងាត់" disabled={state.isReadOnly} visibilityToggle className="khmer-search" />
                     </Form.Item>
-
-                    {/* <Form.Item
-                        name={"password"}
-                        label="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please fill in password",
-                            },
-                        ]}
-                    >
-                        <Input.Password placeholder="Input password" disabled={state.isReadOnly} />
-                    </Form.Item> */}
                     <Form.Item
                         style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                         name={"confirm_password"}

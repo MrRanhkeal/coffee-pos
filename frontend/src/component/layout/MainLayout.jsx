@@ -340,14 +340,15 @@ const MainLayout = () => {
       <Layout>
         <div className="admin-header">
           <div className="admin-header-g1">
-            <div>
+            <div style={{padding:'6px',margin:'6px 0 0 0'}}>
               <img className="admin-logo" src={Logo} alt="Logo" />
+              <div style={{ fontWeight: 'bold', color: 'green' }}>V-Friend Coffee</div>
             </div>
             <div>
-              <div className="txt-brand-name">V-Friends POS</div>
+              <div className="txt-brand-name" style={{ fontFamily: 'Khmer OS Muol Light', fontWeight: 'bold',color:'#ea2618ff',fontSize:'30px',alignContent: 'center',justifyContent: 'center',margin: '30px 0 0 400px'}}>ប្រព័ន្ធគ្រប់គ្រង និងការលក់</div>
               {/* <div className="txt-brand-name">Count : {count}</div> */}
 
-              <div style={{ fontWeight: 'bold', color: 'green' }}>Coffee Shop</div>
+              
             </div>
             {/* <div>
               <Input.Search

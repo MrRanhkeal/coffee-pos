@@ -3,7 +3,8 @@ import { Button, Form, Input, message, Modal, Select, Space, Table, Tag } from "
 import { MdDelete, MdEdit } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { request } from "../../util/helper";
-import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-design/icons";
+import { FiSearch } from "react-icons/fi";
 // import PropTypes from "prop-types";
 import { configStore } from "../../store/configStore";
 import { IoMdEye } from "react-icons/io";
@@ -146,19 +147,33 @@ function SupplierPage() {
             <div className="pageHeader" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                 <Space style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                     {/* <div>Supplier List </div> */}
-                    <Input.Search 
-                        onChange={(value) =>
-                            setState((p) => ({ ...p, txtSearch: value.target.value }))
+                    <Input
+                        placeholder="ស្វែងរក"
+                        prefix={<FiSearch />}
+                        className="khmer-search"
+                        value={state.txtSearch || ""}
+                        onChange={(event) =>
+                            setState((prev) => ({
+                                ...prev,
+                                txtSearch: event.target.value,
+                            }))
                         }
                         allowClear
-                        onSearch={getList}
-                        placeholder="ស្វែងរក"
-                        className="khmer-search"
-                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} 
+                        // placeholder="ស្វែងរក"
+                        // className="khmer-search"
+                        // value={state.txtSearch || ""}
+                        // onChange={(event) =>
+                        //     setState((prev) => ({
+                        //         ...prev,
+                        //         txtSearch: event.target.value,
+                        //     }))
+                        // }
+                        // style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} 
                     />
-                    <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                    {/* <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                         <span><SearchOutlined style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />ស្វែងរក</span>
-                    </Button>
+                    </Button> */}
                 </Space>
                 <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} onClick={onClickAddBtn} >
                     <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> បញ្ចូលថ្មី
@@ -216,9 +231,13 @@ function SupplierPage() {
                             style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                             allowSearch
                             allowClear
-                            options={(config.supplier_address || []).map(item => ({
-                                label: item.label,
-                                value: item.value
+                            options={config.supplier_address?.map((opt) => ({
+                                value: opt.value,
+                                label: (
+                                    <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                                        {opt.label}
+                                    </span>
+                                )
                             }))}
                             onChange={(value) => {
                                 setState(prev => ({

@@ -238,8 +238,7 @@ function Stock_CoffeePage() {
     };
     return (
         <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={loading}>
-            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-                <h3 style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}> Total Cost</h3>
+            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}> 
                 {(() => {
                     const TotalCost = Array.isArray(total_cost) && total_cost.length > 0
                         ? total_cost[0].total_cost || 0
@@ -336,11 +335,7 @@ function Stock_CoffeePage() {
                             placeholder="ជ្រើសរើសប្រភេទទំនិញ"
                             showSearch
                             allowClear
-                            optionFilterProp="children"
-                            // options={(config.categories || []).map(item => ({
-                            //     label: item.label,
-                            //     value: item.value
-                            // }))}
+                            optionFilterProp="children" 
                             options={config.categories?.map((opt) => ({
                                 value: opt.value,
                                 label: (

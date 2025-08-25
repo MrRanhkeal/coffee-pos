@@ -235,8 +235,7 @@ function Stock_ProductPage() {
     };
     return (
         <div style={{ margin: 0, padding: 0, fontSize: "20px", color: "rgb(237, 53, 53)", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} loading={loading}>
-            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-                <h3 style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}> Total Cost</h3>
+            <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}> 
                 {(() => {
                     const TotalCost = Array.isArray(total_cost) && total_cost.length > 0
                         ? total_cost[0].total_cost || 0

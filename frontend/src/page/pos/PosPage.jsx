@@ -8,8 +8,8 @@ import ExchangePage from '../currency/ExchangePage';
 import { useReactToPrint } from "react-to-print";
 import PrintInvoice from "../../component/pos/PrintInvoice";
 import { request } from "../../util/helper";
-import { getProfile } from "../../store/profile.store";
-import { FaSearch } from "react-icons/fa";
+import { getProfile } from "../../store/profile.store"; 
+import { FiSearch } from "react-icons/fi";
 
 function PosPage() {
     const { Text } = Typography;
@@ -214,9 +214,9 @@ function PosPage() {
         }
     }, [filter.category_id, getList]);
 
-    const onFilter = () => {
-        getList();
-    };
+    // const onFilter = () => {
+    //     getList();
+    // };
 
     const handleClearCart = useCallback(() => {
         setState((p) => ({ ...p, cart_list: [] }));
@@ -270,6 +270,98 @@ function PosPage() {
             console.log(e, 'handleRemove error');
         }
     };
+
+    // const handleClickOut = async () => {
+    //     if (objSummary.total_paid < objSummary.total) {
+    //         notification.error({
+    //             message: "Insufficient Payment",
+    //             description: "Paid amount is not sufficient, please check again!",
+    //             placement: "top",
+    //             style: {
+    //                 backgroundColor: "#ece5e5ff",
+    //                 outline: "1px solid #ff4d4f",
+    //             },
+    //         });
+    //         return;
+    //     }
+
+    //     try {
+    //         const order_details = state.cart_list.map(item => ({
+    //             product_id: item.id || 'Guest',
+    //             product_name: item.name,
+    //             qty: item.cart_qty,
+    //             price: Number(item.price),
+    //             discount: Number(item.discount || 0),
+    //             total: Number((item.cart_qty * item.price * (1 - (item.discount || 0) / 100)).toFixed(2)),
+    //             sugarLevel: item.sugarLevel
+    //         }));
+    //         const param = {
+    //             order: {
+    //                 total_amount: objSummary.total,
+    //                 paid_amount: objSummary.total_paid,
+    //                 total_qty: objSummary.total_qty,
+    //                 save_discount: objSummary.save_discount,
+
+    //                 // Convert null to 'Guest'
+    //                 customer_id: objSummary.customer_id ? objSummary.customer_id : 'Guest',
+    //                 customer_name: objSummary.customer_name ? objSummary.customer_name : 'Guest',
+
+    //                 payment_method: objSummary.payment_method || 'Cash',
+    //                 remark: objSummary.remark || '',
+    //             },
+    //             order_details: order_details,
+    //         };
+
+    //         const res = await request("order", "post", param);
+
+    //         if (res && !res.error) {
+    //             message.success("Order completed successfully!");
+
+    //             const invoiceData = {
+    //                 ...objSummary,
+    //                 order_no: res.order?.order_no,
+    //                 order_date: res.order?.create_at
+    //             };
+
+    //             setObjSummary(invoiceData);
+
+    //             setTimeout(() => {
+    //                 handlePrintInvoice();
+
+    //                 setTimeout(() => {
+    //                     handleClearCart();
+
+    //                     setObjSummary({
+    //                         sub_total: 0,
+    //                         total_qty: 0,
+    //                         save_discount: 0,
+    //                         tax: 10,
+    //                         total: 0,
+    //                         total_paid: 0,
+    //                         customer_id: null,          // reset to null
+    //                         customer_name: null,       // reset to null
+    //                         payment_method: null,
+    //                         remark: '0',
+    //                         order_no: null,
+    //                         order_date: null,
+    //                     });
+
+    //                 }, 1000);
+    //             }, 500);
+
+    //         } else {
+    //             throw new Error(res.error || 'Failed to complete order');
+    //         }
+
+    //     } catch (error) {
+    //         notification.error({
+    //             message: "Order Failed",
+    //             description: error.message || "Failed to complete the order. Please try again.",
+    //             placement: "top",
+    //         });
+    //     }
+    // };
+
     const handleClickOut = async () => {
         // Check if paid amount is sufficient
         if (objSummary.total_paid < objSummary.total) {
@@ -288,7 +380,7 @@ function PosPage() {
         try {
             // Prepare order details with complete item information
             const order_details = state.cart_list.map(item => ({
-                product_id: item.id,
+                product_id: item.id || 'Guest',
                 product_name: item.name,
                 qty: item.cart_qty,
                 price: Number(item.price),
@@ -339,13 +431,14 @@ function PosPage() {
                             tax: 10,
                             total: 0,
                             total_paid: 0,
-                            customer_id: null,
+                            customer_id: null, 
                             customer_name: null,
                             payment_method: null,
                             remark: '0',
                             order_no: null,
                             order_date: null,
-                        });
+                        }); 
+
                     }, 1000);
                 }, 500);
             } else {
@@ -392,7 +485,8 @@ function PosPage() {
                     cart_list={state.cart_list}
                     objSummary={{
                         ...objSummary,
-                        customer_id: objSummary.customer_id ? String(objSummary.customer_id) : "VIP Customer",
+                        // customer_id: objSummary.customer_id ? String(objSummary.customer_id) : "VIP Customer",
+                        customer_id: objSummary.customer_id ? String(objSummary.customer_id ?? "VIP Customer") : "VIP Customer",
                     }}
                     cashier={profile?.name || 'System'}
                 // ...other props
@@ -414,28 +508,26 @@ function PosPage() {
                         <Space >
                             {/* <Typography.Title level={3} style={{ margin: 0 }}>Products</Typography.Title> */}
                             <Flex style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                                <Input 
-                                    placeholder="ស្វែងរក ទំនិញ..."
+                                <Input
+                                    placeholder="ស្វែងរក"
+                                    prefix={<FiSearch />}
                                     className="khmer-search"
-                                    allowClear
-                                    style={{ width: 250 }}
+                                    value={filter.txt_search || ""}
                                     onChange={(event) =>
                                         setFilter((prev) => ({
                                             ...prev,
                                             txt_search: event.target.value,
                                         }))
                                     }
-                                    onSearch={onFilter}
+                                    allowClear
+                                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} 
                                 />
-                            </Flex>
-                            <Button type="primary" onClick={onFilter} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
-                                <FaSearch style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}/> ស្វែងរក
-                            </Button>
+                            </Flex> 
                         </Space>
 
                         <div style={{ marginBottom: '1rem' }}>
-                            <Typography.Title level={5} style={{ marginBottom: '1rem', color: '#595959' ,fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}}>ប្រភេទទំនិញ</Typography.Title>
-                            <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: '0.5rem',fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+                            <Typography.Title level={5} style={{ marginBottom: '1rem', color: '#595959', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ប្រភេទទំនិញ</Typography.Title>
+                            <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: '0.5rem', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
                                 {categories.map((category) => {
                                     {/* const isSelected = String(filter.category_name) === String(category.name); */ }
                                     const isSelected = category.id === filter.category_id;
@@ -532,7 +624,7 @@ function PosPage() {
                             handleClickOut={handleClickOut}
                         />
                     </div>
-                    <div><ExchangePage /></div>
+                    <div style={{width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex', margin: '0 0 6px 0' }}><ExchangePage /></div>
                 </Col>
             </Row>
         </MainPage>
@@ -541,6 +633,7 @@ function PosPage() {
 PrintInvoice.propTypes = {
     objSummary: PropTypes.shape({
         customer_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.oneOf([null])]),
+        customer_name: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
         // ...other props
     }),
     // ...

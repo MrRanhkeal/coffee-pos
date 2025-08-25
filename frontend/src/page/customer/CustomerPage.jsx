@@ -7,7 +7,7 @@ import { DeleteOutlined, EditOutlined, EyeOutlined, FileAddFilled } from "@ant-d
 // import PropTypes from "prop-types";
 import { Flex } from 'antd';
 import { IoMdEye } from "react-icons/io";
-import { FaSearch } from "react-icons/fa";
+import { FiSearch } from "react-icons/fi";
 function CustomerPage() {
   const [form] = Form.useForm();
   const [list, setList] = useState([]);
@@ -150,19 +150,33 @@ function CustomerPage() {
           </Flex> */}
           <Flex>
             <Input
-              style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
-              onChange={(value) =>
-                setState((p) => ({ ...p, txtSearch: value.target.value }))
+              placeholder="ស្វែងរក"
+              prefix={<FiSearch />}
+              className="khmer-search"
+              value={state.txtSearch || ""}
+              onChange={(event) =>
+                setState((prev) => ({
+                  ...prev,
+                  txtSearch: event.target.value,
+                }))
               }
               allowClear
-              onSearch={getList}
-              placeholder="ស្វែងរក"
-              className="khmer-search"
+              style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+            // placeholder="ស្វែងរក"
+            // className="khmer-search"
+            // value={state.txtSearch || ""}
+            // onChange={(event) =>
+            //   setState((prev) => ({
+            //     ...prev,
+            //     txtSearch: event.target.value,
+            //   }))
+            // }
+            // style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} 
             />
           </Flex>
-          <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
+          {/* <Button type="primary" onClick={getList} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>
             <FaSearch style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> ស្វែងរក
-          </Button>
+          </Button> */}
         </Space>
         <Button type="primary" style={{ padding: "10px", marginBottom: "10px", marginLeft: "auto", fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} onClick={onClickAddBtn} >
           <FileAddFilled style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} /> បញ្ចូលថ្មី
