@@ -17,16 +17,16 @@
 
 
 #Dashboard
-![alt text](<Screenshot 2025-08-25 144919.png>)
+<img width="2527" height="1394" alt="Screenshot 2025-08-25 144919" src="https://github.com/user-attachments/assets/c1b6ce47-0a45-4d3d-b53f-f83fc5454522" />
 
 #Product
-![alt text](<Screenshot 2025-08-25 145106.png>)
+<img width="2538" height="1383" alt="Screenshot 2025-08-25 145106" src="https://github.com/user-attachments/assets/af996fa3-a569-4a12-8acc-87e6c1691f44" />
 
 #POS
-![alt text](<Screenshot 2025-08-25 145337.png>)
+<img width="2550" height="1403" alt="Screenshot 2025-08-25 145337" src="https://github.com/user-attachments/assets/3e72e1b9-bbbe-450f-8cff-dce075dc645f" />
 
 #Orders
-![alt text](<Screenshot 2025-08-25 145735.png>)
+<img width="2543" height="1102" alt="Screenshot 2025-08-25 145654" src="https://github.com/user-attachments/assets/69c142de-535c-4273-b250-4738bee502de" />
 
 #Report
-![alt text](<Screenshot 2025-08-25 145521.png>)
+<img width="2542" height="1410" alt="Screenshot 2025-08-25 145521" src="https://github.com/user-attachments/assets/f589b405-a7ec-4d51-9ac6-04aafda917ff" />
