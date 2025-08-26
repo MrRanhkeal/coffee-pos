@@ -1,16 +1,32 @@
-# © Coffee Management System Using Node Express.js & React
+# © Coffee Management System Use Express & React
 
-1. cd /backend `npm install` for get node package
-2. use `npm start` for run backend
-3. cd /frontend `npm install` for get node package
-4. use `npm start` for run frontend
+1. cd /backend get node package
+   ```bash
+   npm install 
+2. then run use:
+   ```cmd
+   npm start
+3. cd /frontend get node package
+   ```bash
+   npm install 
+4. then run use:
+    ```cmd
+    npm start
+
+#More detail please contact me : kealranhcamkh@gmail.com
+
 
 #Dashboard
-![image](https://github.com/user-attachments/assets/08e88cf2-5986-45c7-b056-cb0222b781b9)
+![alt text](<Screenshot 2025-08-25 144919.png>)
 
-#Categories
-![image](https://github.com/user-attachments/assets/32c91a62-8fbf-4c54-b839-3057f7df6ff3)
+#Product
+![alt text](<Screenshot 2025-08-25 145106.png>)
 
-#Products
-![image](https://github.com/user-attachments/assets/6ce7ee9e-0806-46e9-b02c-2f5c65f87cbf)
+#POS
+![alt text](<Screenshot 2025-08-25 145337.png>)
 
+#Orders
+![alt text](<Screenshot 2025-08-25 145735.png>)
+
+#Report
+![alt text](<Screenshot 2025-08-25 145521.png>)

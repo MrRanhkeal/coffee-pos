@@ -4,42 +4,40 @@ exports.getlist = async (req, res) => {
         const [category] = await db.query("select id as value, name as label,description from category");
         const [role] = await db.query("select id, name from roles");
         const [supplier] = await db.query("select id, name from supplier");
-        //and more
-
-        const brand = [
-            { label: "មណ្ឌលគិរី​កាហ្វេ", value: "មណ្ឌលគិរី​កាហ្វេ", country: "kh" },
-            { label: "Arabia Coffee", value: "Arabia Coffee", country: "vn" },
-            { label: "Amazon Coffee", value: "Amazon Coffee", country: "th" },
-            { label: "Bodia Tea", value: "Bodia Tea", country: "kh" },
-            { label: "ChaTraMue Tea", value: "ChaTraMue Tea", country: "th" },
-            { label: "Soda", value: "Soda", country: "kh" },
-            { label: "Milk", value: "Milk", country: "kh" },
-            { label: "Coconut", value: "Coconut", country: "kh" },
-        ];
-        const categories = [
-            { label: "មណ្ឌលគិរី​កាហ្វេ", value: "មណ្ឌលគិរី​កាហ្វេ", country: "kh" },
-            { label: "Arabia Coffee", value: "Arabia Coffee", country: "vn" },
-            { label: "Amazon Coffee", value: "Amazon Coffee", country: "th" },
-            { label: "Bodia Tea", value: "Bodia Tea", country: "kh" },
-            { label: "ChaTraMue Tea", value: "ChaTraMue Tea", country: "th" },
-            { label: "Soda", value: "Soda", country: "kh" },
-            { label: "Milk", value: "Milk", country: "kh" },
-            { label: "Coconut", value: "Coconut", country: "kh" },
-            { label: "Test", value: "Test", country: "kh" },
-        ];
-        const name_product =[
+        const brand ={
+            coffee :[
+                { label: "Arabia Coffee", value: "Arabia Coffee", country: "vn" },
+            ]
+        }
+        const categories = {
+            could :[
+                { label: "Arabia Coffee", value: "Arabia Coffee", country: "vn" },
+            ],
+            hot :[
+                { label: "Arabia Coffee", value: "Arabia Coffee", country: "vn" },
+            ],
+            soda:[
+                { label: "Coca Cola", value: "Coca Cola", country: "kh" },
+                { label: "Pepsi", value: "Pepsi", country: "kh" },
+                { label: "7 Up", value: "7 Up", country: "kh" },
+            ],
+            col_tea:[
+                { label: "Bodia Tea", value: "Bodia Tea", country: "kh" },
+                { label: "ChaTraMue Tea", value: "ChaTraMue Tea", country: "th" },
+            ]
+        } 
+        const name_product = [
             { label: "អាម៉ាហ្សូន", value: "អាម៉ាហ្សូន" },
             { label: "Mondolkiri", value: "Mondolkiri" },
             { label: "Vietnam", value: "Vietnam" },
         ];
         const brand_name = [
-            { label: "khmer cup", value: "khmer cup" }, 
-            { label: "vietnam cup", value: "vietnam cup" }, 
-            { label: "orthers cup", value: "orthers cup" }, 
+            { label: "khmer cup", value: "khmer cup" },
+            { label: "vietnam cup", value: "vietnam cup" },
+            { label: "orthers cup", value: "orthers cup" },
 
 
-        ];
-        //product_type
+        ]; 
         const product_type = {
             Coffee: [
                 { label: "Americano", value: "Americano" },
@@ -63,30 +61,7 @@ exports.getlist = async (req, res) => {
             { label: "អាម៉ាហ្សូន", value: "អាម៉ាហ្សូន" },
             { label: "Mondolkiri", value: "Mondolkiri" },
             { label: "Vietnam", value: "Vietnam" },
-        ];
-        // const product_name = {
-
-        //     Coffee: [
-        //         { label: "អាម៉ាហ្សូន", value: "អាម៉ាហ្សូន" },
-        //         { label: "Mondolkiri", value: "Mondolkiri" },
-        //         { label: "Vietnam", value: "Vietnam" },
-        //     ],
-        //     Tea: [
-        //         { label: "Laluna Green Tea Milk", value: "Laluna Green Tea Milk" },
-        //         { label: "Thai Tea Milk", value: "Thai Tea Milk" },
-        //         { label: "Milo Milk", value: "Milo Milk" },
-        //         { label: "Ovaltine Milk", value: "Ovaltine Milk" },
-        //         { label: "Taro Milk", value: "Taro Milk" },
-        //         { label: "Chocolate Milk", value: "Chocolate Milk" },
-        //         { label: "Oreo Milk", value: "Oreo Milk" },
-        //         { label: "Strawberry Milk", value: "Strawberry Milk" },
-        //         { label: "Blueberry Milk", value: "Blueberry Milk" },
-        //         { label: "Soda Milk", value: "Soda Milk" },
-        //         { label: "Passion Milk", value: "Passion Milk" },
-        //         { label: "Ginger Milk", value: "Ginger Milk" },
-        //         { label: "Matcha Latte", value: "Matcha Latte" }
-        //     ],
-        // };
+        ]; 
         const cup_product = {
             Cup_product: [
                 { label: "Amazon", value: "Amazon" },
@@ -123,9 +98,7 @@ exports.getlist = async (req, res) => {
             "select id as value, concat(name) as label, name from customers"
         );
         res.json({
-            category,
-            role,
-            supplier,
+            category,  
             brand,
             customer,
             expense_type,

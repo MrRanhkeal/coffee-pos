@@ -6,7 +6,7 @@ exports.getList = async (req, res) => {
         var txtSearch = req.query.txtSearch;
         var sql = "SELECT * FROM expenses ";
         if (!isEmpty(txtSearch)) {
-            sql += " WHERE expense_date LIKE :txtSearch";
+            sql += " WHERE expense_type LIKE :txtSearch";
         }
         const [list] = await db.query(sql, {
             txtSearch: "%" + txtSearch + "%",

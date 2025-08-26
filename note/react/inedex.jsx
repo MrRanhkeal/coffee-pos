@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, Input, InputNumber, Select, Empty } from 'antd';
 import PropTypes from 'prop-types';
 // import styled, { keyframes } from 'styled-components'; 
-import BillItem from '../BillItem'; 
-import MyQRCode from '../../../assets/myqr.jpg'; 
+import BillItem from '../BillItem';
+import MyQRCode from '../../../assets/myqr.jpg';
 
 // Define the keyframes
 const redPulse = {
@@ -58,12 +58,12 @@ function CartView({
     const paidInUSD = objSummary.currency === 'KHR' ? Number(objSummary.total_paid) / 4100 : Number(objSummary.total_paid);
 
     return (
-        <div style={{width: '100%',height: '100%',margin: '0', padding: '0', backgroundColor: '#fff', borderRadius: '8px'}}>
+        <div style={{ width: '100%', height: '100%', margin: '0', padding: '0', backgroundColor: '#fff', borderRadius: '8px' }}>
             <RedPulseKeyframes />
             <div style={{
-                background: '#fff', 
+                background: '#fff',
                 borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)', 
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                 padding: '2px',
                 maxWidth: '100%',
                 width: '100%',
@@ -176,9 +176,9 @@ function CartView({
                                 display: 'inline-block'
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <img src={MyQRCode} alt="QR Code" style={{ width: '25%', height: 'auto'}} />
+                                    <img src={MyQRCode} alt="QR Code" style={{ width: '25%', height: 'auto' }} />
                                     <div style={{ textAlign: 'left' }}>
-                                        <div style={{ ...redPulse, fontSize: '16px', fontWeight: 'bold',margin: '10% 10% 0 10%' }}>
+                                        <div style={{ ...redPulse, fontSize: '16px', fontWeight: 'bold', margin: '10% 10% 0 10%' }}>
                                             Pay to this QR Code
                                             <br />
                                             Amount: ${objSummary.total.toFixed(2)}

@@ -1,0 +1,5 @@
+//apache 
+httpd.exe -k install
+
+//start
+net start Apache2.4

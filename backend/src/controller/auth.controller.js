@@ -25,7 +25,7 @@ exports.getlist = async (req, res) => {
         })
     }
     catch (error) {
-        logErr("auth.get-list", error, res);
+        logErr("auth.getlist", error, res);
     }
 };
 //register
@@ -39,11 +39,20 @@ exports.register = async (req, res) => {
                 error: true,
                 message: "Missing required fields"
             });
-        }
+        } 
+        //ceck username exist
+        const checkSql = `SELECT id FROM users WHERE name = :name OR username = :username LIMIT 1`;
+        const [existingUsers] = await db.query(checkSql, { name, username });
 
+        if (existingUsers.length > 0) {
+            return res.status(400).json({
+                error: true,
+                message: "Username or name combination already exists"
+            });
+        }
         const hashedPassword = bcrypt.hashSync(password, 10);
         
-        const sql = `INSERT INTO users (  
+        const InsertSql = `INSERT INTO users (  
             role_id,
             name,
             username,
@@ -59,7 +68,7 @@ exports.register = async (req, res) => {
             :create_by
         )`;
 
-        const data = await db.query(sql, {
+        const [result] = await db.query(InsertSql, {
             role_id,
             name,
             username,
@@ -69,7 +78,7 @@ exports.register = async (req, res) => {
         });
 
         res.json({
-            data,
+            data:{id: result.insertId,username,name},
             message: "User registered successfully",
             error: false
         });
@@ -269,7 +278,18 @@ exports.verify_email = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const { id, role_id, name, username, password, is_active } = req.body;
-        
+        //check if username exists
+        if (username || name) {
+            const checkSql = `SELECT id FROM users WHERE (name = :name OR username = :username) AND id != :id LIMIT 1`;
+            const [existingUsers] = await db.query(checkSql, { name, username, id });
+
+            if (existingUsers.length > 0) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Name or Username already exists"
+                });
+            }
+        }
         // Build the SQL query parts
         const updates = [];
         const params = { id };
@@ -298,11 +318,22 @@ exports.update = async (req, res) => {
             params.password = bcrypt.hashSync(password, 10);
         }
 
+        if (updates.length === 0) {
+            return res.status(400).json({
+                error: true,
+                message: "No fields to update"
+            });
+        }
         // Construct the final SQL query
-        const sql = `UPDATE users SET ${updates.join(", ")} WHERE id = :id`;
+        const updateSql = `UPDATE users SET ${updates.join(", ")} WHERE id = :id`;
+        // const [existingUsers] = await db.query(checkSql, {
+        //     name: name || '',
+        //     username: username || '',
+        //     id
+        // });
 
         // Execute the query
-        await db.query(sql, params);
+        await db.query(updateSql, params);
 
         res.json({
             message: "User updated successfully",

@@ -1,0 +1,110 @@
+:root{
+    --small-font-size: 1rem;
+    --normal-font-size: 1.3rem;
+}
+body{
+    width: 100vw;
+    height: 100vh;
+    margin:0;
+}
+.login{
+    position: relative;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden;
+    color: #f0f0ff ;
+    font-family: khmer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+form{
+    position: relative;
+    background-color: #f00f0f;
+    border: 2px solid #f0f0f0;
+    padding: 2.5rem 1.5rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+h1{
+    font-size: 3rem;
+    text-align: center;
+    margin: 0;
+}
+.input-field{
+    position: relative;
+
+}
+i{
+    font-size: 2.5rem;
+    position: absolute;;
+}
+.input-field input{
+    width: 100%;
+    padding: 12px;
+    background:none;
+    color: #f0f0f0;
+    border:none;
+    font-size: var(--normal-font-size);
+    border-bottom: 1px solid #f0f0f0;
+    padding-left: 25px;
+    box-sizing: border-box;
+    position:relative;
+    inset: 0;
+    outline: none;
+    z-index: 1;
+}
+.input-field label{
+    position: absolute;
+    left: 25px;
+    top: 9px;
+    color: #f0f0f0;
+    font-size: var(--normal-font-size);
+    transition: top 0.3s, font-size 0.3s;
+}
+.input-field i{
+    top:13px;
+}
+.input-field i.eye{
+    right:  0px;
+}
+input:focus + label,
+.input-field input:not(:placeholder-shown) 
++ label {
+    top: -15px;
+    font-size: var(--small-font-size);
+}
+.check-group,
+.check-box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--small-font-size);
+} 
+input[type="checkbox"] {
+    accent-color: #141313;
+    transform: scale(1.2);
+    margin-right: 5px;
+}
+a{
+    color:#f0f0f0;
+    text-decoration: none;
+
+}
+button{
+    width: 100%;
+    padding: 1rem;
+    border-radius: .5rem;
+    background-color: #f0f0f0f0;
+    color:#141313;
+    font-size: var(--normal-font-size);
+    cursor: pointer;
+    border: none;
+}
+p{
+    text-align: center;
+}

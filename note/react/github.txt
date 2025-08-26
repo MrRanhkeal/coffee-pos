@@ -27,3 +27,6 @@ git push -u origin main
 
     #congit
     git config --global --add safe.directory E:/IT_Class/Y_3/S_1/PHP_And_MySQL/ass/meeting_system_project_G4
+    
+    #Force Push – not recommended unless you're sure
+    git push --force origin main

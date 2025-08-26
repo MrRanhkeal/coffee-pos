@@ -34,7 +34,7 @@ function ProductItem({
             price,
             discount,
             qty,
-            sugarLevel: sugarLevel
+            sugarLevel: sugarLevel,
         });
         setModalOpen(false);
     };
@@ -45,7 +45,9 @@ function ProductItem({
 
     const handlePrevImage = (e) => {
         e.stopPropagation();
-        setSelectedImageIdx((prev) => (prev - 1 + imageList.length) % imageList.length);
+        setSelectedImageIdx(
+            (prev) => (prev - 1 + imageList.length) % imageList.length
+        );
     };
 
     const handleNextImage = (e) => {
@@ -59,12 +61,18 @@ function ProductItem({
         final_price = final_price.toFixed(2);
     }
     return (
-        <div className={styles.contianer} >
+        <div className={styles.contianer}>
             <Image
                 src={Config.image_path + imageList[selectedImageIdx]}
                 alt={name}
                 preview={false}
-                style={{ borderRadius: '20px', width: '350px', height: '300px', justifyContent: 'center', cursor: 'pointer' }}
+                style={{
+                    borderRadius: "20px",
+                    width: "350px",
+                    height: "300px",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                }}
                 onClick={handleImageClick}
             />
             <Modal
@@ -74,34 +82,57 @@ function ProductItem({
                 centered
                 width={400}
             >
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ position: 'relative', width: '350px', height: '300px' }}>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <div
+                        style={{ position: "relative", width: "350px", height: "300px" }}
+                    >
                         <Image
                             src={Config.image_path + imageList[selectedImageIdx]}
                             alt={name}
                             preview={false}
-                            style={{ borderRadius: '20px', width: '350px', height: '300px' }}
+                            style={{ borderRadius: "20px", width: "350px", height: "300px" }}
                         />
                         {imageList.length > 1 && (
                             <>
                                 <Button
-                                    style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)' }}
+                                    style={{
+                                        position: "absolute",
+                                        left: 0,
+                                        top: "50%",
+                                        transform: "translateY(-50%)",
+                                    }}
                                     onClick={handlePrevImage}
                                     size="small"
                                 >{`<`}</Button>
                                 <Button
-                                    style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)' }}
+                                    style={{
+                                        position: "absolute",
+                                        right: 0,
+                                        top: "50%",
+                                        transform: "translateY(-50%)",
+                                    }}
                                     onClick={handleNextImage}
                                     size="small"
                                 >{`>`}</Button>
                             </>
                         )}
                     </div>
-                    <div style={{ marginTop: 16, width: '100%' }}>
+                    <div style={{ marginTop: 16, width: "100%" }}>
                         <Radio.Group
                             value={sugarLevel}
                             onChange={(e) => setSugarLevel(e.target.value)}
-                            style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}
+                            style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "8px",
+                                justifyContent: "center",
+                            }}
                         >
                             <Radio value={0}>0%</Radio>
                             <Radio value={25}>25%</Radio>
@@ -112,7 +143,7 @@ function ProductItem({
                     </div>
                     <Button
                         type="primary"
-                        style={{ marginTop: 16, width: '100%' }}
+                        style={{ marginTop: 16, width: "100%" }}
                         icon={<MdAddCircle />}
                         onClick={handleAddWithSugar}
                     >
@@ -120,7 +151,9 @@ function ProductItem({
                     </Button>
                 </div>
             </Modal>
-            <div className={styles.p_name + " truncate-text"}>{name} {description} </div>
+            <div className={styles.p_name + " truncate-text"}>
+                {name} {description}{" "}
+            </div>
             <div className={styles.p_des}>
                 {category_name} - {brand}
             </div>
@@ -145,7 +178,7 @@ function ProductItem({
                 <Radio.Group
                     value={sugarLevel}
                     onChange={(e) => setSugarLevel(e.target.value)}
-                    style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}
+                    style={{ display: "flex", flexWrap: "wrap", gap: "2px" }}
                 >
                     <Radio value={0}>0%</Radio>
                     <Radio value={25}>25%</Radio>
@@ -179,5 +212,3 @@ ProductItem.propTypes = {
 };
 
 export default ProductItem;
-
-
