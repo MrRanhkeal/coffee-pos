@@ -1,4 +1,4 @@
-const { LogErr, logErr } = require("./src/util/logErr");
+const { logErr } = require("./src/util/logErr");
 const express = require("express");
 const cors = require("cors");
 const app = express();
