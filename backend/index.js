@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 const fs = require("fs");
 const path = require("path");
-const { log } = require("console");
+// const { log } = require("console");
 
 // Middleware
 app.use(express.json());
@@ -55,6 +55,7 @@ try {
 catch (error) {
     logErr("index", error);
 }
+
 // // Dynamic route
 // const routesPath = path.join(__dirname, "src", "route");
 // fs.readdirSync(routesPath).forEach((file) => {

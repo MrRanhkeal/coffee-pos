@@ -39,7 +39,7 @@ exports.register = async (req, res) => {
                 error: true,
                 message: "Missing required fields"
             });
-        } 
+        }
         //ceck username exist
         const checkSql = `SELECT id FROM users WHERE name = :name OR username = :username LIMIT 1`;
         const [existingUsers] = await db.query(checkSql, { name, username });
@@ -51,7 +51,7 @@ exports.register = async (req, res) => {
             });
         }
         const hashedPassword = bcrypt.hashSync(password, 10);
-        
+
         const InsertSql = `INSERT INTO users (  
             role_id,
             name,
@@ -78,7 +78,7 @@ exports.register = async (req, res) => {
         });
 
         res.json({
-            data:{id: result.insertId,username,name},
+            data: { id: result.insertId, username, name },
             message: "User registered successfully",
             error: false
         });
@@ -97,7 +97,8 @@ exports.login = async (req, res) => {
         let sql =
             " select " +
             " u.*," +
-            " r.name as role_name" +
+            " r.name as role_name," +
+            " r.permission as role_permission" +
             " from users u " +
             " inner join roles r on u.role_id = r.id" +
             " where u.username=:username ";
@@ -116,7 +117,7 @@ exports.login = async (req, res) => {
             let isMatch = bcrypt.compareSync(password, dbPassword); //this compare true and false pass
             if (!isMatch) {
                 res.json({
-                    error: { 
+                    error: {
                         message: "ពាក្យសម្ងាត់មិត្រឹមត្រូវ, សូមព្យាយាមម្តងទៀត!"
                     }, //pro data
                 });
@@ -124,13 +125,46 @@ exports.login = async (req, res) => {
             }
             else {
                 delete data[0].password;
+                // Build dynamic permission from roles table
+                const roleName = data[0].role_name;
+                const rolePermRaw = data[0].role_permission; // may be JSON string or 'all' or null
+                let permissionObj = null;
+                if (roleName === 'Admin') {
+                    permissionObj = { all: true };
+                    // surface this indicator on profile for frontend's quick check
+                    data[0].permission = 'all';
+                } else {
+                    try {
+                        if (rolePermRaw === 'all') {
+                            permissionObj = { all: true };
+                            data[0].permission = 'all';
+                        } else if (rolePermRaw) {
+                            const parsed = typeof rolePermRaw === 'string' ? JSON.parse(rolePermRaw) : rolePermRaw;
+                            if (parsed === 'all') {
+                                permissionObj = { all: true };
+                                data[0].permission = 'all';
+                            } else if (parsed && parsed.all === true) {
+                                permissionObj = { all: true };
+                                data[0].permission = 'all';
+                            } else if (parsed && typeof parsed === 'object') {
+                                permissionObj = parsed;
+                            }
+                        }
+                    } catch (e) {
+                        // ignore parse errors and fallback below
+                    }
+                    if (!permissionObj) {
+                        // default minimal permission for non-admin
+                        permissionObj = { pos: true, order: true, customer: true };
+                    }
+                }
                 let obj = {
                     profile: data[0],
-                    permission: data[0].role_name === 'Admin' ? ["view", "create", "update", "delete"] : ["view"]
+                    permission: permissionObj
                 }
                 res.json({
                     message: "login successfully",
-                    ...obj, //this javascript spread operator (...) allows us to quickly copy the contents all part of an existing object into another object
+                    ...obj, // include profile and permission in payload
                     // get token
                     access_token: await getAccessToken(obj)
                 });
@@ -351,7 +385,7 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         const sql = "DELETE FROM users WHERE id = :id";
         await db.query(sql, { id });
 

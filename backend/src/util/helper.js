@@ -93,6 +93,7 @@ exports.uploadFile = multer({
 //         }
 //     },
 // }); 
+
 exports.removeFile = async (fileName) => {
     const filePath = path.join(config.image_path, fileName);
     try {
@@ -101,4 +102,4 @@ exports.removeFile = async (fileName) => {
     } catch (err) {
         return { success: false, message: "Error deleting file" };
     }
-};
+}; 
