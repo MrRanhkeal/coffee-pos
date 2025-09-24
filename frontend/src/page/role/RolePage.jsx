@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { request } from "../../util/helper";
-import { Button, Form, Input, message, Modal, Space, Table, Tag, Select } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table, Select } from "antd";
 import { DeleteOutlined, EditOutlined, FileAddFilled } from "@ant-design/icons";
 import { } from "react-icons/md";
 
@@ -18,6 +18,25 @@ function RolePage() {
         visible: false
     });
     const [form] = Form.useForm();
+    const permissionOptions = [
+        { label: 'All', value: 'all' },
+        { label: 'Dashboard', value: '' },
+        { label: 'POS', value: 'pos' },
+        { label: 'Order', value: 'order' },
+        { label: 'Customer', value: 'customer' },
+        // management
+        { label: 'Product', value: 'product' },
+        { label: 'Category', value: 'category' },
+        { label: 'Supplier', value: 'supplier' },
+        { label: 'User', value: 'user' },
+        { label: 'Role', value: 'role' },
+        // expenses & stock
+        { label: 'Expense', value: 'expanse' },
+        { label: 'Stock', value: 'stock' },
+        // reports
+        { label: 'Sale Report', value: 'getsalereport' },
+        { label: 'Sale Summary', value: 'get_sale_summary' },
+    ];
 
     useEffect(() => {
         getList();
@@ -43,22 +62,26 @@ function RolePage() {
 
     // Handle edit button click
     const handleEdit = (record) => {
-        // let permission = record.permission;
-        // try {
-        //     if (typeof permission === 'string') {
-        //         permission = JSON.parse(permission);
-        //     }
-        //     if (!Array.isArray(permission)) {
-        //         permission = [];
-        //     }
-        // } catch {
-        //     permission = [];
-        // }
+        // normalize permission from DB to multi-select values
+        let values = [];
+        try {
+            const perm = record.permission;
+            if (perm === 'all') {
+                values = ['all'];
+            } else if (perm) {
+                const parsed = typeof perm === 'string' ? JSON.parse(perm) : perm;
+                if (parsed && parsed.all) {
+                    values = ['all'];
+                } else if (parsed && typeof parsed === 'object') {
+                    values = Object.keys(parsed).filter(k => parsed[k]);
+                }
+            }
+        } catch { /* no-op: ignore malformed permission */ }
 
         form.setFieldsValue({
             id: record.id,
             name: record.name,
-            // permission: permission
+            permission: values
         });
         setState(pre => ({ ...pre, visible: true }));
     };
@@ -66,7 +89,7 @@ function RolePage() {
     // Handle delete button click
     const handleDelete = (record) => {
         Modal.confirm({
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប{record.name}</span>,
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>លុប {record.name}</span>,
             content: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>តើអ្នកចង់លុប {record.name} មែនទេ ?</span>,
             okText: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#e42020ff' }}>បាទ/ចាស</span>,
             okType: 'danger',
@@ -89,12 +112,19 @@ function RolePage() {
     const onFinish = async (values) => {
         const method = form.getFieldValue("id") ? "put" : "post";
         try {
-            // Use permission array directly
-            const permission = Array.isArray(values.permission) ? values.permission : [];
+            // Convert selected keys to permission payload
+            let permissionPayload = null;
+            const selected = Array.isArray(values.permission) ? values.permission : [];
+            if (selected.includes('all')) {
+                permissionPayload = 'all';
+            } else {
+                permissionPayload = {};
+                selected.forEach(k => { permissionPayload[k] = true; });
+            }
 
             const data = {
                 name: values.name,
-                permission: JSON.stringify(permission)
+                permission: permissionPayload
             };
 
             // Add id for update operation
@@ -128,7 +158,7 @@ function RolePage() {
             render: (_, __, index) => index + 1
         },
         {
-            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះ</span>,
+            title: <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>ឈ្មោះតួនាទី</span>,
             dataIndex: "name",
             render: (text) => <span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{text}</span>,
             key: "name",
@@ -138,6 +168,7 @@ function RolePage() {
             //     textOverflow: "ellipsis"
             // }
         },
+
         // {
         //     title: "Permission",
         //     dataIndex: "permission",
@@ -224,7 +255,19 @@ function RolePage() {
                         rules={[{ required: true, message: "Please input role name" }]}
                     >
                         <Input placeholder="ឈ្មោះតួនាទី" style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }} />
-                    </Form.Item> 
+                    </Form.Item>
+                    <Form.Item
+                        name="permission"
+                        label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>សិទ្ធិប្រើប្រាស់</span>}
+                    >
+                        <Select
+                            mode="multiple"
+                            allowClear
+                            placeholder="ជ្រើសសិទ្ធិ"
+                            options={permissionOptions}
+                            style={{ width: '100%', fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
+                        />
+                    </Form.Item>
                     <Form.Item style={{ textAlign: "right" }}>
                         <Space>
                             <Button type="default" onClick={handleCancel} style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}>{state.isReadOnly ? "បិទ" : "បោះបង់"}</Button>

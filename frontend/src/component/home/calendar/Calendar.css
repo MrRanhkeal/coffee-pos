@@ -35,7 +35,7 @@
  */
 
 
-.calendar-container { 
+.calendar-container {
   padding: 1rem;
   background: white;
   border-radius: 8px;
@@ -57,8 +57,7 @@
 /* Selected date (e.g., 26th) */
 .react-calendar__tile--active {
   background: none !important;
-  border: 2px solid #b71c1c !important;
-  /* red border */
+  border: 2px solid #b71c1c !important; 
   color: black !important;
   font-weight: bold;
   border-radius: 50%;
@@ -69,14 +68,15 @@
 
 /* Today's date (e.g., 27th) */
 .react-calendar__tile--now {
-  background: #006edc !important;
-  /* solid blue */
+  background: #006edc !important; 
   color: white !important;
   font-weight: bold;
   border-radius: 50%;
   width: 60px;
+  margin-left: 20px;
   height: 60px;
 }
+
 .react-calendar__tile:hover {
   background-color: #e6e6e6;
   border-radius: 50%;

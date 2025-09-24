@@ -11,7 +11,7 @@ export const configStore = create((set) => ({
     customer: null,
   },
   setConfig: (params) =>
-    set((state) => ({
+    set(() => ({
       config: params,
       //...state, //check
     })),

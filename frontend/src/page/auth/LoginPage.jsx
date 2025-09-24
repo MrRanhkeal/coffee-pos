@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
-import { Form, Button, message, Input, Checkbox } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, message } from "antd";
 import { request } from "../../util/helper";
 import { setAcccessToken, setPermission, setProfile } from "../../store/profile.store";
 import { useNavigate } from "react-router-dom";
-import { LoginOutlined } from "@ant-design/icons";
+import { LoginOutlined, EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { FcLock } from "react-icons/fc";
-import { FcBusinessman } from "react-icons/fc";
+import { FcBusinessman } from "react-icons/fc"; 
 // import "./LoginPage.css";
 import backgroundImage from '../../assets/coffee_Image_backgorund.png';
-
-function LoginPage() {
+import './LoginPage.css';
+function LoginPage() { 
+  const [showPassword, setShowPassword] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const onLogin = async (values) => {
@@ -40,138 +41,162 @@ function LoginPage() {
     return () => { document.head.removeChild(link); };
   }, []);
   return (
-    <div className="login-page" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#f6fbf6ff' }}>
-      <div className="login-container" style={{ padding: '10px', borderRadius: '10px', boxShadow: '0 6px 8px #121010ff', backgroundColor: '#3c3838ff', width: '400px', alignItems: 'center' }}>
-        <h2 style={{ color: '#06D6A0', fontSize: "40px", alignItems: 'center', justifyContent: 'center', margin: '0 0 0 120px' }}>LOGIN</h2>
-        
-        <Form
-          form={form}
-          name="login"
-          initialValues={{ remember: true }}
-          onFinish={onLogin}
-          layout="vertical"
-          size="large"
+    <div className="login-page" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      
+      <Form
+        form={form}
+        name="login"
+        initialValues={{ remember: true }}
+        onFinish={onLogin}
+        layout="vertical"
+        size="large"
+        className="login-form"
+      >
+        <h2 
+          style={{
+            color: "#080808ff",
+            fontSize: "40px",
+            fontWeight: "bold",
+            textAlign: "center",
+            margin: "0 0 20px 0",
+          }}
+        > 
+          LOGIN
+        </h2>
+
+        {/* Username */}
+        <Form.Item
+          name="username"
+          type="email"
+          rules={[{ required: true, message: "សូមបញ្ចូលអុីម៉ែលអ្នកប្រើប្រាស់ !" }]}
         >
-          <Form.Item
-            name="username"
-            // className="khmer-search"
-            className="input-field"
-            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#f6fbf6ff' }}>ឈ្មោះអ្នកប្រើ</span>}
-            rules={[{
-              required: true,
-              message: "សូមបញ្ចូលអុីម៉ែលអ្នកប្រើប្រាស់ !"
-            }]}
-          >
-            <Input
-              prefix={<FcBusinessman />}
-              className="khmer-search"
-              placeholder="បញ្ចូលអុីម៉ែលអ្នកប្រើប្រាស់"
+          <div className="input-field" type='email'>
+            <i>
+              <FcBusinessman />
+            </i>
+            <input
               type="email"
-              size="large"
+              placeholder=" "  
+              autoComplete="email" 
+              style={{
+                fontFamily: "Noto Sans Khmer, Roboto, sans-serif", 
+                margin: "0 0 0 20px",
+                color: "#ffffffff",
+              }}
             />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            className="khmer-search"
-            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#f6fbf6ff' }}>ពាក្យសម្ងាត់</span>}
-            rules={[{
-              required: true,
-              message: "សូមបញ្ចូលពាក្យសម្ងាត់ !"
-            }]}
-          >
-            <Input.Password
-              prefix={<FcLock />}
-              className="khmer-search"
-              placeholder="បញ្ចូលពាក្យសម្ងាត់"
-              size="large"
-              autoComplete="current-password"
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <div className="login-options">
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-              <a className="forgot-link" href="#">Forgot password?</a>
-            </div>
-          </Form.Item>
-
-          <Form.Item>
-            <Button block type="primary" htmlType="submit" size="large" style={{ color: '#61E786' }}>
-              <LoginOutlined />
-              LOGIN
-            </Button>
-          </Form.Item>
-        </Form>
-        
-        
-        
-        
-        
-        
-        {/*<Form
-          form={form}
-          name="login"
-          initialValues={{ remember: true }}
-          onFinish={onLogin}
-          layout="vertical"
-          size="large"
+            <label
+              style={{
+                fontFamily: "Noto Sans Khmer, Roboto, sans-serif", 
+                fontWeight: "bold",
+                margin: "0 0 0 20px",
+                color: "#080808ff",
+              }}
+            >
+              ឈ្មោះអ្នកប្រើ
+            </label>
+          </div>
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: "សូមបញ្ចូលពាក្យសម្ងាត់ !" }]}
         >
-          <Form.Item
-            name="username"
-            className="khmer-search"
-            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#f6fbf6ff' }}>ឈ្មោះអ្នកប្រើ</span>}
-            rules={[{
-              required: true,
-              message: "សូមបញ្ចូលអុីម៉ែលអ្នកប្រើប្រាស់ !"
-            }]}
-          >
-            <Input
-              prefix={<FcBusinessman />}
-              className="khmer-search"
-              placeholder="បញ្ចូលអុីម៉ែលអ្នកប្រើប្រាស់"
-              type="email"
-              size="large"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            className="khmer-search"
-            label={<span style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif', fontWeight: 'bold', color: '#f6fbf6ff' }}>ពាក្យសម្ងាត់</span>}
-            rules={[{
-              required: true,
-              message: "សូមបញ្ចូលពាក្យសម្ងាត់ !"
-            }]}
-          >
-            <Input.Password
-              prefix={<FcLock />}
-              className="khmer-search"
-              placeholder="បញ្ចូលពាក្យសម្ងាត់"
-              size="large"
+          <div className="input-field" style={{ position: "relative" }}>
+            <i>
+              <FcLock />
+            </i>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder=" "
               autoComplete="current-password"
+              style={{
+                fontFamily: "Noto Sans Khmer, Roboto, sans-serif", 
+                margin: "0 0 0 20px",
+                color: "#ffffffff",
+                paddingRight: "35px", // Add space for the icon
+              }}
             />
-          </Form.Item>
+            <label
+              style={{
+                fontFamily: "Noto Sans Khmer, Roboto, sans-serif",
+                fontWeight: "bold",
+                margin: "0 0 0 20px",
+                color: "#080808ff",
+              }}
+            >
+              ពាក្យសម្ងាត់
+            </label> 
+            {/* Toggle eye icon */}
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                fontSize: "20px",
+                color: "#d43232ff",
+                zIndex: 2,
+              }}
+            >
+              {showPassword ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
+            </span>
+            {/* <label
+              style={{
+                fontFamily: "Noto Sans Khmer, Roboto, sans-serif",
+                fontWeight: "bold",
+                margin: "0 0 0 20px",
+                color: "#030a04ff",
+              }}
+            >
+              ពាក្យសម្ងាត់
+            </label> */}
 
-          <Form.Item>
-            <div className="login-options">
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-              <a className="forgot-link" href="#">Forgot password?</a>
-            </div>
-          </Form.Item>
+            {/* Toggle eye icon */}
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                fontSize: "18px",
+              }} 
+            > 
+            </span>
+          </div>
+        </Form.Item>
 
-          <Form.Item>
-            <Button block type="primary" htmlType="submit" size="large" style={{ color: '#61E786' }}>
-              <LoginOutlined />
-              LOGIN
-            </Button>
-          </Form.Item>
-        </Form> */}
-      </div>
+        {/* Remember me */}
+        <Form.Item>
+          <div className="check-group">
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <div className="check-box">
+                <input type="checkbox" />
+                <span>Remember me</span>
+              </div>
+            </Form.Item>
+          </div>
+        </Form.Item>
+
+        {/* Submit */}
+        <Form.Item>
+          <button className="login-title"
+            type="submit"
+            // style={{
+            //   backgroundColor: "#61E786",
+            //   padding: "10px 20px",
+            //   borderRadius: "8px",
+            //   border: "none",
+            //   fontWeight: "bold",
+            // }}
+          >
+            <LoginOutlined style={{ marginRight: "8px" }} />
+            LOGIN
+          </button>
+        </Form.Item>
+      </Form>
     </div>
   );
 }

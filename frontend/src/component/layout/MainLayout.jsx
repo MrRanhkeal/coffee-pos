@@ -12,8 +12,7 @@ import Logo from "../../assets/v-friends.jpg";
 import ImgUser from "../../assets/admin.jpg";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md"; 
-import {
-  getPermission, getProfile, setAcccessToken, setProfile, } from "../../store/profile.store";
+import {getPermission, getProfile, setAcccessToken, setPermission, setProfile, } from "../../store/profile.store";
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
 // import { icons } from "antd/es/image/PreviewGroup";
@@ -229,10 +228,26 @@ const MainLayout = () => {
     if (permission?.all) {
       // Admin: show all menu items
       new_item_menu = [...items_menu];
-    } else if (permission?.pos || permission?.order || permission?.customer) {
-      // POS: show POS, Dashboard, Order, Customer and permission any route
-      new_item_menu = items_menu.filter(item => ["", "pos", "order", "customer"].includes(item.key));
-    } else if (Array.isArray(permission)) {
+    } else if (permission && typeof permission === 'object' && !Array.isArray(permission)) {
+      // New object-based permission: include items with truthy key or allowed children
+      items_menu.forEach((item) => {
+        const isAllowed = !!permission[item.key];
+        let allowedChildren = [];
+        if (item?.children && item.children.length > 0) {
+          allowedChildren = item.children.filter((child) => !!permission[child.key]);
+        }
+        if (allowedChildren.length > 0) {
+          new_item_menu.push({ ...item, children: allowedChildren });
+        } else if (isAllowed || (item.key === "" && (permission[""] || permission.dashboard))) {
+          new_item_menu.push(item);
+        }
+      });
+    }
+    // else if (permission?.pos || permission?.order || permission?.customer) {
+    //   // Backward-compatibility special-case for POS-like roles
+    //   new_item_menu = items_menu.filter(item => ["", "pos", "order", "customer"].includes(item.key));
+    // } 
+    else if (Array.isArray(permission)) {
       // Fallback to old array logic
       items_menu?.map((item1) => {
         // level one
@@ -275,6 +290,7 @@ const MainLayout = () => {
   const onLoginOut = () => {
     setProfile("");
     setAcccessToken("");
+    setPermission("");
     navigate("/login");
   };
 

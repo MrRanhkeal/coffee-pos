@@ -25,7 +25,13 @@ export const getProfile = () => {
 };
 
 export const setPermission = (array) => {
-  localStorage.setItem("permission", array);
+  try {
+    const value = typeof array === 'string' ? array : JSON.stringify(array);
+    localStorage.setItem("permission", value);
+  } catch {
+    // fallback to raw set if stringify fails
+    localStorage.setItem("permission", array);
+  }
 };
 
 export const getPermission = () => {
@@ -35,16 +41,20 @@ export const getPermission = () => {
     if (profile && (profile.role_name || profile.permission)) {
       if (profile.role_name === 'Admin' || profile.permission === 'all') {
         return { all: true };
-      } 
-      else {
-        return { pos: true, order: true, customer: true };
       }
     }
-    // fallback to old permission array if needed
-    var permission = localStorage.getItem("permission");
+    // Prefer stored permission JSON from backend roles
+    const permission = localStorage.getItem("permission");
     if (permission !== "" && permission !== null && permission !== undefined) {
-      return JSON.parse(permission);
+      try {
+        const parsed = JSON.parse(permission);
+        // can be object (new logic) or array (old logic)
+        return parsed;
+      } catch {
+        // not JSON, ignore
+      }
     }
+    // no stored permission found
     return null;
   } catch (err) {
     console.log("not found permission", err);

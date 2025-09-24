@@ -1,12 +1,6 @@
-/* .login-page {
-    width: 100vw;
-    height: 100vh;
-    background-image: url("../../../../frontend/src/assets/coffee_Image_backgorund.png");
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+:root {
+    --small-font-size: 1rem;
+    --normal-font-size: 1.3rem;
 }
 
 body {
@@ -15,91 +9,144 @@ body {
     margin: 0;
 }
 
-.login-container {
-    backdrop-filter: blur(8px);
-    border-radius: 16px;
-    padding: 20px 20px 20px 20px;
-    width: 500px;
-    height: 450px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(200, 189, 189, 0.2);
-    color: white;
-    text-align: center;
-}
-
-.login-container h2 {
-    margin-bottom: 30px;
-    font-weight: 600;
-    font-size: 30px;
-    color: white;
-}
-
-.login-container .ant-form-item-label>label {
-    color: white;
-}
-
-.login-container .ant-input-affix-wrapper {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 8px !important;
-    color: white !important;
-}
-
-.login-container .ant-input {
-    background: transparent !important;
-    color: white !important;
-}
-
-.login-container .ant-input::placeholder {
-    color: rgba(255, 255, 255, 0.7) !important;
-}
-
-.login-container .ant-input-password-icon {
-    color: rgba(255, 255, 255, 0.7) !important;
-}
-
-.login-options {
+.login {
+    position: relative;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden;
+    color: #f0f0ff;
+    font-family: khmer;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
-.login-container .ant-checkbox-wrapper {
-    color: white;
+.login-form {
+    position: relative;
+    width: 50vh;
+    height: auto;
+    border: 4px solid #25bb22;
+    padding: 2.5rem 1.5rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.login-container .ant-checkbox-inner {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(192, 180, 180, 0.3);
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin: 0;
 }
 
-.login-container .ant-btn-primary {
-    background: "#FC5C7D,#6A82FB";
+.input-field {
+    position: relative;
+
+}
+
+i {
+    font-size: 2.5rem;
+    position: absolute;
+    ;
+}
+
+.input-field input {
+    width: 89%;
+    padding: 12px;
+    background: none;
+    color: #f0f0f0;
     border: none;
-    height: 40px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-size: var(--normal-font-size);
+    border-bottom: 1px solid #f0f0f0f0;
+    padding-left: 25px;
+    box-sizing: border-box;
+    position: relative;
+    inset: 0;
+    outline: none;
+    z-index: 1;
 }
 
-.login-container .ant-btn-primary:hover {
-    background: "#FC5C7D,#6A82FB";
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(1, 8, 14, 0.3);
+.input-field label {
+    position: absolute;
+    left: 25px;
+    top: 9px;
+    color: #922626;
+    font-size: var(--normal-font-size);
+    transition: top 0.3s, font-size 0.3s;
 }
 
-.forgot-link {
-    color: rgba(255, 255, 255, 0.8);
+.input-field i {
+    top: 13px;
+}
+
+.input-field i.eye {
+    right: 0px;
+}
+
+input:focus+label,
+.input-field input:not(:placeholder-shown)+label {
+    top: -15px;
+    font-size: var(--small-font-size);
+}
+
+.check-group,
+.check-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--small-font-size);
+}
+
+input[type="checkbox"] {
+    accent-color: #141313;
+    transform: scale(1.2);
+    margin-right: 5px;
+}
+
+a {
+    color: #f0f0f0;
     text-decoration: none;
-    transition: color 0.3s ease;
+
 }
 
-.forgot-link:hover {
-    color: white;
-    text-decoration: underline;
+.login-title {
+    width: 100%;
+    padding: 1rem;
+    border-radius: .5rem;
+    background-color: #f41d1d;
+    color: #141313;
+    font-size: var(--normal-font-size);
+    cursor: pointer;
+    border: none;
 }
 
-.khmer-search:focus~label,
-.khmer-search:valid~label {
-    top: -10px;
-} */
+p {
+    text-align: center;
+}
+
+.input-field input[type="password"] {
+    all: unset;
+    width: 75%;
+    padding: 12px 0 12px 25px; 
+    font-size: var(--normal-font-size);
+    border-bottom: 1px solid #f0f0f0;
+    outline: none;
+    position: relative;
+    z-index: 1;
+}
+
+.login-title { 
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 0 20px 0;
+    transition: background-color 0.5s ease;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.login-title:hover {
+    background-color: #28bb28;
+}

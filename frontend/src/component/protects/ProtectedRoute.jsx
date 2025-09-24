@@ -14,6 +14,13 @@ export default function ProtectedRoute({ permissionKey, element }) {
     // If the permissionKey is found in permission object, allow
     if (permission && permission[permissionKey]) return element;
 
+    // Fallback to legacy array format: [{ web_route_key: "/user" }, ...]
+    if (Array.isArray(permission)) {
+        const findKey = "/" + permissionKey;
+        const ok = permission.findIndex(p => p?.web_route_key === findKey) !== -1;
+        if (ok) return element;
+    }
+
     // Otherwise, block access
     return <Navigate to="/" replace />;
 }

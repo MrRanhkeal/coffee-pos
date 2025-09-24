@@ -26,21 +26,24 @@ function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/pos" element={<PosPage />} />
+          {/* <Route path="/pos" element={<PosPage />} />
           <Route path="/customer" element={<CustomerPage />} />
-          <Route path="/order" element={<OrderPage />} /> 
+          <Route path="/order" element={<OrderPage />} />  */}
 
           {/* blocked routes */}
+          <Route path="/pos" element={<ProtectedRoute permissionKey="pos" element={<PosPage />} />} />
+          <Route path="/customer" element={<ProtectedRoute permissionKey="customer" element={<CustomerPage />} />} />
+          <Route path="/order" element={<ProtectedRoute permissionKey="order" element={<OrderPage />} />} />
           <Route path="/product" element={<ProtectedRoute permissionKey="product" element={<ProductPage />} />} />
           <Route path="/category" element={<ProtectedRoute permissionKey="category" element={<CategoryPage />} />} />
           <Route path="/supplier" element={<ProtectedRoute permissionKey="supplier" element={<SupplierPage />} />} />
           <Route path="/user" element={<ProtectedRoute permissionKey="user" element={<UserPage />} />} />
           <Route path="/role" element={<ProtectedRoute permissionKey="role" element={<RolePage />} />} />
           <Route path="/expanse" element={<ProtectedRoute permissionKey="expanse" element={<ExpansePage />} />} />
-          <Route path="/stock" element={<ProtectedRoute permissionKey="stock" element={<StockPage />} />} /> 
+          <Route path="/stock" element={<ProtectedRoute permissionKey="stock" element={<StockPage />} />} />
 
           <Route path="/currency" element={<ExchangePage />} />
-  
+
           <Route
             path="/getsalereport"
             element={<ProtectedRoute permissionKey="getsalereport" element={<ReportSalePage />} />}

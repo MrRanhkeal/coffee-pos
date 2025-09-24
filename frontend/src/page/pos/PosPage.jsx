@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Col, message, notification, Row, Space, Card, Typography, Input, Empty, Button, Flex } from "antd";
+import { Col, message, notification, Row, Space, Card, Typography, Input, Empty, Flex } from "antd";
 import PropTypes from "prop-types";
 import MainPage from "../../component/layout/MainPage";
 import ProductItem from "../../component/pos/ProductItem";
 import CartView from "../../component/pos/cart/CartView";
-import ExchangePage from '../currency/ExchangePage';
+import Exchange from "../../component/home/exchange/Exchange";
+// import Excha from '../currency/ExchangePage';
 import { useReactToPrint } from "react-to-print";
 import PrintInvoice from "../../component/pos/PrintInvoice";
 import { request } from "../../util/helper";
-import { getProfile } from "../../store/profile.store"; 
+import { getProfile } from "../../store/profile.store";
 import { FiSearch } from "react-icons/fi";
 
 function PosPage() {
@@ -431,13 +432,13 @@ function PosPage() {
                             tax: 10,
                             total: 0,
                             total_paid: 0,
-                            customer_id: null, 
+                            customer_id: null,
                             customer_name: null,
                             payment_method: null,
                             remark: '0',
                             order_no: null,
                             order_date: null,
-                        }); 
+                        });
 
                     }, 1000);
                 }, 500);
@@ -520,9 +521,9 @@ function PosPage() {
                                         }))
                                     }
                                     allowClear
-                                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif'}} 
+                                    style={{ fontFamily: 'Noto Sans Khmer, Roboto, sans-serif' }}
                                 />
-                            </Flex> 
+                            </Flex>
                         </Space>
 
                         <div style={{ marginBottom: '1rem' }}>
@@ -624,7 +625,7 @@ function PosPage() {
                             handleClickOut={handleClickOut}
                         />
                     </div>
-                    <div style={{width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex', margin: '0 0 6px 0' }}><ExchangePage /></div>
+                    <div style={{ width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex', margin: '0 0 6px 0' }}><Exchange /></div>
                 </Col>
             </Row>
         </MainPage>
